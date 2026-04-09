@@ -1,4 +1,4 @@
-const { CATEGORY } = require("../locales/en/cruds");
+
 
 module.exports = {
     APP_MODE: [

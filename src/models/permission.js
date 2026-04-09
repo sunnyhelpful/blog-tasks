@@ -1,21 +1,22 @@
 const mongoose = require("mongoose");
-const mongoosePaginate = require('mongoose-paginate-v2');
+const mongoosePaginate = require("mongoose-paginate-v2");
 
 const permissionSchema = new mongoose.Schema(
   {
     title: {
-      type: Map,
-      of: String,
+      type: String,
       required: true,
+      trim: true,
     },
     name: {
       type: String,
       default: null,
+      trim: true,
     },
     module: {
-      type: Map,
-      of: String,
+      type: String,
       required: true,
+      trim: true,
     },
     isDeleted: {
       type: Boolean,
@@ -32,5 +33,7 @@ const permissionSchema = new mongoose.Schema(
 );
 
 permissionSchema.plugin(mongoosePaginate);
+
 const Permission = mongoose.model("Permission", permissionSchema, "permissions");
+
 module.exports = Permission;

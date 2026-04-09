@@ -10,7 +10,6 @@ const customMiddleware = require('./middleware/middleware');
 const bodyParser = require('body-parser');
 const ejsLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
-const runCrons = require('./crons/index');
 const constantKey = require('./config/constant');
 
 
