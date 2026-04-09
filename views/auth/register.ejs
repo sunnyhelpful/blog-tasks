@@ -6,14 +6,11 @@
         <a class="logo" href="javascript:;">
           <!-- <img class="img-fluid for-light m-auto" src="/backend/images/logo/logo1.png" alt="looginpage">
           <img class="img-fluid for-dark" src="/backend/images/logo/logo-dark.png" alt="logo"> -->
-          <h3><%= companyInfo.NAME %></h3>
         </a>
         <div class="login-main"> 
           <form class="theme-form" id="registerForm" action="<%- '/register' %>" method="POST">
-            <h2 class="text-left"><%= trans.auth.messages.registration.heading %></h2>
-            <p class="text-left"><%= trans.auth.messages.registration.subheading %></p>
-
-            <%- include('./partials/language-selector') %>
+            <h2 class="text-left">Create your account</h2>
+            <p class="text-left">Enter your personal details to create account</p>
             
             <div class="form-group">
               <label class="col-form-label pt-0">Your Name</label>
