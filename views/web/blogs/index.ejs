@@ -57,7 +57,7 @@
   function createPostCard(blog) {
     const imageHtml = blog.blogImages && blog.blogImages.file_path 
       ? `<div style="margin-top:10px;">
-           <img src="/public/storage/${blog.blogImages.file_path}" alt="${blog.title}" style="width:100%; max-height:400px; object-fit:cover;">
+           <img src="/${blog.blogImages.file_path}" alt="${blog.title}" style="width:100%; max-height:400px; object-fit:cover;">
          </div>`
       : '';
 

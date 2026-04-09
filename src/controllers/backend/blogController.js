@@ -151,6 +151,7 @@ const edit = async (req, res) => {
         message: "Blog not found",
       });
     }
+    console.log('blog.. ', blog);
 
     return res.render("backend/blogs/edit", { blog });
   } catch (err) {

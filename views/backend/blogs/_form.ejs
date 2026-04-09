@@ -1,6 +1,6 @@
 <%
   const hasUrl = blog?.externalImageUrl;
-  const hasFile = blog?.blogImages && blog.blogImages.length > 0;
+  const hasFile = blog && blog?.blogImages && blog?.blogImages?.file_path || false;
 %>
 
 <div class="card-body">
@@ -81,12 +81,13 @@
           name="blogImages"
           accept="image/*"
         />
+        <%= blog.blogImages.file_path %>
 
         <!-- Existing File Preview -->
         <% if (hasFile) { %>
           <div class="mt-2">
             <img 
-              src="/<%= blog.blogImages[0].file_path.replace('public/', '') %>" 
+              src="/<%= blog.blogImages.file_path %>" 
               width="120"
               class="rounded border"
             >

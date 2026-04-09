@@ -160,6 +160,8 @@ async function show(req, res) {
     const blog = await Blog.findOne({ slug: slug })
       .populate("blogImages");
     
+    console.log("blog.. ", blog);
+    
     if (!blog) {
       return res.status(404).render("common/pages/page-404", {
         layout: 'layouts/webLayout',
@@ -204,7 +206,7 @@ async function show(req, res) {
     return res.render("web/blogs/show", {
       layout: 'layouts/webLayout',
       title: blog.title,
-      blog: blog.toObject(),
+      blog: blog,
       author: author
     });
   } catch (error) {
