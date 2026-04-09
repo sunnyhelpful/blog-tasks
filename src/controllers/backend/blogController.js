@@ -1,10 +1,11 @@
 const { isValidObjectId } = require("mongoose");
+const { prepareMongooseDataTablesParams } = require("../../utils/helper");
 const Blog = require("../../models/blog");
 const { saveUpload } = require("../../utils/saveUpload");
-
+const blogTransformer = require('../../transformers/backend/blogTransformer');
 // helper validation
 const validateBlog = (
-  { title, description, content, slug },
+  { title, description },
   isUpdate = false,
 ) => {
   const errors = [];
@@ -18,20 +19,6 @@ const validateBlog = (
   if (!isUpdate || description !== undefined) {
     if (!description || description.trim().length < 5) {
       errors.push("Description must be at least 5 characters");
-    }
-  }
-
-  if (!isUpdate || content !== undefined) {
-    if (!content || content.trim().length < 10) {
-      errors.push("Content must be at least 10 characters");
-    }
-  }
-
-  if (!isUpdate || slug !== undefined) {
-    if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
-      errors.push(
-        "Slug must be lowercase and contain only letters, numbers, hyphens",
-      );
     }
   }
 
@@ -57,7 +44,7 @@ async function index(req, res) {
             .limit(pageSize)
             .sort({ [finalSortColumn]: finalSortOrder });
 
-        const transformedBlogs = blogTransformer.transformCollection(blogs, req.session.lang);
+        const transformedBlogs = blogTransformer.transformCollection(blogs);
 
         return res.json({
             draw: parseInt(req.query.draw) || 1,
@@ -88,28 +75,17 @@ const create = async (req, res) => {
 // STORE
 const store = async (req, res) => {
   try {
-    const { title, description, content, slug } = req.body;
+    const { title, description } = req.body;
 
     // validation
-    const errors = validateBlog({ title, description, content, slug });
+    const errors = validateBlog({ title, description });
     if (errors.length) {
       return res.status(400).json({ success: false, errors });
-    }
-
-    // check unique slug
-    const existingSlug = await Blog.findOne({ slug });
-    if (existingSlug) {
-      return res.status(400).json({
-        success: false,
-        message: "Slug already exists",
-      });
     }
 
     const blog = await Blog.create({
       title: title.trim(),
       description: description.trim(),
-      content: content.trim(),
-      slug: slug.trim(),
     });
 
     // uploads
@@ -171,7 +147,6 @@ const edit = async (req, res) => {
         title: blog.title,
         description: blog.description,
         content: blog.content,
-        slug: blog.slug,
         blogImages: blog.blogImages || [],
       },
     });
@@ -183,7 +158,7 @@ const edit = async (req, res) => {
 // UPDATE
 const update = async (req, res) => {
   try {
-    const { title, description, content, slug } = req.body;
+    const { title, description, content } = req.body;
     const { id } = req.params;
     if (!id || !isValidObjectId(id)) {
       return res.status(400).json({ success: false, message: "Invalid ID" });
@@ -197,27 +172,14 @@ const update = async (req, res) => {
     }
 
     // validation (partial allowed)
-    const errors = validateBlog({ title, description, content, slug }, true);
+    const errors = validateBlog({ title, description, content }, true);
     if (errors.length) {
       return res.status(400).json({ success: false, errors });
-    }
-
-    // slug uniqueness (if changed)
-    if (slug && slug !== blog.slug) {
-      const existingSlug = await Blog.findOne({ slug });
-      if (existingSlug) {
-        return res.status(400).json({
-          success: false,
-          message: "Slug already exists",
-        });
-      }
     }
 
     blog.title = title?.trim() ?? blog.title;
     blog.description = description?.trim() ?? blog.description;
     blog.content = content?.trim() ?? blog.content;
-    blog.slug = slug?.trim() ?? blog.slug;
-
     await blog.save();
 
     // uploads

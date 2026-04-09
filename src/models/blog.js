@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const BlogSchema = new mongoose.Schema(
   {
@@ -25,6 +26,13 @@ const BlogSchema = new mongoose.Schema(
   },
 );
 
+BlogSchema.pre("validate", async function (next) {
+    if (this.title && !this.slug) {
+        this.slug = await generateUniqueSlug(this.title, this._id);
+    }
+    next();
+});
+
 BlogSchema.virtual("blogImages", {
   ref: "Upload",
   localField: "_id",
@@ -35,5 +43,25 @@ BlogSchema.virtual("blogImages", {
     deletedAt: null,
   },
 });
+
+async function generateUniqueSlug(title, blogId = null) {
+    const baseSlug = slugify(title, { lower: true, strict: true });
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+        const query = { slug };
+        if (blogId) {
+            query._id = { $ne: blogId };
+        }
+
+        const existing = await mongoose.model("Blog").findOne(query);
+        if (!existing) break;
+
+        slug = `${baseSlug}-${counter++}`;
+    }
+
+    return slug;
+}
 
 module.exports = mongoose.model("Blog", BlogSchema);
