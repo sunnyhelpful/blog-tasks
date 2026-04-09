@@ -6,7 +6,6 @@ const authenticate = require('../../middleware/auth/web/authenticate');
 const isNotAuthenticated = require('../../middleware/auth/web/isNotAuthenticated');
 const authorizePermission = require('../../middleware/auth/web/authorizePermission');
 const routeLimiter = require('../../middleware/rateLimiter');
-const readExcelFile = require('../../middleware/readExcelFile');
 
 
 const handleMulterError = require('../../middleware/handleMulterError');
@@ -193,7 +192,6 @@ router.post('/category/:id', authenticate, authorizePermission(['edit_category']
 router.delete('/category/:id/delete', authenticate, authorizePermission(['delete_category']), categoryController.destroy);
 router.post('/categories/status-update/:id', authenticate, authorizePermission(['category_status']), categoryController.statusUpdate);
 router.post('/categories/verify-update/:id', authenticate, authorizePermission(['category_verification']), categoryController.verificationUpdate);
-router.post('/categories/imports', authenticate, authorizePermission(['category_import']), uploadFile('category_file', 'excel', 'documents', 50, 1), handleMulterError(50), readExcelFile, categoryController.categoryImport);
 router.get('/categories/:id/form-builder', authenticate, authorizePermission(['create_postform']), categoryController.createPostForm);
 router.get('/categories/form-buidler/fetch-selected-attributes', authenticate, authorizePermission(['create_postform']), categoryController.fetchSelectedAttribute);
 router.post('/categories/form-buidler-attribute/:id/store', authenticate, authorizePermission(['create_postform']), categoryController.storeSelectedAttribute);
@@ -214,7 +212,6 @@ router.post('/brand/:id', authenticate, authorizePermission(['edit_brand']), mul
 router.delete('/brand/:id/delete', authenticate, authorizePermission(['delete_brand']), brandController.destroy);
 router.post('/brand/status-update/:id', authenticate, authorizePermission(['brand_status']), brandController.statusUpdate);
 router.post('/brand/verify-update/:id', authenticate, authorizePermission(['brand_verification']), brandController.verificationUpdate);
-// router.post('/brands/import', authenticate, authorizePermission(['brand_import']), uploadFile('brand_file', 'excel', 'documents', 50, 1), handleMulterError(50), readExcelFile, brandController.categoryImport);
 
 
 /* Tags */

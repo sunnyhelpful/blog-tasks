@@ -6,22 +6,18 @@ async function saveUpload(storeId, schema, file, savefileType = null, isS3 = fal
     throw new Error('No file provided');
   }
 
-  let filePath, fileUrl;
   const {
     originalname: originalFileName,
     mimetype: fileType,
     filename,
-    size
+    size,
+    path: fileFullPath,
   } = file;
 
-  if (isS3) {
-    filePath = file.key;
-    fileUrl = file.location;
-  } else {
-    const baseDir = path.join(__dirname, '..', '..');
-    filePath = path.relative(baseDir, file.path).replace(/\\/g, '/');
-    fileUrl = `/storage/${filePath}`;
-  }
+  const baseDir = path.join(__dirname, '..', '..');
+
+  let filePath = path.relative(baseDir, fileFullPath).replace(/\\/g, '/');
+  let fileUrl = `/${filePath}`;
 
   const extension = path.extname(originalFileName).toLowerCase().slice(1);
   const type = savefileType || fileType.split('/')[0];
@@ -30,11 +26,13 @@ async function saveUpload(storeId, schema, file, savefileType = null, isS3 = fal
     uploadsable_id: storeId,
     uploadsable_type: schema,
     file_path: filePath,
+    file_url: fileUrl,
     original_file_name: originalFileName,
     type,
     file_type: fileType,
     extension,
     orientation: null,
+    size,
   });
 
   await upload.save();
@@ -42,5 +40,5 @@ async function saveUpload(storeId, schema, file, savefileType = null, isS3 = fal
 }
 
 module.exports = {
-  saveUpload
+  saveUpload,
 };
