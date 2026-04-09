@@ -32,11 +32,6 @@ $(document).ready(function () {
     updateCountryCode();
     input.addEventListener('countrychange', updateCountryCode);
 
-    /* ... */
-    $('.permissionsTable').DataTable({
-        processing: true,
-        language: languageConfig,
-    });
 
     jQuery.validator.addMethod("pattern", function (value, element, param) {
         if (value === '') return true;
