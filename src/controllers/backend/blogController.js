@@ -3,7 +3,8 @@ const { prepareMongooseDataTablesParams } = require("../../utils/helper");
 const Blog = require("../../models/blog");
 const { saveUpload } = require("../../utils/saveUpload");
 const blogTransformer = require("../../transformers/backend/blogTransformer");
-// helper validation
+
+// validation
 const validateBlog = ({ title, description }, isUpdate = false) => {
   const errors = [];
 
@@ -23,7 +24,7 @@ const validateBlog = ({ title, description }, isUpdate = false) => {
 };
 
 // INDEX
-async function index(req, res) {
+const index = async (req, res) => {
   try {
     if (!req.xhr && !req.headers.accept.includes("json")) {
       return res.render("backend/blogs/index");
@@ -31,8 +32,6 @@ async function index(req, res) {
 
     const { pageSize, pageStart, searchFilter, sortColumn, sortOrder } =
       prepareMongooseDataTablesParams(req, ["title", "createdAt"], Blog.schema);
-    const finalSortColumn = sortColumn || "createdAt";
-    const finalSortOrder = sortOrder === "ASC" ? 1 : -1;
 
     const totalCount = await Blog.countDocuments({});
     const filteredCount = await Blog.countDocuments({ ...searchFilter });
@@ -40,34 +39,26 @@ async function index(req, res) {
     const blogs = await Blog.find({ ...searchFilter })
       .skip(pageStart)
       .limit(pageSize)
-      .sort({ [finalSortColumn]: finalSortOrder });
-
-    const transformedBlogs = blogTransformer.transformCollection(blogs);
+      .sort({ [sortColumn || "createdAt"]: sortOrder === "ASC" ? 1 : -1 });
 
     return res.json({
       draw: parseInt(req.query.draw) || 1,
       recordsTotal: totalCount,
       recordsFiltered: filteredCount,
-      data: transformedBlogs,
+      data: blogTransformer.transformCollection(blogs),
     });
   } catch (error) {
-    console.error("Error fetching blogs:", error);
-    return res.status(500).json(
-      internalServerErrorResponse(
-        req.t(req.trans.messages.oops_something_went_wrong, {
-          attribute: req.trans.cruds.MODULE.BRAND,
-        }),
-      ),
-    );
-  }
-}
-
-const create = async (req, res) => {
-  try {
-    return res.render("backend/blogs/create", {
-      blog: {},
+    console.error(error);
+    return res.status(500).json({
+      status: false,
+      message: "Something went wrong",
     });
-  } catch (error) {}
+  }
+};
+
+// CREATE
+const create = async (req, res) => {
+  return res.render("backend/blogs/create", { blog: {} });
 };
 
 // STORE
@@ -75,10 +66,9 @@ const store = async (req, res) => {
   try {
     const { title, description, image_type, image_url } = req.body;
 
-    // validation
     const errors = validateBlog({ title, description });
     if (errors.length) {
-      return res.status(400).json({ success: false, errors });
+      return res.status(400).json({ status: false, errors });
     }
 
     const blog = await Blog.create({
@@ -87,17 +77,24 @@ const store = async (req, res) => {
       externalImageUrl: image_type === "url" ? image_url : null,
     });
 
-    // uploads
-    const updatedBlog = await Blog.findById(blog._id).populate("blogImages");
-    if (req.file) {
+    // file upload
+    if (image_type === "file" && req.file) {
       await saveUpload(blog._id, "Blog", req.file);
     }
 
-    return res
-      .status(201)
-      .json({ status: true, data: updatedBlog, redirectUrl: "/admin/blogs" });
+    const updatedBlog = await Blog.findById(blog._id).populate("blogImages");
+
+    return res.status(201).json({
+      status: true,
+      data: updatedBlog,
+      message: "Blog created successfully",
+      redirectUrl: "/admin/blogs",
+    });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
   }
 };
 
@@ -107,20 +104,30 @@ const show = async (req, res) => {
     const { id } = req.params;
 
     if (!id || !isValidObjectId(id)) {
-      return res.status(400).json({ success: false, message: "Invalid ID" });
+      return res.status(400).json({
+        status: false,
+        message: "Invalid ID",
+      });
     }
 
     const blog = await Blog.findById(id).populate("blogImages");
 
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        status: false,
+        message: "Blog not found",
+      });
     }
 
-    return res.json({ success: true, data: blog });
+    return res.json({
+      status: true,
+      data: blog,
+    });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
   }
 };
 
@@ -128,74 +135,88 @@ const show = async (req, res) => {
 const edit = async (req, res) => {
   try {
     const { id } = req.params;
+
     if (!id || !isValidObjectId(id)) {
-      return res.status(400).json({ success: false, message: "Invalid ID" });
+      return res.status(400).json({
+        status: false,
+        message: "Invalid ID",
+      });
     }
-    const blog = await Blog.findById(req.params.id).populate("blogImages");
-    console.log(blog);
+
+    const blog = await Blog.findById(id).populate("blogImages");
+
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        status: false,
+        message: "Blog not found",
+      });
     }
 
-    return res.render("backend/blogs/edit", {
-      blog: blog,
-    });
-
-    // return res.json({
-    //   success: true,
-    //   data: {
-    //     title: blog.title,
-    //     description: blog.description,
-    //     content: blog.content,
-    //     blogImages: blog.blogImages || [],
-    //   },
-    // });
+    return res.render("backend/blogs/edit", { blog });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
   }
 };
 
 // UPDATE
 const update = async (req, res) => {
   try {
-    const { title, description, content } = req.body;
     const { id } = req.params;
+    const { title, description, image_type, image_url } = req.body;
+
     if (!id || !isValidObjectId(id)) {
-      return res.status(400).json({ success: false, message: "Invalid ID" });
+      return res.status(400).json({
+        status: false,
+        message: "Invalid ID",
+      });
     }
 
-    const blog = await Blog.findById(req.params.id);
+    const blog = await Blog.findById(id);
+
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        status: false,
+        message: "Blog not found",
+      });
     }
 
-    // validation (partial allowed)
-    const errors = validateBlog({ title, description, content }, true);
+    const errors = validateBlog({ title, description }, true);
     if (errors.length) {
-      return res.status(400).json({ success: false, errors });
+      return res.status(400).json({ status: false, errors });
     }
 
     blog.title = title?.trim() ?? blog.title;
     blog.description = description?.trim() ?? blog.description;
-    blog.content = content?.trim() ?? blog.content;
+
+    // handle image type
+    if (image_type === "url") {
+      blog.externalImageUrl = image_url;
+    } else {
+      blog.externalImageUrl = null;
+    }
+
     await blog.save();
 
-    // uploads
-    if (req.files && req.files.blogImages) {
-      for (const file of req.files.blogImages) {
-        await saveUpload(blog._id, "Blog", file);
-      }
+    // file upload
+    if (image_type === "file" && req.file) {
+      await saveUpload(blog._id, "Blog", req.file);
     }
 
     const updatedBlog = await Blog.findById(blog._id).populate("blogImages");
 
-    return res.json({ success: true, data: updatedBlog });
+    return res.json({
+      status: true,
+      data: updatedBlog,
+      message: "Blog updated successfully",
+    });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
   }
 };
 
@@ -203,29 +224,41 @@ const update = async (req, res) => {
 const deleteBlog = async (req, res) => {
   try {
     const { id } = req.params;
+
     if (!id || !isValidObjectId(id)) {
-      return res.status(400).json({ success: false, message: "Invalid ID" });
+      return res.status(400).json({
+        status: false,
+        message: "Invalid ID",
+      });
     }
-    const blog = await Blog.findById(req.params.id);
+
+    const blog = await Blog.findById(id);
 
     if (!blog) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Blog not found" });
+      return res.status(404).json({
+        status: false,
+        message: "Blog not found",
+      });
     }
 
     const Upload = require("../../models/upload");
 
     await Upload.updateMany(
       { uploadsable_id: blog._id, uploadsable_type: "Blog" },
-      { deletedAt: new Date() },
+      { deletedAt: new Date() }
     );
 
     await blog.deleteOne();
 
-    return res.json({ success: true, message: "Blog deleted successfully" });
+    return res.json({
+      status: true,
+      message: "Blog deleted successfully",
+    });
   } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
   }
 };
 
