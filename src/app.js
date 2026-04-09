@@ -141,12 +141,12 @@ app.use('/', require('./routes'));
 
 app.get('/', function (req, res) {
   try {
-    res.render('web/index', {
+    /* res.render('web/index', {
       layout: 'layouts/webLayout',
       title: 'ProConnect - Professional Network'
-    });
+    }); */
     // res.send('Welcome');
-    // return res.redirect('/admin/login')
+    return res.redirect('/')
   } catch (error) {
     logError('Error rendering the home view:', error);
     res.status(500).send('Internal Server Error');

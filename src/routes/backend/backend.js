@@ -13,7 +13,6 @@ const { uploadFile } = require("../../utils/uploadFile");
 const authController = require("../../controllers/backend/auth/authController");
 const dashboardController = require("../../controllers/backend/dashboardController");
 
-// Auth Routes
 router.get("/login", routeLimiter, isNotAuthenticated, (req, res) => {
   res.render("auth/login", { layout: "layouts/authLayout" });
 });
@@ -46,20 +45,7 @@ router.post("/reset-password", authController.resetPassword);
 
 router.get("/logout", authenticate, authController.logout);
 
-// Protected Routes
 router.get("/dashboard", authenticate, dashboardController.dashboard);
-/* 
-router.get("/blogs/", blogController.index);
-
-router.post("/blogs/", uploadFile("blogImages"), blogController.store);
-
-router.get("/blogs/:id", blogController.show);
-
-router.get("/:id/edit", blogController.edit);
-
-router.put("/blogs/:id", uploadFile("blogImages"), blogController.update);
-
-router.delete("/blogs/:id", blogController.delete); */
 
 /* blog */
 router.get('/blogs', authenticate, blogController.index);
