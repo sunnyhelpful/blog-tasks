@@ -1,1 +1,360 @@
-<%- include('./backendLayout') %>
+<!DOCTYPE html>
+<html lang="<%= lang %>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= title || 'ProConnect - Professional Network' %></title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #f3f2ef; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-size: 14px; color: rgba(0,0,0,0.9); }
+  img{
+    max-width: 100%;
+    vertical-align: middle;
+  }
+  /* CUSTOM LOGO */
+  .li-logo-wrap { display: flex; align-items: center; gap: 6px; flex-shrink: 0; margin-right: 4px; text-decoration: none; }
+  .li-logo-icon { width: 36px; height: 36px; background: #0a66c2; border-radius: 6px; display: flex; align-items: center; justify-content: center; }
+  .li-logo-icon svg { width: 22px; height: 22px; fill: #fff; }
+  .li-logo-text { font-size: 17px; font-weight: 800; color: #0a66c2; letter-spacing: -0.5px; }
+  .li-logo-text span { color: #00b09b; }
+
+  /* NAVBAR */
+  .li-navbar { background: #fff; border-bottom: 1px solid rgba(0,0,0,0.08); position: sticky; top: 0; z-index: 1000; height: 52px; }
+  .li-navbar .container-fluid { max-width: 1128px; margin: 0 auto; padding: 0 8px; height: 52px; display: flex; align-items: center; gap: 4px; }
+  .li-search-wrap { position: relative; flex: 0 0 260px; }
+  .li-search-wrap input { background: #eef3f8; border: 1px solid transparent; border-radius: 4px; padding: 6px 8px 6px 32px; font-size: 14px; width: 100%; outline: none; }
+  .li-search-wrap input:focus { background: #fff; border-color: #0a66c2; }
+  .li-search-wrap .bi-search { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: rgba(0,0,0,0.6); font-size: 16px; }
+  .nav-spacer { flex: 1; }
+  .li-nav-items { display: flex; align-items: center; height: 52px; }
+  .li-nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0 12px; height: 52px; cursor: pointer; text-decoration: none; color: rgba(0,0,0,0.6); font-size: 11px; min-width: 60px; border-bottom: 2px solid transparent; transition: color 0.15s; position: relative; }
+  .li-nav-item:hover { color: rgba(0,0,0,0.9); }
+  .li-nav-item.active { color: rgba(0,0,0,0.9); border-bottom: 2px solid rgba(0,0,0,0.9); }
+  .li-nav-item i { font-size: 20px; margin-bottom: 2px; }
+  .li-nav-item .nbadge { position: absolute; top: 6px; right: 8px; background: #cc1016; color: #fff; font-size: 10px; font-weight: 700; border-radius: 50%; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 3px; }
+  .nav-divider { width: 1px; height: 32px; background: rgba(0,0,0,0.15); margin: 0 4px; }
+  .li-premium-btn { border: 1px solid #915907; color: #915907; background: none; border-radius: 4px; padding: 4px 10px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .li-premium-btn:hover { background: #fdf5e8; }
+
+  /* LAYOUT */
+  .li-layout { max-width: 1128px; margin: 0 auto; padding: 24px 8px; display: flex; gap: 24px; align-items: flex-start; }
+
+  /* CARDS */
+  .li-card { background: #fff; border: 1px solid rgba(0,0,0,0.08); border-radius: 8px; overflow: hidden; }
+
+  /* LEFT */
+  .li-left { flex: 0 0 225px; position: sticky; top: 65px; }
+  .profile-banner { height: 56px; background: linear-gradient(135deg, #0a66c2 0%, #00b09b 100%); }
+  .profile-avatar-wrap { padding: 0 16px; margin-top: -24px; margin-bottom: 8px; }
+  .profile-avatar { width: 72px; height: 72px; border-radius: 50%; border: 2px solid #fff; background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; font-size: 26px; color: #fff; font-weight: 700; }
+  .profile-info { padding: 0 16px 12px; }
+  .profile-name { font-size: 15px; font-weight: 600; color: rgba(0,0,0,0.9); display: flex; align-items: center; gap: 4px; }
+  .profile-name .bi-patch-check-fill { color: #0a66c2; font-size: 14px; }
+  .profile-title { font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 2px; line-height: 1.4; }
+  .profile-location { font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 2px; }
+  .profile-company { display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 12px; color: rgba(0,0,0,0.6); }
+  .profile-divider { height: 1px; background: rgba(0,0,0,0.08); margin: 0 16px; }
+  .profile-premium { padding: 10px 16px; }
+  .profile-premium p { font-size: 12px; color: rgba(0,0,0,0.6); margin-bottom: 4px; }
+  .profile-premium a { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.9); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+  .profile-premium a:hover { color: #0a66c2; }
+  .li-gold-dot { width: 8px; height: 8px; border-radius: 50%; background: #f5a623; display: inline-block; }
+  .profile-stats { padding: 10px 16px; }
+  .profile-stat-row { display: flex; justify-content: space-between; align-items: center; padding: 3px 0; font-size: 12px; cursor: pointer; }
+  .profile-stat-row:hover .stat-label { color: #0a66c2; text-decoration: underline; }
+  .stat-label { color: rgba(0,0,0,0.6); }
+  .stat-count { font-weight: 600; color: #0a66c2; }
+  .li-left-nav { padding: 8px 0; }
+  .li-left-nav a { display: flex; align-items: center; gap: 12px; padding: 6px 16px; font-size: 14px; color: rgba(0,0,0,0.9); text-decoration: none; cursor: pointer; }
+  .li-left-nav a:hover { background: rgba(0,0,0,0.04); }
+  .li-left-nav a i { font-size: 18px; color: rgba(0,0,0,0.6); }
+
+  /* FEED */
+  .li-feed { flex: 1; min-width: 0; }
+  .li-post-box { padding: 12px 16px; display: flex; align-items: center; gap: 8px; }
+  .li-post-avatar { width: 48px; height: 48px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.15); background: linear-gradient(135deg,#667eea,#764ba2); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; font-weight: 700; flex-shrink: 0; }
+  .li-post-input { flex: 1; border: 1px solid rgba(0,0,0,0.3); border-radius: 20px; padding: 8px 16px; font-size: 14px; background: #fff; cursor: pointer; color: rgba(0,0,0,0.6); text-align: left; font-family: inherit; }
+  .li-post-input:hover { background: #eef3f8; border-color: rgba(0,0,0,0.6); }
+  .li-post-actions { display: flex; justify-content: space-around; padding: 4px 8px 8px; }
+  .li-post-action { display: flex; align-items: center; gap: 4px; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.6); text-decoration: none; }
+  .li-post-action:hover { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.9); }
+  .li-post-action i { font-size: 18px; }
+  .li-post-action.video i { color: #70b5f9; }
+  .li-post-action.photo i { color: #5f9ea0; }
+  .li-post-action.article i { color: #e06847; }
+  .li-sort-bar { padding: 8px 16px; display: flex; justify-content: flex-end; align-items: center; gap: 4px; font-size: 14px; color: rgba(0,0,0,0.6); }
+  .li-sort-bar span { font-weight: 600; color: rgba(0,0,0,0.9); cursor: pointer; }
+  .li-sort-bar span:hover { color: #0a66c2; text-decoration: underline; }
+
+  /* POSTS */
+  .post-header { padding: 12px 16px 0; display: flex; align-items: flex-start; justify-content: space-between; }
+  .post-author { display: flex; align-items: flex-start; gap: 8px; }
+  .post-logo { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; flex-shrink: 0; overflow: hidden; }
+  .post-author-name { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.9); cursor: pointer; }
+  .post-author-name:hover { color: #0a66c2; text-decoration: underline; }
+  .post-author-meta { font-size: 12px; color: rgba(0,0,0,0.6); }
+  .post-author-time { font-size: 12px; color: rgba(0,0,0,0.6); display: flex; align-items: center; gap: 4px; }
+  .post-controls { display: flex; gap: 4px; }
+  .post-controls button { background: none; border: none; cursor: pointer; color: rgba(0,0,0,0.6); padding: 4px; border-radius: 50%; font-size: 20px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; }
+  .post-controls button:hover { background: rgba(0,0,0,0.08); }
+  .post-body { padding: 8px 16px 0; font-size: 14px; color: rgba(0,0,0,0.9); line-height: 1.6; }
+  .post-body a { color: #0a66c2; text-decoration: none; font-weight: 500; }
+  .post-reactions { padding: 6px 16px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: rgba(0,0,0,0.6); border-bottom: 1px solid rgba(0,0,0,0.08); }
+  .react-icons { display: flex; }
+  .react-icon { width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; margin-left: -4px; }
+  .react-icon:first-child { margin-left: 0; }
+  .ri-like { background: #0a66c2; }
+  .ri-love { background: #e25252; }
+  .ri-clap { background: #e98a0a; }
+  .post-footer { display: flex; justify-content: space-around; padding: 4px 0; }
+  .post-action-btn { display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.6); background: none; border: none; font-family: inherit; transition: background 0.1s; }
+  .post-action-btn:hover { background: rgba(0,0,0,0.04); color: rgba(0,0,0,0.9); }
+  .post-action-btn i { font-size: 18px; }
+
+  /* RIGHT */
+  .li-right { flex: 0 0 300px; position: sticky; top: 65px; }
+  .news-header { padding: 12px 16px 8px; display: flex; justify-content: space-between; align-items: center; }
+  .news-header h3 { font-size: 16px; font-weight: 700; }
+  .news-header button { background: none; border: none; font-size: 18px; cursor: pointer; color: rgba(0,0,0,0.6); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .news-header button:hover { background: rgba(0,0,0,0.08); }
+  .news-sub { padding: 0 16px 4px; font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.6); }
+  .news-bullet { width: 6px; height: 6px; border-radius: 50%; background: rgba(0,0,0,0.7); flex-shrink: 0; margin-top: 5px; }
+  .news-item { padding: 6px 16px; display: flex; align-items: flex-start; gap: 8px; cursor: pointer; }
+  .news-item:hover { background: rgba(0,0,0,0.04); }
+  .news-content p { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.9); line-height: 1.4; margin: 0; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; }
+  .news-content span { font-size: 12px; color: rgba(0,0,0,0.6); }
+  .news-show-more { padding: 10px 16px 12px; }
+  .news-show-more a { font-size: 14px; font-weight: 600; color: rgba(0,0,0,0.6); text-decoration: none; display: flex; align-items: center; gap: 4px; }
+  .news-show-more a:hover { color: rgba(0,0,0,0.9); text-decoration: underline; }
+  .puzzle-section { padding: 12px 16px; border-top: 1px solid rgba(0,0,0,0.08); }
+  .puzzle-section h4 { font-size: 14px; font-weight: 700; margin-bottom: 8px; }
+  .puzzle-item { display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 4px 0; }
+  .puzzle-icon { width: 48px; height: 48px; border-radius: 8px; background: #f5a623; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+  .puzzle-info p { font-size: 14px; font-weight: 600; margin: 0; }
+  .puzzle-info span { font-size: 12px; color: rgba(0,0,0,0.6); }
+  .puzzle-arrow { margin-left: auto; font-size: 18px; color: rgba(0,0,0,0.6); }
+  .ad-card { padding: 8px 16px; }
+  .ad-label { font-size: 11px; color: rgba(0,0,0,0.6); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; }
+  .ad-content { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 8px 0; }
+  .ad-avatar-group { display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
+  .ad-person-avatar { width: 56px; height: 56px; border-radius: 50%; background: #888; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #fff; }
+  .ad-logo-box { width: 56px; height: 56px; border-radius: 8px; background: #0a66c2; display: flex; align-items: center; justify-content: center; margin-left: -12px; border: 2px solid #fff; }
+  .ad-logo-box svg { width: 32px; height: 32px; fill: #fff; }
+  .ad-content p { font-size: 14px; color: rgba(0,0,0,0.9); margin-bottom: 12px; font-weight: 500; }
+  .ad-demo-btn { border: 1px solid #0a66c2; color: #0a66c2; background: none; border-radius: 16px; padding: 6px 20px; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .ad-demo-btn:hover { background: #eef3f8; }
+  .li-footer { padding: 8px 16px 12px; font-size: 12px; color: rgba(0,0,0,0.6); line-height: 2; display: flex; flex-direction: column; align-items: center; }
+  .li-footer a { color: rgba(0,0,0,0.6); text-decoration: none; margin-right: 8px; }
+  .li-footer a:hover { text-decoration: underline; color: #0a66c2; }
+  .li-footer-brand { margin-top: 8px; display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .promoted-tag { font-size: 11px; color: rgba(0,0,0,0.6); font-style: italic; }
+  .follow-btn { border: 1px solid #0a66c2; color: #0a66c2; background: none; border-radius: 16px; padding: 4px 14px; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+  .follow-btn:hover { background: #eef3f8; }
+  .suggest-person { display: flex; align-items: center; gap: 10px; padding: 8px 16px; }
+  .suggest-person:hover { background: rgba(0,0,0,0.03); }
+  .suggest-avatar { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #fff; font-weight: 700; flex-shrink: 0; }
+  .suggest-info { flex: 1; min-width: 0; }
+  .suggest-name { font-size: 13px; font-weight: 600; color: rgba(0,0,0,0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .suggest-title { font-size: 11px; color: rgba(0,0,0,0.6); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .connect-btn { border: 1px solid #0a66c2; color: #0a66c2; background: none; border-radius: 16px; padding: 4px 12px; font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap; }
+  .connect-btn:hover { background: #eef3f8; }
+
+  @media (max-width: 1024px) { .li-right { display: none; } }
+  @media (max-width: 768px) {
+    .li-layout { flex-direction: column; padding: 8px; }
+    .li-left { display: none; }
+    .li-feed { width: 100%; }
+    .li-search-wrap { flex: 1; }
+    .li-nav-item span { display: none; }
+    .li-nav-item { min-width: 40px; padding: 0 8px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="li-navbar">
+  <div class="container-fluid">
+    <a class="li-logo-wrap" href="#">
+      <div class="li-logo-icon">
+        <img src="/images/logo.svg" alt="Logo">
+      </div>
+    </a>
+    <div class="li-search-wrap">
+      <i class="bi bi-search"></i>
+      <input type="text" placeholder="Search professionals, jobs, companies...">
+    </div>
+    <div class="nav-spacer"></div>
+    <div class="li-nav-items">
+      <a class="li-nav-item active" href="#"><i class="bi bi-house-fill"></i><span>Home</span></a>
+      <a class="li-nav-item" href="#"><i class="bi bi-briefcase-fill"></i><span>Jobs</span></a>
+      <a class="li-nav-item" href="#"><i class="bi bi-chat-fill"></i><span>Messaging</span><span class="nbadge">5</span></a>
+      <a class="li-nav-item" href="#">
+        <div style="width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;font-weight:700;margin-bottom:2px;">SR</div>
+        <span>Me <i class="bi bi-chevron-down" style="font-size:10px;"></i></span>
+      </a>
+      <div class="nav-divider"></div>
+      <a class="li-nav-item" href="#"><i class="bi bi-grid-3x3-gap-fill"></i><span>For Business</span></a>
+      <button class="li-premium-btn ms-2">Try Premium ✨</button>
+    </div>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="li-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="li-left">
+    <div class="li-card">
+      <div class="profile-banner"></div>
+      <div class="profile-avatar-wrap"><div class="profile-avatar">SR</div></div>
+      <div class="profile-info">
+        <div class="profile-name">Steven B. Roberts<i class="bi bi-patch-check-fill"></i></div>
+        <div class="profile-title">Senior Product Manager at Castrosasz Convertiblessd</div>
+        <div class="profile-location">Ashwood Drive Cleghorn, IA 51014</div>
+        <div class="profile-company mt-2">
+          <i class="bi bi-building" style="font-size:14px;color:#0a66c2;"></i>
+          <span>Castrosasz Convertiblessd Pvt Ltd</span>
+        </div>
+      </div>
+      <div class="profile-divider"></div>
+      <div class="profile-premium">
+        <p>Unlock premium insights and grow faster</p>
+        <a href="#"><span class="li-gold-dot"></span> Start 1 month free trial</a>
+      </div>
+      <div class="profile-divider"></div>
+      <div class="profile-stats">
+        <div class="profile-stat-row"><span class="stat-label">Profile viewers</span><span class="stat-count">42</span></div>
+        <div class="profile-stat-row"><span class="stat-label">Post impressions</span><span class="stat-count">1,284</span></div>
+        <div class="profile-stat-row"><span class="stat-label">Search appearances</span><span class="stat-count">18</span></div>
+      </div>
+      <div class="profile-divider"></div>
+      <div style="padding:8px 16px 12px;font-size:12px;">
+        <a href="#" style="color:rgba(0,0,0,0.6);text-decoration:none;">View all analytics →</a>
+      </div>
+    </div>
+
+    <div class="li-card" style="margin-top:8px;">
+      <div class="li-left-nav">
+        <a href="#"><i class="bi bi-bookmark-fill"></i> Saved items</a>
+        <a href="#"><i class="bi bi-people-fill"></i> Groups</a>
+        <a href="#"><i class="bi bi-newspaper"></i> Newsletters</a>
+        <a href="#"><i class="bi bi-calendar-event-fill"></i> Events</a>
+      </div>
+    </div>
+
+    <div class="li-card" style="margin-top:8px;">
+      <div style="padding:10px 16px 4px;font-size:13px;font-weight:700;color:rgba(0,0,0,0.8);">
+        Recent
+      </div>
+      <div class="li-left-nav" style="padding:4px 0 8px;">
+        <a href="#"><i class="bi bi-clock-history" style="font-size:14px;"></i> Frontend Development</a>
+        <a href="#"><i class="bi bi-clock-history" style="font-size:14px;"></i> Remote Tech Jobs</a>
+        <a href="#"><i class="bi bi-clock-history" style="font-size:14px;"></i> #WebDevelopment</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN FEED CONTENT -->
+  <main class="li-feed">
+    <%- body %>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="li-right">
+
+    <!-- News -->
+    <div class="li-card">
+      <div class="news-header">
+        <h3>ProConnect News</h3>
+        <button><i class="bi bi-info-circle"></i></button>
+      </div>
+      <div class="news-sub">Top stories</div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>US, Iran agree to 2-week ceasefire pact</p><span>5h ago · 22,813 readers</span></div></div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>RBI holds repo rate steady at 5.25%</p><span>1h ago · 1,081 readers</span></div></div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>AI reshapes leadership at top IT firms</p><span>1h ago · 630 readers</span></div></div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>Consumer goods firms post record Q1 sales</p><span>1h ago · 561 readers</span></div></div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>Wealth managers diversify into new assets</p><span>2h ago · 254 readers</span></div></div>
+      <div class="news-item"><div class="news-bullet"></div><div class="news-content"><p>Startup funding in India hits Q1 record</p><span>3h ago · 4,102 readers</span></div></div>
+      <div class="news-show-more"><a href="#">Show more <i class="bi bi-chevron-down"></i></a></div>
+      <div class="puzzle-section">
+        <h4>Today's puzzles</h4>
+        <div class="puzzle-item">
+          <div class="puzzle-icon">🧩</div>
+          <div class="puzzle-info"><p>Zip - a quick brain teaser</p><span>Solve in 60s or less!</span></div>
+          <i class="bi bi-chevron-right puzzle-arrow"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ad -->
+    <div class="li-card" style="margin-top:8px;">
+      <div class="ad-card">
+        <div style="font-size:13px;color:rgba(0,0,0,0.6);margin-bottom:12px;">Target the right accounts with ProConnect Sales Navigator.</div>
+        <div class="ad-content">
+          <div class="ad-avatar-group">
+            <div class="ad-person-avatar" style="background:linear-gradient(135deg,#667eea,#764ba2);">👤</div>
+            <div class="ad-logo-box">
+              <img src="/images/logo.svg" alt="Logo">
+            </div>
+          </div>
+          <p>Faster paths to success.</p>
+          <button class="ad-demo-btn">Request a demo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="li-footer" style="margin-top:8px;">
+      <div><a href="#">About</a><a href="#">Accessibility</a><a href="#">Help Center</a></div>
+      <div><a href="#">Privacy &amp; Terms</a><a href="#">Ad Choices</a><a href="#">Advertising</a></div>
+      <div><a href="#">Business Services</a><a href="#">Get the app</a><a href="#">More</a></div>
+      <div class="li-footer-brand">
+        <div style="width:16px;height:16px;background:#0a66c2;border-radius:3px;display:flex;align-items:center;justify-content:center;">
+          <img src="/images/logo.svg" alt="Logo" style="width:12px;">
+        </div>
+        <span>ProConnect Corporation © 2026</span>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelector('.li-post-input')?.addEventListener('click', function() {
+    this.style.borderColor = '#0a66c2';
+  });
+
+  document.querySelectorAll('.post-action-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const icon = this.querySelector('i');
+      if (icon && (icon.classList.contains('bi-hand-thumbs-up') || icon.classList.contains('bi-hand-thumbs-up-fill'))) {
+        if (this.dataset.liked === '1') {
+          this.dataset.liked = '0';
+          this.style.color = '';
+          icon.classList.replace('bi-hand-thumbs-up-fill', 'bi-hand-thumbs-up');
+          if(this.lastChild) this.lastChild.textContent = ' Like';
+        } else {
+          this.dataset.liked = '1';
+          this.style.color = '#0a66c2';
+          icon.classList.replace('bi-hand-thumbs-up', 'bi-hand-thumbs-up-fill');
+          if(this.lastChild) this.lastChild.textContent = ' Liked';
+        }
+      }
+    });
+  });
+
+  document.querySelectorAll('.connect-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      if (this.dataset.sent === '1') return;
+      this.dataset.sent = '1';
+      this.innerHTML = '<i class="bi bi-check2" style="font-size:11px;"></i> Pending';
+      this.style.color = 'rgba(0,0,0,0.5)';
+      this.style.borderColor = 'rgba(0,0,0,0.2)';
+    });
+  });
+</script>
+</body>
+</html>
