@@ -48,7 +48,7 @@ router.get("/logout", authenticate, authController.logout);
 
 // Protected Routes
 router.get("/dashboard", authenticate, dashboardController.dashboard);
-
+/* 
 router.get("/blogs/", blogController.index);
 
 router.post("/blogs/", uploadFile("blogImages"), blogController.store);
@@ -59,6 +59,16 @@ router.get("/:id/edit", blogController.edit);
 
 router.put("/blogs/:id", uploadFile("blogImages"), blogController.update);
 
-router.delete("/blogs/:id", blogController.delete);
+router.delete("/blogs/:id", blogController.delete); */
+
+/* blog */
+router.get('/blogs', authenticate, blogController.index);
+router.get('/blog/create', authenticate, uploadFile("blogImages"), blogController.create);
+router.post('/blog/store', authenticate, blogController.store);
+router.get('/blog/:id', authenticate, blogController.show);
+router.get('/blog/:id/edit', authenticate, blogController.edit);
+router.post('/blog/:id', authenticate, blogController.update);
+router.delete('/blog/:id/delete', authenticate, blogController.delete);
+
 
 module.exports = router;

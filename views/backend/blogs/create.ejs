@@ -1,16 +1,22 @@
-<% title = trans.cruds.ROLE.heading.create_role %>
+<% title = 'Create Blog' %>
+
 <div class="container-fluid">
     <div class="page-title">
         <div class="row">
             <div class="col-sm-6 col-12">
-                
-                <h2><%= t(trans.cruds.ROLE.title) %></h2>
+                <h2>Blogs</h2>
             </div>
             <div class="col-sm-6 col-12">
                 <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
-                    <li class="breadcrumb-item"><a href="<%= '/admin/roles' %>"><%= trans.cruds.ROLE.title %></a></li>
-                    <li class="breadcrumb-item active"><%= trans.global.create %></li>
+                    <li class="breadcrumb-item">
+                        <a href="/admin/dashboard">
+                            <i class="iconly-Home icli svg-color"></i> Home
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="/admin/blogs">Blogs</a>
+                    </li>
+                    <li class="breadcrumb-item active">Create</li>
                 </ol>
             </div>
         </div>
@@ -21,31 +27,33 @@
     <div class="edit-profile">
         <div class="row">
             <div class="col-xl-12">
-                <form class="card" id="roleData" action="<%= '/admin/role/store' %>" method="POST">
+                <form class="card" id="blogData" action="/admin/blog/store" method="POST">
                     <div class="card-header card-no-border pb-0">
-                        <h3 class="card-title mb-0"><%= trans.cruds.ROLE.heading.create_role %></h3>
+                        <h3 class="card-title mb-0">Create Blog</h3>
                     </div>
+
                     <%- include('./_form') %>
+
                     <div class="card-footer text-end d-flex justify-content-end gap-2">
                         <!-- Cancel Button -->
-                        <a href="<%= '/admin/roles' %>" class="btn btn-secondary">
-                            <%= trans.global.cancel || 'Cancel' %>
+                        <a href="/admin/blogs" class="btn btn-secondary">
+                            Cancel
                         </a>
 
                         <!-- Save & Continue Editing Button -->
                         <button class="btn btn-info" type="submit" name="save_continue" value="1">
-                            <%= trans.global.save_and_continue || 'Save & Continue' %>
+                            Save & Continue
                         </button>
 
                         <!-- Save Button -->
                         <button class="btn btn-primary" type="submit">
-                            <%= trans.global.save || 'Save' %>
+                            Save
                         </button>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
 </div>
-<%- include('./script') %>
+
+<%- './script' %>

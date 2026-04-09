@@ -39,17 +39,51 @@ const validateBlog = (
 };
 
 // INDEX
-const index = async (req, res) => {
-  try {
-    const blogs = await Blog.find()
-      .populate("blogImages")
-      .sort({ createdAt: -1 });
+async function index(req, res) {
+    try {
+        if (!req.xhr && !req.headers.accept.includes('json')) {
+            return res.render('backend/blogs/index');
+        }
 
-    return res.json({ success: true, data: blogs });
-  } catch (err) {
-    return res.status(500).json({ success: false, message: err.message });
+        const { pageSize, pageStart, searchFilter, sortColumn, sortOrder } = prepareMongooseDataTablesParams(req, ['title', 'createdAt'], Blog.schema);
+        const finalSortColumn = sortColumn || 'createdAt';
+        const finalSortOrder = sortOrder === 'ASC' ? 1 : -1;
+
+        const totalCount = await Blog.countDocuments({ });
+        const filteredCount = await Blog.countDocuments({ ...searchFilter });
+
+        const blogs = await Blog.find({ ...searchFilter })
+            .skip(pageStart)
+            .limit(pageSize)
+            .sort({ [finalSortColumn]: finalSortOrder });
+
+        const transformedBlogs = blogTransformer.transformCollection(blogs, req.session.lang);
+
+        return res.json({
+            draw: parseInt(req.query.draw) || 1,
+            recordsTotal: totalCount,
+            recordsFiltered: filteredCount,
+            data: transformedBlogs,
+        });
+    } catch (error) {
+        console.error('Error fetching blogs:', error);
+        return res.status(500).json(internalServerErrorResponse(
+            req.t(req.trans.messages.oops_something_went_wrong, {
+                attribute: req.trans.cruds.MODULE.BRAND,
+            })
+        ));
+    }
+}
+
+const create = async (req, res) => {
+  try {
+    return res.render("backend/blogs/create", {
+      blog: {},
+    });
+  } catch (error) {
+    
   }
-};
+}
 
 // STORE
 const store = async (req, res) => {
@@ -233,6 +267,7 @@ const deleteBlog = async (req, res) => {
 
 module.exports = {
   index,
+  create,
   store,
   show,
   edit,
