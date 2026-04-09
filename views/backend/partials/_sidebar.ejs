@@ -1,256 +1,31 @@
 <aside class="page-sidebar"> 
-    <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
-    <div class="main-sidebar" id="main-sidebar">
-      <ul class="sidebar-menu" id="simple-bar">
+  <div class="left-arrow" id="left-arrow"><i data-feather="arrow-left"></i></div>
+  <div class="main-sidebar" id="main-sidebar">
+    <ul class="sidebar-menu" id="simple-bar">
+
+      <!-- Dashboard -->
+      <li class="sidebar-list">
+        <a class="sidebar-link" href="/admin/dashboard"> 
+          <svg class="stroke-icon">
+            <use href="/backend/svg/iconly-sprite.svg#Home-dashboard"></use>
+          </svg>
+          <h6>Dashboard</h6>
+        </a>
+      </li>
+
+      <!-- Blog -->
+      <% if(userInfo.permissions.includes('access_blog')){ %>
         <li class="sidebar-list">
-          <a class="sidebar-link" href="<%= '/admin/dashboard' %>"> 
+          <a class="sidebar-link" href="/admin/blogs">
             <svg class="stroke-icon">
-              <use href="/backend/svg/iconly-sprite.svg#Home-dashboard"></use>
+              <use href="/backend/svg/iconly-sprite.svg#Paper-plus"></use>
             </svg>
-            <h6><%= trans.cruds.SIDEBAR.DASHBOARD %></h6>
+            <h6>Blog</h6>
           </a>
         </li>
+      <% } %>
 
-        <% if(userInfo.permissions.includes('access_role')){ %>
-          <li class="sidebar-list">
-            <a class="sidebar-link <%= routeType == 'role' ? 'active' : ''  %>" href="/admin/roles">
-              <svg class="hidestrock-css" width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_3423_3072)">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.625 15.1972H2.2125C2.17275 15.1972 2.1345 15.1807 2.10675 15.153C2.07825 15.1245 2.0625 15.087 2.0625 15.0472V13.959C2.0625 13.3365 2.50725 12.7875 3.19275 12.321C4.41675 11.4855 6.3975 10.959 8.625 10.959C8.9355 10.959 9.1875 10.707 9.1875 10.3965C9.1875 10.0867 8.9355 9.83398 8.625 9.83398C6.1335 9.83398 3.92775 10.4572 2.55825 11.391C1.5135 12.1035 0.9375 13.0087 0.9375 13.959V15.0472C0.9375 15.3847 1.07175 15.7095 1.311 15.9487C1.55025 16.1872 1.87425 16.3222 2.2125 16.3222H8.625C8.9355 16.3215 9.1875 16.0695 9.1875 15.759C9.1875 15.4492 8.9355 15.1965 8.625 15.1972Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M8.625 0.9375C6.348 0.9375 4.5 2.7855 4.5 5.0625C4.5 7.3395 6.348 9.1875 8.625 9.1875C10.902 9.1875 12.75 7.3395 12.75 5.0625C12.75 2.7855 10.902 0.9375 8.625 0.9375ZM8.625 2.0625C10.281 2.0625 11.625 3.4065 11.625 5.0625C11.625 6.7185 10.281 8.0625 8.625 8.0625C6.969 8.0625 5.625 6.7185 5.625 5.0625C5.625 3.4065 6.969 2.0625 8.625 2.0625Z" fill="#949494"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.1246 10.4531C11.6501 10.4531 10.4531 11.6501 10.4531 13.1246C10.4531 14.5991 11.6501 15.7969 13.1246 15.7969C14.5991 15.7969 15.7969 14.5991 15.7969 13.1246C15.7969 11.6501 14.5991 10.4531 13.1246 10.4531ZM13.1246 11.5781C13.9781 11.5781 14.6719 12.2711 14.6719 13.1246C14.6719 13.9781 13.9781 14.6719 13.1246 14.6719C12.2711 14.6719 11.5774 13.9781 11.5774 13.1246C11.5774 12.2711 12.2711 11.5781 13.1246 11.5781Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.6875 11.0153V9.75C13.6875 9.4395 13.4355 9.1875 13.125 9.1875C12.8145 9.1875 12.5625 9.4395 12.5625 9.75V11.016C12.5625 11.3257 12.8145 11.5785 13.125 11.5785C13.4355 11.5777 13.6875 11.3258 13.6875 11.0153Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.0147 12.0311L15.9094 11.1356C16.1292 10.9166 16.1292 10.5596 15.9094 10.3406C15.6904 10.1208 15.3334 10.1208 15.1144 10.3406L14.2189 11.2353C13.9999 11.4551 13.9999 11.8113 14.2189 12.0311C14.4387 12.2501 14.7949 12.2501 15.0147 12.0311Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M15.2336 13.6875H16.4996C16.8101 13.6875 17.0621 13.4355 17.0621 13.125C17.0621 12.8145 16.8101 12.5625 16.4996 12.5625H15.2336C14.9239 12.5625 14.6719 12.8145 14.6719 13.125C14.6711 13.4355 14.9239 13.6875 15.2336 13.6875Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.2189 15.0147L15.1144 15.9094C15.3334 16.1292 15.6904 16.1292 15.9094 15.9094C16.1292 15.6904 16.1292 15.3334 15.9094 15.1144L15.0147 14.2189C14.7949 13.9999 14.4387 13.9999 14.2189 14.2189C13.9999 14.4387 13.9999 14.7949 14.2189 15.0147Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.5625 15.2344V16.5004C12.5625 16.8109 12.8145 17.0629 13.125 17.0629C13.4355 17.0629 13.6875 16.8109 13.6875 16.5004V15.2344C13.6875 14.9246 13.4355 14.6726 13.125 14.6719C12.8145 14.6719 12.5625 14.9246 12.5625 15.2344Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2353 14.2189L10.3406 15.1144C10.1208 15.3334 10.1208 15.6904 10.3406 15.9094C10.5596 16.1292 10.9166 16.1292 11.1356 15.9094L12.0311 15.0147C12.2501 14.7949 12.2501 14.4387 12.0311 14.2189C11.8113 13.9999 11.4551 13.9999 11.2353 14.2189Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.0153 12.5625H9.75C9.4395 12.5625 9.1875 12.8145 9.1875 13.125C9.1875 13.4355 9.4395 13.6875 9.75 13.6875H11.0153C11.3258 13.6875 11.5785 13.4355 11.5778 13.125C11.5778 12.8145 11.3258 12.5625 11.0153 12.5625Z" fill="black"/>
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.0311 11.2353L11.1356 10.3406C10.9166 10.1208 10.5596 10.1208 10.3406 10.3406C10.1208 10.5596 10.1208 10.9166 10.3406 11.1356L11.2353 12.0311C11.4551 12.2501 11.8113 12.2501 12.0311 12.0311C12.2501 11.8113 12.2501 11.4551 12.0311 11.2353Z" fill="black"/>
-                </g>
-                <defs>
-                <clipPath id="clip0_3423_3072">
-                <rect width="18" height="18" fill="white"/>
-                </clipPath>
-                </defs>
-              </svg> 
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.SYSTEM_ROLES %></h6> 
-            </a>
-          </li>
-        <% } %> 
-        
-
-        <% if(userInfo.permissions.includes('access_system_user') || userInfo.permissions.includes('access_platform_user')){ %>
-          <li class="sidebar-list <%= (routeType == 'platformUser' || routeType == 'user') ? 'active-bg' : ''  %>">
-            <a class="sidebar-link" href="javascript:void(0)">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Profile"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.USER %></h6>
-              <i class="iconly-Arrow-Right-2 icli"> </i>
-            </a>
-            <ul class="sidebar-submenu" style="<%= (routeType == 'user' || routeType == 'platformUser') ? 'display:block;' : '' %>">
-              <% if(userInfo.permissions.includes('access_system_user')){ %>
-                <li class="<%= routeType == 'user' ? 'active' : ''  %>">
-                  <a href="/admin/users" class="<%= routeType == 'user' ? 'active' : ''  %>"><%= trans.cruds.SIDEBAR.SYSTEM_USERS %></a>
-                </li>
-              <% } %> 
-              <% if(userInfo.permissions.includes('access_platform_user')){ %>
-                <li class="<%= routeType == 'platformUser' ? 'active' : ''  %>">
-                  <a href="/admin/platform-users" class="<%= routeType == 'platformUser' ? 'active' : ''  %>"><%= trans.cruds.SIDEBAR.PLATEFORM_USERS %></a>
-                </li>
-              <% } %> 
-            </ul>
-          </li>
-        <% } %>
-
-        <!-- <% if(userInfo.permissions.includes('access_category_type')){ %>
-          <li class="sidebar-list">
-            <a class="sidebar-link <%= routeType == 'categoryType' ? 'active' : ''  %>" href="/admin/categories-type">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Category"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.CATEGORY_TYPE %></h6>
-            </a>
-          </li>
-        <% } %> -->
-
-        <% if(userInfo.permissions.includes('access_category')){ %>
-          <li class="sidebar-list">
-            <a class="sidebar-link <%= routeType == 'category' ? 'active' : ''  %>" href="/admin/categories">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Category"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.CATEGORY %></h6>
-            </a>
-          </li>
-        <% } %>
-
-        <% if(userInfo.permissions.includes('access_attribute')){ %>
-          <li class="sidebar-list">
-            <a class="sidebar-link <%= routeType == 'attribute' ? 'active' : ''  %>" href="/admin/attributes">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Category"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.ATTRIBUTE %></h6>
-            </a>
-          </li>
-        <% } %>
-
-        <% if(userInfo.permissions.includes('access_product')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/products">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Bag"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.PRODUCTS %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_tag')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link <%= routeType == 'tag' ? 'active' : ''  %>" href="/admin/tags">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Shield"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.TAG %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_brand')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link <%= routeType == 'brand' ? 'active' : ''  %>" href="/admin/brands">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Paper-plus"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.BRAND %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_order')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/orders">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Folder"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.ORDERS %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_return_refund')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/returns-and-refunds">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Filter"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.RETURNS %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_advertisement')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/advertisement">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#More-box"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.ADVERTISEMENT %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_reviews')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/reviews">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Star-kit"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.REVIEWS %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_report_analytics')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/reports">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Activity"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.REPORTS %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <% if(userInfo.permissions.includes('access_support_ticket')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/support-tickets">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Ticket"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.SUPPORT %></h6>
-            </a>
-          </li>
-        <% } %>
-        
-        <!-- For Announcement -->
-        <% if(userInfo.permissions.includes('access_announcement')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link" href="/admin/announcements">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g clip-path="url(#clip0_3413_3307)">
-                <mask id="mask0_3413_3307" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
-                <path d="M0 1.90735e-06H24V24H0V1.90735e-06Z" fill="white"/>
-                </mask>
-                <g mask="url(#mask0_3413_3307)">
-                <path d="M4.91571 16.8455L7.20128 15.5259L4.23696 10.3916L1.95138 11.7112C0.533597 12.5297 0.0478316 14.3427 0.866363 15.7605C1.68489 17.1783 3.49788 17.6641 4.91571 16.8455Z" stroke="black" stroke-width="0.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.39998 4.61213L11.7359 1.99749L18.2203 13.2288L7.20066 15.5264L4.23633 10.392L6.58959 7.75791" stroke="black" stroke-width="0.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M19.6127 13.6016C20.1 13.3202 20.2671 12.697 19.9857 12.2096L13.5012 0.97829C13.2198 0.490884 12.5966 0.323915 12.1093 0.605306C11.6219 0.886696 11.4549 1.5099 11.7363 1.99726L18.2207 13.2286C18.5021 13.716 19.1253 13.883 19.6127 13.6016Z" stroke="black" stroke-width="0.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M5.07617 16.7528L5.89723 18.175C6.12898 18.5764 6.64231 18.7139 7.0437 18.4821L10.0818 16.7281C10.4832 16.4964 10.6207 15.9831 10.3889 15.5817L10.0814 15.049" stroke="black" stroke-width="0.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M9.68491 16.9573L12.1677 21.2577L12.7902 21.6743C13.0658 21.8588 13.0522 22.2683 12.765 22.4341L10.9688 23.4712C10.7546 23.5948 10.4808 23.5215 10.3571 23.3073L7.43945 18.2537" stroke="black" stroke-width="0.8" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M19.0469 5.26465L22.0753 3.51616" stroke="#ACACAC" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M17.9277 3.52344L19.3706 1.0242" stroke="#ACACAC" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M20.2969 7.10352H22.579" stroke="#ACACAC" stroke-width="1.2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                </g>
-                </g>
-                <defs>
-                <clipPath id="clip0_3413_3307">
-                <rect width="24" height="24" fill="white"/>
-                </clipPath>
-                </defs>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.ANNOUNCEMENT %></h6>
-            </a>
-          </li>
-        <% } %>
-
-        <!-- For Tier -->
-        <% if(userInfo.permissions.includes('access_tier')){ %>
-          <li class="sidebar-list static-sidebar">
-            <a class="sidebar-link <%= routeType == 'tier' ? 'active' : ''  %>" href="/admin/tiers">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Wallet"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.TIER %></h6>
-            </a>
-          </li>
-        <% } %>
-
-        <!-- For Setting -->
-        <% if(userInfo.permissions.includes('access_setting')){ %>
-          <li class="sidebar-list">
-            <a class="sidebar-link" href="/admin/settings">
-              <svg class="stroke-icon">
-                <use href="/backend/svg/iconly-sprite.svg#Setting"></use>
-              </svg>
-              <h6 class="f-w-600"><%= trans.cruds.SIDEBAR.SETTING %></h6>
-            </a>
-          </li>
-        <% } %>
-      </ul>
-    </div>
-    <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
+    </ul>
+  </div>
+  <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
 </aside>

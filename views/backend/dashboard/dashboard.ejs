@@ -1,243 +1,104 @@
-<% title = trans.cruds.MODULE.DASHBOARD + ' - ' + companyInfo.NAME %>
+<% title = 'Blog Dashboard' %>
 <div class="container-fluid">
   <div class="page-title">
     <div class="row">
       <div class="col-sm-6 col-12"> 
-        <h2>
-          <%= trans.cruds.MODULE.DASHBOARD %>
-        </h2>
+        <h2>Blog Dashboard</h2>
         <div class="d-flex align-center">
-            <h1><%= trans.global.hello %>, <%= userInfo.name || trans.global.not_available %>  
-              <img src="/backend/images/dashboard-1/hand.png" width="20" alt=""/></h1>
-          </div>
+            <h1><img src="/backend/images/dashboard-1/hand.png" width="20" alt=""/></h1>
+        </div>
       </div>
       <div class="col-sm-6 col-12">
         <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i></a></li>
-          <li class="breadcrumb-item"><%= trans.cruds.MODULE.DASHBOARD %></li>
-          <li class="breadcrumb-item active"><%= trans.global.view %></li>
+          <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="iconly-Home icli svg-color"></i></a></li>
+          <li class="breadcrumb-item">Blog</li>
+          <li class="breadcrumb-item active">View</li>
         </ol>
       </div>
     </div>
   </div>
 </div>
-<!-- Container-fluid starts-->
 
 <% if(userInfo.permissions.includes('access_dashboard')){ %>
-  <div class="container-fluid default-dashboard">
+  <div class="container-fluid blog-dashboard">
 
-    <!-- data display -->
+    <!-- Blog stats -->
     <div class="row">
 
       <div class="col-md-3">
         <div class="card dashboard-card">
           <div class="card-body text-center">
-              
-              <div class="icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M11.5 12.2422C14.5376 12.2422 17 9.77975 17 6.74219C17 3.70462 14.5376 1.24219 11.5 1.24219C8.46243 1.24219 6 3.70462 6 6.74219C6 9.77975 8.46243 12.2422 11.5 12.2422Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M17.4995 13.9375C15.5335 13.9375 13.9375 15.5335 13.9375 17.4995C13.9375 19.4655 15.5335 21.0625 17.4995 21.0625C19.4655 21.0625 21.0625 19.4655 21.0625 17.4995C21.0625 15.5335 19.4655 13.9375 17.4995 13.9375ZM17.4995 15.4375C18.6375 15.4375 19.5625 16.3615 19.5625 17.4995C19.5625 18.6375 18.6375 19.5625 17.4995 19.5625C16.3615 19.5625 15.4365 18.6375 15.4365 17.4995C15.4365 16.3615 16.3615 15.4375 17.4995 15.4375Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.25 14.687V13C18.25 12.586 17.914 12.25 17.5 12.25C17.086 12.25 16.75 12.586 16.75 13V14.688C16.75 15.101 17.086 15.438 17.5 15.438C17.914 15.437 18.25 15.101 18.25 14.687Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M20.0183 16.0402L21.2113 14.8462C21.5043 14.5542 21.5043 14.0782 21.2113 13.7862C20.9193 13.4932 20.4433 13.4932 20.1513 13.7862L18.9573 14.9792C18.6653 15.2722 18.6653 15.7472 18.9573 16.0402C19.2503 16.3322 19.7253 16.3322 20.0183 16.0402Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M20.3115 18.25H21.9995C22.4135 18.25 22.7495 17.914 22.7495 17.5C22.7495 17.086 22.4135 16.75 21.9995 16.75H20.3115C19.8985 16.75 19.5625 17.086 19.5625 17.5C19.5615 17.914 19.8985 18.25 20.3115 18.25Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M18.9573 20.0183L20.1513 21.2113C20.4433 21.5043 20.9193 21.5043 21.2113 21.2113C21.5043 20.9193 21.5043 20.4433 21.2113 20.1513L20.0183 18.9573C19.7253 18.6653 19.2503 18.6653 18.9573 18.9573C18.6653 19.2503 18.6653 19.7253 18.9573 20.0183Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16.75 20.3086V21.9966C16.75 22.4106 17.086 22.7466 17.5 22.7466C17.914 22.7466 18.25 22.4106 18.25 21.9966V20.3086C18.25 19.8956 17.914 19.5596 17.5 19.5586C17.086 19.5586 16.75 19.8956 16.75 20.3086Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M14.9811 18.9573L13.7881 20.1513C13.4951 20.4433 13.4951 20.9193 13.7881 21.2113C14.0801 21.5043 14.5561 21.5043 14.8481 21.2113L16.0421 20.0183C16.3341 19.7253 16.3341 19.2503 16.0421 18.9573C15.7491 18.6653 15.2741 18.6653 14.9811 18.9573Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M14.687 16.75H13C12.586 16.75 12.25 17.086 12.25 17.5C12.25 17.914 12.586 18.25 13 18.25H14.687C15.101 18.25 15.438 17.914 15.437 17.5C15.437 17.086 15.101 16.75 14.687 16.75Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M16.0421 14.9792L14.8481 13.7862C14.5561 13.4932 14.0801 13.4932 13.7881 13.7862C13.4951 14.0782 13.4951 14.5542 13.7881 14.8462L14.9811 16.0402C15.2741 16.3322 15.7491 16.3322 16.0421 16.0402C16.3341 15.7472 16.3341 15.2722 16.0421 14.9792Z" fill="#04196C"/>
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12.936 21.7555C12.402 21.0695 12.45 20.0745 13.081 19.4445L13.275 19.2495H13C12.034 19.2495 11.25 18.4655 11.25 17.4995C11.25 16.5335 12.034 15.7495 13 15.7495H13.275L13.081 15.5545C12.425 14.8995 12.399 13.8505 13.003 13.1635C12.513 13.1255 12.011 13.1055 11.5 13.1055C8.178 13.1055 5.237 13.9365 3.411 15.1815C2.018 16.1315 1.25 17.3385 1.25 18.6055V20.0555C1.25 20.5065 1.429 20.9395 1.748 21.2575C2.067 21.5765 2.499 21.7555 2.95 21.7555H12.936Z" fill="#04196C"/>
-                  </svg>                                                         
-              </div>
+              <div class="icon">📝</div>
               <div class="title">
-                <h4><%= trans.cruds.DASHBOARD.heading.SYSTEM_USERS %></h4>
+                <h4>Total Posts</h4>
                 <div class="count-text">
-                    <div class="count-sub-text count-up" id="systemUserCount" data-count="0">0</div>
-                    <span class="active-text">0%</span>
+                    <div class="count-sub-text count-up" id="postCount" data-count="0">0</div>
                 </div>
               </div>
           </div>
         </div>
       </div>
+
       <div class="col-md-3">
         <div class="card dashboard-card">
           <div class="card-body text-center">
-              
-              <div class="icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16.0686 7.09091C16.0686 8.17589 15.6401 9.21642 14.8773 9.98362C14.1145 10.7508 13.0799 11.1818 12.0012 11.1818C10.9225 11.1818 9.88792 10.7508 9.12514 9.98362C8.36236 9.21642 7.93383 8.17589 7.93383 7.09091C7.93383 6.00593 8.36236 4.96539 9.12514 4.1982C9.88792 3.43101 10.9225 3 12.0012 3C13.0799 3 14.1145 3.43101 14.8773 4.1982C15.6401 4.96539 16.0686 6.00593 16.0686 7.09091ZM19.9733 19.3735C20.1522 20.2604 19.4071 21 18.509 21H5.49341C4.59371 21 3.85019 20.2604 4.0259 19.3735C4.40018 17.524 5.39846 15.8614 6.8517 14.6673C8.30494 13.4732 10.1238 12.8209 12.0004 12.8209C13.877 12.8209 15.6958 13.4732 17.1491 14.6673C18.6023 15.8614 19.6006 17.524 19.9749 19.3735" fill="#04196C"/>
-                  </svg>                                                           
-              </div>
+              <div class="icon">👤</div>
               <div class="title">
-                <h4><%= trans.cruds.DASHBOARD.heading.PLATFORM_USERS %></h4>
+                <h4>Authors</h4>
                 <div class="count-text">
-                    <div class="count-sub-text count-up" id="platformUserCount" data-count="0">0</div>
-                    <span class="active-text">0%</span>
+                    <div class="count-sub-text count-up" id="authorCount" data-count="0">0</div>
                 </div>
               </div>
           </div>
         </div>
       </div>
+
       <div class="col-md-3">
         <div class="card dashboard-card">
           <div class="card-body text-center">
-              
-              <div class="icon">
-                  <svg class="stroke-icon">
-                    <use href="/backend/svg/iconly-sprite.svg#Paper-plus"></use>
-                  </svg>                                                   
-              </div>
+              <div class="icon">📂</div>
               <div class="title">
-                <h4><%= trans.cruds.DASHBOARD.heading.BRAND %></h4>
-                <div class="count-text">
-                    <div class="count-sub-text count-up" id="brandCount" data-count="0">0</div>
-                    <span class="active-text">0%</span>
-                </div>
-              </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3">
-        <div class="card dashboard-card">
-          <div class="card-body text-center">
-              
-              <div class="icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M10.875 4.125V9.375C10.875 9.77282 10.717 10.1544 10.4357 10.4357C10.1544 10.717 9.77282 10.875 9.375 10.875H4.125C3.72718 10.875 3.34564 10.717 3.06434 10.4357C2.78304 10.1544 2.625 9.77282 2.625 9.375V4.125C2.625 3.72718 2.78304 3.34564 3.06434 3.06434C3.34564 2.78304 3.72718 2.625 4.125 2.625H9.375C9.77282 2.625 10.1544 2.78304 10.4357 3.06434C10.717 3.34564 10.875 3.72718 10.875 4.125ZM19.875 2.625H14.625C14.2272 2.625 13.8456 2.78304 13.5643 3.06434C13.283 3.34564 13.125 3.72718 13.125 4.125V9.375C13.125 9.77282 13.283 10.1544 13.5643 10.4357C13.8456 10.717 14.2272 10.875 14.625 10.875H19.875C20.2728 10.875 20.6544 10.717 20.9357 10.4357C21.217 10.1544 21.375 9.77282 21.375 9.375V4.125C21.375 3.72718 21.217 3.34564 20.9357 3.06434C20.6544 2.78304 20.2728 2.625 19.875 2.625ZM9.375 13.125H4.125C3.72718 13.125 3.34564 13.283 3.06434 13.5643C2.78304 13.8456 2.625 14.2272 2.625 14.625V19.875C2.625 20.2728 2.78304 20.6544 3.06434 20.9357C3.34564 21.217 3.72718 21.375 4.125 21.375H9.375C9.77282 21.375 10.1544 21.217 10.4357 20.9357C10.717 20.6544 10.875 20.2728 10.875 19.875V14.625C10.875 14.2272 10.717 13.8456 10.4357 13.5643C10.1544 13.283 9.77282 13.125 9.375 13.125ZM17.25 13.125C16.4342 13.125 15.6366 13.3669 14.9583 13.8202C14.2799 14.2734 13.7512 14.9177 13.439 15.6714C13.1268 16.4252 13.0451 17.2546 13.2043 18.0547C13.3634 18.8549 13.7563 19.5899 14.3332 20.1668C14.9101 20.7437 15.6451 21.1366 16.4453 21.2957C17.2454 21.4549 18.0748 21.3732 18.8286 21.061C19.5823 20.7488 20.2266 20.2201 20.6798 19.5417C21.1331 18.8634 21.375 18.0658 21.375 17.25C21.375 16.156 20.9404 15.1068 20.1668 14.3332C19.3932 13.5596 18.344 13.125 17.25 13.125Z" fill="#04196C"/>
-                  </svg>                                                         
-              </div>
-              <div class="title">
-                <h4><%= trans.cruds.DASHBOARD.heading.CATEGORY %></h4>
+                <h4>Categories</h4>
                 <div class="count-text">
                     <div class="count-sub-text count-up" id="categoryCount" data-count="0">0</div>
-                    <span class="active-text">0%</span>
                 </div>
               </div>
           </div>
         </div>
       </div>
+
+      <div class="col-md-3">
+        <div class="card dashboard-card">
+          <div class="card-body text-center">
+              <div class="icon">🕒</div>
+              <div class="title">
+                <h4>Recent Posts</h4>
+                <div class="count-text">
+                    <div class="count-sub-text count-up" id="recentPostCount" data-count="0">0</div>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
-    <div class="row">
-      <div class="col-xxl-6 col-xl-4 proorder-xxl-2 col-sm-6 box-col-6">
-        <div class="card earning-card">
-          <div class="card-header pb-0 card-no-border">
-            <div class="header-top">
-              <h3><%= trans.cruds.DASHBOARD.heading.earnings_trend %> </h3>
-              <div class="dropdown">
-                <button class="btn dropdown-toggle" id="userdropdown3" type="button" data-bs-toggle="dropdown" aria-expanded="false"><%= trans.messages.dashboard_fileration.monthly %></button>
-                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="userdropdown3">
-                  <a class="dropdown-item" href="javascript:;"><%= trans?.messages?.dashboard_fileration?.weekly %></a>
-                  <a class="dropdown-item" href="javascript:;"><%= trans?.messages?.dashboard_fileration?.monthly %></a>
-                  <a class="dropdown-item" href="javascript:;"><%= trans?.messages?.dashboard_fileration?.yearly %></a>
-                </div>
-              </div>
-            </div>
+    <!-- Recent Posts Table -->
+    <!-- <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h3>Recent Posts</h3>
           </div>
-          <div class="card-body pb-0">
-            <div class="d-flex align-center gap-3">
-              <h2>SAR 4,875</h2>
-                <span class="text-primary">
-                  36.28%
-                  <svg class="stroke-icon stroke-primary">
-                    <use href="/backend/svg/icon-sprite.svg#arrow-down"></use>
-                  </svg>
-                </span>
-            </div>
-            <div id="earnings-chart"></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-xxl-6 col-xl-6 proorder-xxl-7 col-lg-12 box-col-12">
-        <div class="card job-card">
-          <div class="card-header pb-0 card-no-border">
-            <div class="header-top">
-              <h3><%= trans.cruds.DASHBOARD.heading.recent_orders %></h3>
-              <div>
-                <%
-                  var today = new Date();
-                  var weekday = today.toLocaleDateString(lang, { weekday: 'long' });
-                  var day = today.getDate();
-                  var monthYear = today.toLocaleDateString(lang, { month: 'short', year: 'numeric' });
-                %>
-                <p>
-                  <%= weekday %> <%= day %>, <span><%= monthYear %></span>
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="card-body pt-2">
-            <ul class="d-flex align-center justify-content-start gap-3"> 
-              <li>
-                <div class="d-flex gap-2"> 
-                  <div class="flex-shrink-0 bg-light-primary">
-                    <svg class="stroke-icon">
-                      <use href="/backend/svg/iconly-sprite.svg#Folder"></use>
-                    </svg>
-                  </div>
-                  <div class="flex-grow-1"> 
-                    <h3>40</h3>
-                    <p><%= trans.cruds.DASHBOARD.heading.total_orders %></p>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div class="d-flex gap-2"> 
-                  <div class="flex-shrink-0 bg-light-secondary">
-                    <svg class="stroke-icon">
-                      <use href="/backend/svg/icon-sprite.svg#employees"></use>
-                    </svg>
-                  </div>
-                  <div class="flex-grow-1"> 
-                    <h3>30</h3>
-                    <p><%= trans.cruds.DASHBOARD.heading.users %></p>
-                  </div>
-                </div>
-              </li>
-            </ul>
-            <div class="table-responsive theme-scrollbar">
-              <table class="table display" style="width:100%">
-                <thead>
-                  <tr> 
-                    <th># </th>
-                    <th><%= trans.cruds.DASHBOARD.fields.title %> </th>
-                    <th><%= trans.cruds.DASHBOARD.fields.seller %> </th>
-                    <th><%= trans.cruds.DASHBOARD.fields.buyer %></th>
-                    <th class="text-center"><%= trans.cruds.DASHBOARD.fields.createdAt %> </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Order #1023</td>
-                    <td>Ahmed Tech</td>
-                    <td>Sarah Ali</td>
-                    <td class="text-center">2025-06-01 14:23</td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Service Request #2045</td>
-                    <td>Global Solutions</td>
-                    <td>Omar Khaled</td>
-                    <td class="text-center">2025-06-03 09:15</td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Invoice #878</td>
-                    <td>Yasmin Corp</td>
-                    <td>Mohammed Nasser</td>
-                    <td class="text-center">2025-06-05 17:42</td>
-                  </tr>
-                </tbody>
-
-              </table>
+          <div class="card-body">
+            <div class="table-responsive">
+              
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    
   </div>
 <% } else { %>
   <div class="container-fluid">
@@ -245,34 +106,14 @@
       <div class="col-md-8 col-lg-6">
         <div class="card border border-danger shadow-lg">
           <div class="card-body text-center p-5">
-            
-            <!-- Icon with circle background -->
-            <div class="mb-4">
-              <div class="d-inline-flex align-items-center justify-content-center bg-danger text-white rounded-circle fs-2 icon-circle">
-                <i class="fas fa-ban"></i>
-              </div>
-            </div>
-  
-            <!-- Message -->
-            <h3 class="text-danger mb-3">
-              <%= trans.messages.access_denied_title %>
-            </h3>
+            <h3 class="text-danger mb-3">Access Denied</h3>
             <p class="text-muted mb-4">
-              🚫 <strong><%= trans.messages.access_denied_message %></strong><br>
-              <%= trans.messages.access_denied_contact %>
+              🚫 <strong>You do not have permission</strong><br>
+              Please contact admin
             </p>
-            
-  
-            <!-- CTA -->
-            <!-- <a href="/admin" class="btn btn-outline-danger">
-              <i class="fas fa-arrow-left"></i> Return to Home
-            </a> -->
-  
           </div>
         </div>
       </div>
     </div>
-  </div>   
+  </div>
 <% } %>
-<!-- include dashboard script -->
-<%- include('./script') %>

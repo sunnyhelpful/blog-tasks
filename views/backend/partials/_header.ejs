@@ -1,8 +1,6 @@
 <header class="page-header row">
    <div class="logo-wrapper d-flex align-items-center col-auto">
-      <a href="<%= '/admin/dashboard' %>">
-         <!-- <img class="light-logo img-fluid" src="/backend/images/logo/logo1.png" alt="logo"/>
-            <img class="dark-logo img-fluid" src="/backend/images/logo/logo-dark.png" alt="logo"/> -->
+      <a href="/admin/dashboard">
          <h2 class="text-white text-center">Kanzy</h2>
       </a>
       <a class="close-btn toggle-sidebar" href="javascript:void(0)">
@@ -11,91 +9,37 @@
          </svg>
       </a>
    </div>
-  <div class="page-main-header col">
+   <div class="page-main-header col">
       <div class="header-left">
       </div>
       <div class="nav-right">
-         <ul class="header-right">
-            <li class="custom-dropdown">
-               <div class="translate_wrapper">
-                  <div class="current_lang">
-                     <a class="lang" href="javascript:void(0)">
-                        <i class="flag-icon flag-icon-us"></i>
-                        <h6 class="lang-txt traslate-box f-w-700">
-                           ENG
-                        </h6>
-                     </a>
-                  </div>
-                  <ul class="custom-menu profile-menu language-menu py-0 more_lang">
-                     <li class="d-block">
-                        <a class="lang" href="javascript:;" data-value="en">
-                           <i class="flag-icon flag-icon-us"></i>
-                           <div class="lang-txt">English</div>
-                        </a>
-                     </li>
-                     <li class="d-block">
-                        <a class="lang" href="javascript:;" data-value="ar">
-                           <i class="flag-icon flag-icon-ae"></i>
-                           <div class="lang-txt">العربية</div>
-                        </a>
-                     </li>
-                  </ul>
-               </div>
-            </li>
-            <li>
-               <a class="dark-mode" href="javascript:void(0)">
-                  <svg>
-                     <use href="/backend/svg/iconly-sprite.svg#moondark"></use>
-                  </svg>
-               </a>
-            </li>
-            <% if (userInfo.permissions.includes("access_notification")) { %>
-               <li class="custom-dropdown" id="notification-dropdown">
-                  <a href="javascript:void(0)">
-                     <svg>
-                           <use href="/backend/svg/iconly-sprite.svg#notification"></use>
-                     </svg>
-                  </a>
-                  <span class="badge rounded-pill badge-primary notification-count d-none" id="notification-badge">
-                     0
-                  </span>
-                  <div class="custom-menu notification-dropdown py-0 overflow-hidden">
-                     <h3 class="title bg-primary-light dropdown-title">
-                           <%=  trans.cruds.NOTIFICATION?.title_singular || 'Notification' %>
-                           <span class="font-primary" id="viewAll">
-                              <a href="/admin/notifications" class="view-all-link"><%=  trans.cruds.NOTIFICATION?.heading?.view_all || 'View all' %></a>
-                           </span>
-                     </h3>
-                     <ul class="activity-timeline notification-list" id="notification-list">
-                        <!-- Notifications will be injected here -->
-                     </ul>
-                  </div>
-               </li>
-            <% } %>            
+         <ul class="header-right">         
             <li class="profile-nav custom-dropdown">
                <div class="user-wrap">
-                  <div class="user-img"><img src="<%= userInfo.profile ? '/' + userInfo.profile : '/backend/images/profile.png' %>" alt="user"/></div>
+                  <div class="user-img">
+                     <img src="<%= userInfo.profile ? '/' + userInfo.profile : '/backend/images/profile.png' %>" alt="user"/>
+                  </div>
                   <div class="user-content">
-                     <h6><%= userInfo.name || trans.global.not_available %></h6>
+                     <h6><%= userInfo.name || 'Not Available' %></h6>
                      <p class="mb-0"><%= userInfo.role || ' ' %><i class="fa-solid fa-chevron-down"></i></p>
                   </div>
                </div>
                <div class="custom-menu overflow-hidden">
                   <ul class="profile-body">
                      <li>
-                        <a  class="d-inline-flex" href="<%= '/admin/profile' %>">
+                        <a class="d-inline-flex" href="/admin/profile">
                            <svg class="svg-color">
                               <use href="/backend/svg/iconly-sprite.svg#Profile"></use>
                            </svg>
-                           <span class="ms-2"><%= trans.cruds.MODULE.ACCOUNT %></span>
+                           <span class="ms-2">Account</span>
                         </a>
                      </li>
                      <li>
-                        <a  class="d-inline-flex" href="javascript:void(0)" onclick="confirmAction('logout', '/admin/logout', '/admin/login', 'GET')">
+                        <a class="d-inline-flex" href="javascript:void(0)" onclick="confirmAction('logout', '/admin/logout', '/admin/login', 'GET')">
                            <svg class="svg-color">
                               <use href="/backend/svg/iconly-sprite.svg#Login"></use>
                            </svg>
-                           <span class="ms-2"><%= trans.cruds.MODULE.LOGOUT %></span>
+                           <span class="ms-2">Logout</span>
                         </a>
                      </li>
                   </ul>
