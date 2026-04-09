@@ -1,6 +1,6 @@
 require('./logs/logger');
 const express = require('express');
-const connect = require('./dbConnect');
+const { connect, closeMongoPluginConnection } = require('./config/database');
 const path = require('path');
 const app = express();
 require('dotenv').config();
@@ -11,8 +11,7 @@ const bodyParser = require('body-parser');
 const ejsLayouts = require('express-ejs-layouts');
 const cookieParser = require('cookie-parser');
 const runCrons = require('./crons/index');
-const constantKey = require('./config/constant')
-const cluster = require('cluster');
+const constantKey = require('./config/constant');
 
 
 const cors = require('cors');
@@ -94,17 +93,6 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Unhandled Promise Rejections & Exceptions
-process.on('unhandledRejection', (reason, promise) => {
-  console.error('🔴 Unhandled Rejection:', reason);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('🔴 Uncaught Exception:', err);
-});
-
-/*  */
-
 const { localization, interpolateMessage } = require('./utils/localization');
 
 app.use((req, res, next) => {
@@ -171,15 +159,6 @@ app.use((req, res) => {
   });
 });
 
-if (cluster.isWorker) {
-  process.on('message', (msg) => {
-    if (msg === 'shutdown') {
-      console.log(`Worker ${process.pid} shutting down gracefully...`);
-      process.exit();
-    }
-  });
-}
-
 connect().then(() => {
   console.log('Database connected successfully');
   
@@ -190,4 +169,8 @@ connect().then(() => {
   logError('Error connecting to database:', err);
 });
 
-module.exports = { app, connect };
+module.exports = { 
+  app, 
+  connect, 
+  closeMongoPluginConnection 
+};

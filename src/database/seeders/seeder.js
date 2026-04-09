@@ -1,23 +1,12 @@
 const mongoose = require('mongoose');
-const connect = require('../../dbConnect');
+const { connect } = require('../../config/database');
 const { waitForConnection } = require('../seedDBConnections');
 
 const seedPermissions = require('./permissionSeeder');
 const seedRoles = require('./rolesSeeder');
 const seedRolePermissions = require('./rolePermissionSeeder');
 const seedUsers = require('./userSeeder');
-const seedSettings = require('./settingSeeder');
-const seedCategoryType = require('./categoriesTypeSeeder');
-const seedTier = require('./tierSeeder');
 
-/* World Database */
-const {
-    seedRegions,
-    seedSubRegions,
-    seedCountries,
-    seedStates,
-    seedCities,
-} = require('./seedLocations');
 
 const runSeeders = async () => {
   try {
@@ -37,21 +26,6 @@ const runSeeders = async () => {
     
     console.log('Starting user seeding...');
     await seedUsers(roles);
-    await seedSettings();
-    
-    console.log("Starting categories type seeding...");
-    await seedCategoryType();
-
-    console.log("Starting tier seeding...");
-    await seedTier();
-
-    /*  */
-    console.log("Start world database seeding...")
-    // await seedRegions();
-    // await seedSubRegions();
-    // await seedCountries();
-    // await seedStates();
-    // await seedCities();
 
     console.log('All seeders have been executed successfully!');
   } catch (error) {

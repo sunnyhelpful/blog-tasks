@@ -1,24 +1,45 @@
-const { app } = require('./src/app');
-const cluster = require('cluster');
-const os = require('os');
+require('dotenv').config();
+const { app, closeMongoPluginConnection } = require('./src/app');
 
 const PORT = process.env.APP_PORT || 3011;
-const isProduction = process.env.APP_MODE === 'production';
 
-if (isProduction && cluster.isMaster) {
-    const numCPUs = os.cpus().length;
-    console.log(`Master ${process.pid} is running`);
+/** Start server */
+const server = app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT} (PID: ${process.pid})`);
+});
 
-    for (let i = 0; i < numCPUs; i++) {
-        cluster.fork();
+/** Graceful shutdown */
+const gracefulExit = async () => {
+    console.log(`Server shutting down... (PID: ${process.pid})`);
+
+    try {
+        server.close(async () => {
+            console.log('No longer accepting connections');
+
+            await closeMongoPluginConnection();
+
+            console.log('MongoDB connection closed');
+            process.exit(0);
+        });
+
+    } catch (err) {
+        console.error('Error during shutdown:', err);
+        process.exit(1);
     }
 
-    cluster.on('exit', (worker, code, signal) => {
-        console.log(`Worker ${worker.process.pid} died. Forking a new worker...`);
-        cluster.fork();
-    });
-} else {
-    app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT} (PID: ${process.pid})`);
-    });
-}
+    setTimeout(() => process.exit(1), 10000);
+};
+
+/** Handle shutdown signals */
+process.on('SIGTERM', gracefulExit);
+process.on('SIGINT', gracefulExit);
+
+/** Handle unexpected errors */
+process.on('unhandledRejection', (reason) => {
+    console.error('Unhandled Rejection:', reason);
+});
+
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
+    gracefulExit();
+});
