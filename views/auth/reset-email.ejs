@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="<%= lang %>" <%= lang === 'ar' ? 'dir="rtl"' : '' %>>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= lang === 'ar' ? 'تعليمات إعادة تعيين كلمة المرور' : 'Password Reset Instructions' %></title>
+    <title>Password Reset Instructions</title>
     <style>
-        /* Style your email content here (ensure it works with RTL for Arabic) */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f7fc;
@@ -30,7 +29,7 @@
             font-size: 24px;
         }
         .content {
-            text-align: <%= lang === 'ar' ? 'right' : 'left' %>;
+            text-align: left;
             font-size: 16px;
             color: #555;
         }
@@ -63,20 +62,20 @@
 
     <div class="email-container">
         <div class="header">
-            <h1><%= lang === 'ar' ? 'تعليمات إعادة تعيين كلمة المرور' : 'Password Reset Instructions' %></h1>
+            <h1>Password Reset Instructions</h1>
         </div>
 
         <div class="content">
-            <p><%= lang === 'ar' ? 'عزيزي' : 'Dear' %> <%= name %>,</p>
-            <p><%= lang === 'ar' ? 'لقد تلقينا طلبًا لإعادة تعيين كلمة المرور الخاصة بك. يمكنك إعادة تعيين كلمة المرور من خلال النقر على الزر أدناه:' : 'We received a request to reset your password. You can reset your password by clicking the button below:' %></p>
-            <a href="<%= resetUrl %>" class="button"><%= lang === 'ar' ? 'إعادة تعيين كلمة المرور' : 'Reset Password' %></a>
-            <p><%= lang === 'ar' ? 'إذا لم تطلب إعادة تعيين كلمة المرور، يرجى تجاهل هذا البريد.' : 'If you did not request a password reset, please ignore this email.' %></p>
-            <p><%= lang === 'ar' ? 'مع خالص التحية' : 'Best regards' %>, <br> The Kanzy Team</p>
+            <p>Dear <%= name %>,</p>
+            <p>We received a request to reset your password. You can reset your password by clicking the button below:</p>
+            <a href="<%= resetUrl %>" class="button">Reset Password</a>
+            <p>If you did not request a password reset, please ignore this email.</p>
+            <p>Best regards,<br>The Team</p>
         </div>
 
         <div class="footer">
-            <p><%= lang === 'ar' ? 'إذا كان لديك أي أسئلة، لا تتردد في الاتصال بنا على support@kanzy.com' : 'If you have any questions, feel free to contact us at support@kanzy.com' %></p>
-            <p>&copy; 2025 Kanzy. <%= lang === 'ar' ? 'جميع الحقوق محفوظة.' : 'All rights reserved.' %></p>
+            <p>If you have any questions, feel free to contact us at support@kanzy.com</p>
+            <p>&copy; 2025 All rights reserved.</p>
         </div>
     </div>
 

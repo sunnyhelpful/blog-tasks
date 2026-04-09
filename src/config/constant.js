@@ -70,20 +70,20 @@ module.exports = {
     },
 
     COMPANY_DETAILS: {
-        NAME: 'Kanzy',
+        NAME: 'Example',
         SLOGAN: 'Innovate. Create. Inspire.',
-        COPYRIGHTS: '© 2025 Kanzy',
+        COPYRIGHTS: '© 2025 Example',
         FOUNDED: '2021',
         HEADQUARTERS: 'San Francisco, CA, USA',
-        WEBSITE: 'https://www.kanzy.com',
-        CONTACT_EMAIL: 'contact@kanzy.com',
+        WEBSITE: 'https://www.example.com',
+        CONTACT_EMAIL: 'contact@example.com',
         PHONE: '+1 (555) 123-4567',
         SOCIAL_MEDIA: {
-            TWITTER: 'https://twitter.com/kanzy',
-            LINKEDIN: 'https://www.linkedin.com/company/kanzy',
-            INSTAGRAM: 'https://instagram.com/kanzy'
+            TWITTER: 'https://twitter.com/example',
+            LINKEDIN: 'https://www.linkedin.com/company/example',
+            INSTAGRAM: 'https://instagram.com/example'
         },
-        LOGO_URL: 'https://www.kanzy.com/assets/logo.png'
+        LOGO_URL: 'https://www.example.com/assets/logo.png'
     },
 
     ATTRIBUTES: {
