@@ -5,7 +5,9 @@ const router = express.Router();
 const authenticate = require("../../middleware/auth/web/authenticate");
 const isNotAuthenticated = require("../../middleware/auth/web/isNotAuthenticated");
 const routeLimiter = require("../../middleware/rateLimiter");
+const blogController = require("../../controllers/backend/blogController");
 
+const { uploadFile } = require("../../utils/uploadFile");
 
 // Controllers
 const authController = require("../../controllers/backend/auth/authController");
@@ -44,8 +46,19 @@ router.post("/reset-password", authController.resetPassword);
 
 router.get("/logout", authenticate, authController.logout);
 
-
 // Protected Routes
 router.get("/dashboard", authenticate, dashboardController.dashboard);
+
+router.get("/blogs/", blogController.index);
+
+router.post("/blogs/", uploadFile("blogImages"), blogController.store);
+
+router.get("/blogs/:id", blogController.show);
+
+router.get("/:id/edit", blogController.edit);
+
+router.put("/blogs/:id", uploadFile("blogImages"), blogController.update);
+
+router.delete("/blogs/:id", blogController.delete);
 
 module.exports = router;
