@@ -1,10 +1,10 @@
-<% title = 'Create Blog' %>
+<% title = 'Create Post' %>
 
 <div class="container-fluid">
     <div class="page-title">
         <div class="row">
             <div class="col-sm-6 col-12">
-                <h2>Blogs</h2>
+                <h2>Posts</h2>
             </div>
             <div class="col-sm-6 col-12">
                 <ol class="breadcrumb">
@@ -14,7 +14,7 @@
                         </a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="/admin/blogs">Blogs</a>
+                        <a href="/admin/blogs">Posts</a>
                     </li>
                     <li class="breadcrumb-item active">Create</li>
                 </ol>
@@ -32,7 +32,7 @@
                 <form class="card" id="blogData" action="/admin/blog/store" method="POST" enctype="multipart/form-data">
 
                     <div class="card-header card-no-border pb-0">
-                        <h3 class="card-title mb-0">Create Blog</h3>
+                        <h3 class="card-title mb-0">Create Post</h3>
                     </div>
 
                     <%- include('./_form') %>
