@@ -1,0 +1,58 @@
+{
+  "name": "dealy-backend",
+  "version": "1.0.0",
+  "description": "Dealy Is a market place where  People can buy and sell their used and fresh products",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
+    "seed": "node src/database/seeders/seeder.js",
+    "fake": "node src/database/factories/factory.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Mayurhis/Dealy-Backend.git"
+  },
+  "keywords": [],
+  "author": "Sunny",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Mayurhis/Dealy-Backend/issues"
+  },
+  "homepage": "https://github.com/Mayurhis/Dealy-Backend#readme",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.777.0",
+    "@faker-js/faker": "^9.7.0",
+    "axios": "^1.8.4",
+    "bcryptjs": "^3.0.2",
+    "body-parser": "^1.20.3",
+    "cluster": "^0.7.7",
+    "connect-flash": "^0.1.1",
+    "connect-redis": "^7.1.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "datatables.net": "^2.2.2",
+    "datatables.net-dt": "^2.2.2",
+    "dotenv": "^16.4.7",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "express-ejs-layouts": "^2.5.1",
+    "express-rate-limit": "^7.5.0",
+    "express-session": "^1.18.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.12.1",
+    "mongoose-paginate-v2": "^1.9.0",
+    "multer": "^1.4.5-lts.2",
+    "multer-s3": "^3.0.1",
+    "node-cron": "^3.0.3",
+    "nodemailer": "^6.10.0",
+    "nodemon": "^3.1.9",
+    "p-queue": "^8.1.0",
+    "redis": "^4.7.0",
+    "slugify": "^1.6.6",
+    "stream-json": "^1.9.1",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,131 @@
+<div class="selected-data mb-4 attribute-number-data" data-type="number" style="display: none;">
+    <div class="row">
+        <div class="col-12 col-md-7 number-form">
+            <!-- Preview Button -->
+            <div class="previwe-btn-box preview-list" data-type="number">
+                <a href="javascript:;" class="btn btn-info btn-view perviewtextWithLabel" id="perviewtextWithLabel" title="<%= trans.global.preview %>">
+                    <i class="fas fa-eye"></i>
+                </a>
+            </div>
+            <div class="lang-card-box mb-3">
+                <div class="title-box">
+                    <h3 class="mt-0">
+                        <%= trans.global.label %>
+                    </h3>
+                </div>
+                <div class="lang-form-input-group">
+                    <div class="row w-100">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="label_en"
+                                id="number_label_en"
+                                value="<%= attribute?.label?.en || '' %>"
+                                placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.english +')' %>"
+                            />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                name="label_ar"
+                                id="number_label_ar"
+                                value="<%= attribute?.label?.ar || '' %>"
+                                placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.arabic +')' %>"
+                            />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lang-card-box mb-4">
+                <div class="title-box">
+                    <h3 class="mt-0">
+                        <%= trans.global.placeholder %>
+                    </h3>
+                </div>
+                <div class="lang-form-input-group">
+                    <div class="row w-100">
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    name="placeholder_en"
+                                    id="number_placeholder_en"
+                                    value="<%= attribute?.placeholder?.en || '' %>"
+                                    placeholder="<%= trans.global.enter_your +' '+ trans.global.placeholder +' ('+ trans.global.english +')' %>"
+                                />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="form-group">
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    name="placeholder_ar"
+                                    id="number_placeholder_ar"
+                                    value="<%= attribute?.placeholder?.ar || '' %>"
+                                    placeholder="<%= trans.global.enter_your +' '+ trans.global.placeholder +' ('+ trans.global.arabic +')' %>"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-5">
+            <div class="preview-data preview-text-data" data-type="number" style="display: none;">
+                <fieldset>
+                    <legend><%= trans.global.preview %></legend>
+                    <div class="mb-4">
+                        <div class="lang-card-box">
+                            <div class="lang-form-input-group">
+                                <div class="row w-100">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <div class="lang-title-box">
+                                                <%= trans.global.english %>
+                                            </div>
+                                            <label class="form-label text-left label_en" for="number_value_attribute_en">
+
+                                            </label>
+                                            <input
+                                                class="form-control"
+                                                type="number"
+                                                id="number_value_attribute_en"
+                                                name="number_value_en"
+                                                value=""
+                                                placeholder=""
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <div class="lang-title-box">
+                                                <%= trans.global.arabic %>
+                                            </div>
+                                            <label class="form-label text-left label_ar" for="number_value_attribute_ar"></label>
+                                            <input
+                                                class="form-control"
+                                                type="number"
+                                                id="number_value_attribute_ar"
+                                                name="number_value_ar"
+                                                value=""
+                                                placeholder=""
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+        </div>
+    </div>
+</div>

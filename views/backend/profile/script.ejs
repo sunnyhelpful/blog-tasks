@@ -1,0 +1,386 @@
+<%- include('../partials/custom-script') %>
+<%- include('../common-scripts/password') %>
+<!-- <link rel="stylesheet" href="/backend/css/intlTelInput.css" /> -->
+<script src="/backend/js/intl-tel/intlTelInput.min.js"></script>
+<script>
+$(document).ready(function () {
+    const input = document.querySelector("#phone_number");
+    const iti = window.intlTelInput(input, {
+        initialCountry: "sa",
+        separateDialCode: true,
+        nationalMode: false,
+        autoHideDialCode: false,
+        formatOnDisplay: false,
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+    });
+
+    const existingDialCode = `<%= '+' + userData.country_code || '+966' %>`;
+    function setCountryByDialCode(dialCode) {
+        const allCountries = window.intlTelInputGlobals.getCountryData();
+        const matchedCountry = allCountries.find(c => '+' + c.dialCode === dialCode);
+        if (matchedCountry) {
+            iti.setCountry(matchedCountry.iso2);
+        }
+    }
+
+    setCountryByDialCode(existingDialCode);
+    function updateCountryCode() {
+        const dialCode = iti.getSelectedCountryData().dialCode;
+        $('#country_code').val(dialCode);
+    }
+
+    updateCountryCode();
+    input.addEventListener('countrychange', updateCountryCode);
+
+    /* ... */
+    $('.permissionsTable').DataTable({
+        processing: true,
+        language: languageConfig,
+    });
+
+    jQuery.validator.addMethod("pattern", function (value, element, param) {
+        if (value === '') return true;
+        return param.test(value);
+    }, `<%= t(trans.validation.invalid_format, {
+        attribute: trans.cruds.PROFILE.fields.phone_number
+    }) %>`);
+
+    $("#profileUpdate").validate({
+        rules: {
+            first_name: {
+                required: true,
+                minlength: 3
+            },
+            middle_name: {
+                required: false,
+                minlength: 1
+            },
+            last_name: {
+                required: true,
+                minlength: 1
+            },
+            username: {
+                required: true,
+                minlength: 3
+            },
+            email: {
+                required: true,
+                email: true
+            },
+            phone_number: {
+                required: false,
+                validatePhoneIntl: true
+            },
+            current_password: {
+                minlength: 6
+            },
+            password: {
+                minlength: 6,
+                maxlength: 15,
+                required: function() {
+                    return $("#current_password").val() !== '';
+                }
+            },
+            password_confirmation: {
+                minlength: 6,
+                maxlength: 15,
+                required: function() {
+                    return $("#current_password").val() !== '';
+                },
+                equalTo: "#new_password"
+            },
+            city:{
+                required:true
+            },
+            postal_code :{
+                required: true,
+                pattern: /^[0-9]{3,7}$/
+            },
+            country:{
+                required:true
+            },
+        },
+        messages: {
+            first_name: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.first_name
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.first_name,
+                    min: 3
+                }) %>`
+            },
+            middle_name: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.middle_name
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.middle_name,
+                    min: 1
+                }) %>`
+            },
+            last_name: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.last_name
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.last_name,
+                    min: 1
+                }) %>`
+            },
+            username: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.username
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.username,
+                    min: 3
+                }) %>`
+            },
+            email: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.email
+                }) %>`,
+                email: `<%= t(trans.validation.client_side_validate.valid_message, {
+                    attribute: trans.cruds.PROFILE.fields.email
+                }) %>`
+            },
+            current_password: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.current_password
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.current_password,
+                    min: 6
+                }) %>`
+            },
+            password: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.new_password
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.PROFILE.fields.new_password,
+                    min: 6
+                }) %>`,
+                maxlength: `<%= t(trans.validation.client_side_validate.max_length, {
+                    attribute: trans.cruds.PROFILE.fields.new_password,
+                    max: 15
+                }) %>`
+            },
+            password_confirmation: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.PROFILE.fields.confirm_password
+                }) %>`,
+                equalTo: `<%= t(trans.validation.client_side_validate.equal_to_message, {
+                    attribute: trans.cruds.PROFILE.fields.confirm_password
+                }) %>`
+            },
+            city:{
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.ADDRESS.fields.city,
+                }) %>`,
+            },
+            postal_code :{
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.ADDRESS.fields.postal_code,
+                }) %>`,
+                pattern: `<%= t(trans.validation.client_side_validate.valid_message, {
+                    attribute: trans.cruds.ADDRESS.fields.postal_code
+                }) %>`
+            },
+            country:{
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.ADDRESS.fields.country,
+                }) %>`,
+            },
+        },
+        errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            error.insertAfter(element);
+        },
+        highlight: function (element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element) {
+            $(element).removeClass('is-invalid');
+        },
+        submitHandler: function (form) {
+            $(".page-loader").removeClass('d-none');
+            const formData = $(form).serialize();
+            const url = $(form).attr("action");
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                success: function (response) {
+                    $(".page-loader").addClass('d-none');
+                    if (response.status) {
+                        showNotificationPopup(response.message, 'success', '/admin/profile');
+                    } else {
+                        showNotificationPopup(response.message, 'error');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $(".invalid-feedback").remove();
+                    $(".page-loader").addClass('d-none');
+
+                    const errors = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : {};
+                    const message = xhr.responseJSON && xhr?.responseJSON?.message ? xhr?.responseJSON?.message : '';
+
+                    if (errors && Object.keys(errors).length > 0) {
+                        displayErrorMessage(errors);
+                    } else if (message) {
+                        showNotificationPopup(message, 'error');
+                    } else {
+                        showNotificationPopup("An unexpected error occurred.", 'error');
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).on("click", ".btnProfileUpdate", function(e) {
+        e.preventDefault(); 
+        const fileInput = $("#imageInput")[0];
+        /* 
+            const form = $(this)[0];
+            const formData = new FormData(form);
+            const url = $(form).attr("action"); 
+        */
+        if (fileInput && fileInput.files.length > 0) {
+            const formData = new FormData();
+            formData.append('profile', fileInput.files[0]); 
+            $(".page-loader").removeClass('d-none');
+            $.ajax({
+                url: `/admin/profile/file`,
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $(".page-loader").addClass('d-none');
+                    if (response.status) {
+                        showNotificationPopup(response.message, 'success', '/admin/profile');
+                    } else {
+                        showNotificationPopup(response.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $(".invalid-feedback").remove();
+                    $(".page-loader").addClass('d-none');
+                    const errors = xhr?.responseJSON?.error || {};
+                    const message = xhr?.responseJSON?.message || '';
+                    if (errors?.profile) {
+                        showNotificationPopup(errors.profile, 'error');
+                    } else if (message) {
+                        showNotificationPopup(message, 'error');
+                    } else {
+                        showNotificationPopup("An unexpected error occurred.", 'error');
+                    }
+                }
+            });
+        } else {
+            $("#profileUpdate").submit();
+        }
+    });
+
+    function displayErrorMessage(errors) {
+        for (const field in errors) {
+            let fieldElement = $(`input[name="${field}"], select[name="${field}"], textarea[name="${field}"]`);
+            const fieldError = errors[field];
+            const errorSpan = $("<span>").addClass("error invalid-feedback").text(fieldError);
+
+            fieldElement.after(errorSpan);
+            fieldElement.addClass('is-invalid');
+        }
+    }
+
+    $.validator.addMethod("validatePhoneIntl", function (value, element) {
+        return value.trim() === "" || iti.isValidNumber();
+    }, `<%= t(trans.validation.client_side_validate.valid_message, {
+        attribute: trans.cruds.PROFILE.fields.phone_number
+    }) %>`);
+
+
+    // Click on icon opens file input
+    $('#editIcon').on('click', function () {
+        $('#imageInput').click();
+    });
+
+    $(document).on('click', '#btnDeleteProfile', function(e) {
+        e.preventDefault();
+
+        Swal.fire({
+            title: `<%= trans.messages.sweetalert.profile_delete.title %>`,
+            text: `<%= trans.messages.sweetalert.profile_delete.message %>`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `<%= trans.messages.sweetalert.confirm_button_text %>`,
+            cancelButtonText: `<%= trans.messages.sweetalert.cancel_button_text %>`,
+            reverseButtons: true,
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/admin/profile',
+                    type: 'DELETE',
+                    success: function(response) {
+                        console.log(response)
+                        if(response.status){
+                            showNotificationPopup(response.message, 'success', response.redirectUrl);
+                        }
+                    },
+                    error: function(xhr) {
+                        showNotificationPopup(`<%= t(trans.messages.oops_something_went_wrong, {
+                            attribute: trans.cruds.MODULE.PROFILE,
+                        }) %>`, 'error');
+                    }
+                });
+            }
+        });
+    });
+});
+
+function previewImage(input, previewElementId) {
+    const file = input.files[0];
+    const previewElement = document.getElementById(previewElementId);
+    const maxSize = 5 * 1024 * 1024;
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+    const showError = (message) => {
+        showNotificationPopup(message, 'error');
+        input.value = "";
+        previewElement.src = '/backend/images/dummy-image.jpg';
+    };
+
+    if (file && file.type.startsWith('image/')) {
+        if (!allowedTypes.includes(file.type)) {
+            const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+            showError(errorMessage);
+            return;
+        }
+
+        if (file.size > maxSize) {
+            const errorMessage = `<%= t(trans.messages.uploaded_file_to_large, { num: 5 }) %>`;
+            showError(errorMessage);
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            previewElement.src = e.target.result;
+        };
+
+        reader.onerror = function () {
+            const errorMessage = 'An error occurred while reading the file.';
+            showError(errorMessage);
+        };
+
+        reader.readAsDataURL(file);
+    } else {
+        const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+        showError(errorMessage);
+    }
+}
+</script>

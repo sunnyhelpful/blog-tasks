@@ -1,0 +1,264 @@
+<div class="card-body">
+  <div class="row">
+    <!-- English Tag Name -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="title_en">
+          <%= trans.cruds.TAG.fields.title_en || "English Title" %> <span class="text-danger">*</span>
+        </label>
+        <input
+          class="form-control"
+          type="text"
+          id="title_en"
+          name="title_en"
+          value="<%= tag?.title?.en || '' %>"
+          placeholder="<%= trans.global.enter_your %> <%= trans.cruds.TAG.fields.title_en || 'English Title' %>"
+        />
+      </div>
+    </div>
+
+    <!-- Arabic Tag Name -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="title_ar">
+          <%= trans.cruds.TAG.fields.title_ar || "Arabic Title" %> <span class="text-danger">*</span>
+        </label>
+        <input
+          class="form-control"
+          type="text"
+          id="title_ar"
+          name="title_ar"
+          value="<%= tag?.title?.ar || '' %>"
+          placeholder="<%= trans.global.enter_your %> <%= trans.cruds.TAG.fields.title_ar || 'Arabic Title' %>"
+        />
+      </div>
+    </div>
+
+    <!-- Tag Type -->
+    <!-- <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="tagType">
+          <%= trans.cruds.TAG.fields.tagType || "Tag Type" %> <span class="text-danger">*</span>
+        </label>
+        <select class="select2 form-control" id="tagType" name="tagType">
+          <option value="">
+            <%= trans.messages.please_select + ' ' + trans.cruds.TAG.fields.tagType || "Tag Type" %>
+          </option>
+          <% for (const [key, value] of Object.entries(tagTypes)) { %>
+            <option value="<%= value %>" <%= tag?.type === value ? 'selected' : '' %>>
+              <%= trans.cruds.TAG.tagTypes[value] || value.charAt(0).toUpperCase() + value.slice(1) %>
+            </option>
+          <% } %>
+        </select>
+      </div>
+    </div> -->
+
+    <!-- Tag Banner Image -->
+    <div class="col-sm-6 col-md-6">
+      <div class="d-flex gap-5">
+        <div class="flex-grow-1">
+          <div class="form-group mb-3">
+            <label class="form-label" for="tag_banner">
+              <%= trans.cruds.TAG.fields.tag_image || "Tag Thumbnail" %>
+            </label>
+            <input
+              class="form-control"
+              id="tag_banner"
+              type="file"
+              name="tag_image"
+              accept="image/jpeg, image/jpg, image/png, image/gif"
+              onchange="previewImage(this, 'tag_banner_preview')"
+            />
+          </div>
+        </div>
+        <img 
+          class="img-100" 
+          id="tag_banner_preview" 
+          alt="Tag Banner" 
+          src="<%= tag.tag_image?.file_path ? '/' + tag.tag_image.file_path.replace('public/', '') : '/backend/images/dummy-image.jpg' %>"/>
+      </div>
+    </div>
+  
+    <!-- Tag Icon -->
+    <div class="col-sm-6 col-md-6">
+      <div class="d-flex gap-5">
+        <div class="flex-grow-1">
+          <div class="form-group mb-3">
+            <label class="form-label" for="tag_icon">
+              <%= trans.cruds.TAG.fields.tag_icon || "Tag Icon" %>
+            </label>
+            <input
+              class="form-control"
+              id="tag_icon"
+              type="file"
+              name="tag_icon"
+              accept="image/jpeg, image/jpg, image/png, image/gif"
+              onchange="previewImage(this, 'tag_icon_preview')"
+            />
+          </div>
+        </div>
+        <img 
+          class="img-100" 
+          id="tag_icon_preview" 
+          alt="Tag Icon" 
+          src="<%= tag.tag_icon?.file_path ? '/' + tag.tag_icon.file_path.replace('public/', '') : '/backend/images/dummy-image.jpg' %>"/>
+      </div>
+    </div>
+
+    <!-- Description (English) -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="description_en">
+          <%= trans.cruds.TAG.fields.description_en || "English Description" %>
+        </label>
+        <textarea
+          class="form-control"
+          name="description_en"
+          id="description_en"
+          rows="3"
+        ><%= tag?.description?.en || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Description (Arabic) -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="description_ar">
+          <%= trans.cruds.TAG.fields.description_ar || "Arabic Description" %>
+        </label>
+        <textarea
+          class="form-control"
+          name="description_ar"
+          id="description_ar"
+          rows="3"
+        ><%= tag?.description?.ar || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Meta Title -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="metaTitle">
+          <%= trans.cruds.TAG.fields.metaTitle || "Meta Title" %>
+          <small class="text-muted">(<%= trans.messages.max_60_chars || "Max 60 characters" %>)</small>
+        </label>
+        <input
+          class="form-control"
+          type="text"
+          id="metaTitle"
+          name="metaTitle"
+          maxlength="60"
+          value="<%= tag?.metaTitle || '' %>"
+          placeholder="<%= trans.global.enter_your %> <%= trans.cruds.TAG.fields.metaTitle || 'Meta Title' %>"
+        />
+      </div>
+    </div>
+
+    <!-- Meta Description -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="metaDescription">
+          <%= trans.cruds.TAG.fields.metaDescription || "Meta Description" %>
+          <small class="text-muted">(<%= trans.messages.max_160_chars || "Max 160 characters" %>)</small>
+        </label>
+        <textarea
+          class="form-control"
+          name="metaDescription"
+          id="metaDescription"
+          rows="3"
+          maxlength="160"
+        ><%= tag?.metaDescription || '' %></textarea>
+      </div>
+    </div>
+
+    <!-- Search Keywords -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="searchKeywords">
+          <%= trans.cruds.TAG.fields.searchKeywords || "Search Keywords" %>
+        </label>
+        <input name="searchKeywords" class="form-control basic-tags" value="<%= tag?.searchKeywords || '' %>" placeholder="<%= trans.messages.add_keywords || 'Add keywords' %>">
+      </div>
+    </div>
+
+    <!-- Parent Tag Select -->
+    <% if(tags.length > 0) { %>
+      <div class="col-sm-6 col-md-6">
+        <div class="form-group mb-3">
+          <label class="form-label" for="parentTag">
+            <%= trans.cruds.TAG.fields.parentTag || "Parent Tag" %>
+          </label>
+          <select class="form-control select2" id="parentTag" name="parentTag">
+            <option value="">
+              <%= trans.messages.please_select + ' ' + (trans.cruds.TAG.fields.parentTag || "Parent Tag") %>
+            </option>
+            <% tags.forEach((tagVal) => { %>
+              <% if (tagVal && tagVal._id && tagVal._id.toString() !== tag._id?.toString()) { %>
+                <option value="<%= tagVal._id %>" 
+                  <%= tag.parentTag && tag.parentTag.toString() === tagVal._id.toString() ? 'selected' : '' %>>
+                  <%= tagVal.title[lang] || tagVal.title['en'] %>
+                </option>
+              <% } %>
+            <% }) %>              
+          </select>
+        </div>
+      </div>
+    <% } %>    
+
+    <!-- Related Tags -->
+    <% if(tags.length > 0) { %>
+      <div class="col-sm-6 col-md-6">
+        <div class="form-group mb-3">
+          <label class="form-label" for="relatedTags">
+            <%= trans.cruds.TAG.fields.relatedTags || "Related Tags" %>
+          </label>
+          <select class="form-control select2" id="relatedTags" name="relatedTags" multiple>
+            <% tags.forEach((tagVal) => { %>
+              <% if (tagVal && tagVal._id && tagVal._id.toString() !== tag._id?.toString()) { %>
+                <option value="<%= tagVal._id %>" 
+                  <%= tag.relatedTags && tag.relatedTags.map(id => id.toString()).includes(tagVal._id.toString()) ? 'selected' : '' %>>
+                  <%= tagVal.title[lang] || tagVal.title['en'] %>
+                </option>
+              <% } %>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+    <% } %> 
+
+    <!-- Visibility -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="visibility">
+          <%= trans.cruds.TAG.fields.visibility || "Visibility" %>
+        </label>
+        <select class="select2 form-control" id="visibility" name="visibility">
+          <% for (const [key, value] of Object.entries(tagVisibility)) { %>
+            <option value="<%= value %>" <%= tag?.visibility === value ? 'selected' : '' %>>
+              <%= trans.cruds.TAG.visibility[value] || value.charAt(0).toUpperCase() + value.slice(1) %>
+            </option>
+          <% } %>
+        </select>
+      </div>
+    </div>
+
+    <!-- Priority -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="priority">
+          <%= trans.cruds.TAG.fields.priority || "Priority" %>
+          <small class="text-muted">(0-100)</small>
+        </label>
+        <input
+          class="form-control"
+          type="number"
+          id="priority"
+          name="priority"
+          min="0"
+          max="100"
+          value="<%= tag?.priority || 0 %>"
+        />
+      </div>
+    </div>
+  </div>
+</div>

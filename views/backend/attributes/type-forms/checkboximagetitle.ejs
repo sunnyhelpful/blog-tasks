@@ -1,0 +1,329 @@
+<div class="checkboximagetitle-atr attribute-checkboximagetitle-data" data-type="checkboximagetitle">
+    <div class="checkboximagetitle-options-wrapper selected-data mb-4" data-type="checkboximagetitle" style="display: none;">
+        <div class="row">
+            <div class="col-12 col-md-7 checkboximagetitle-clone-wrap checkboximagetitle-form">
+                <div class="previwe-btn-box preview-list" data-type="checkboximagetitle">
+                    <a href="javascript:;" class="btn btn-info btn-view perviewtextWithLabel" id="perviewtextWithLabel" title="<%= trans.global.preview %>">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+
+                <div class="lang-card-box mb-3">
+                    <div class="title-box">
+                        <h3 class="mt-0"><%= trans.global.label %></h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                        <div class="row w-100">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text"
+                                        name="label_en"
+                                        id="checkboximagetitle_label_en"
+                                        value="<%= attribute?.label?.en || '' %>"
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.english +')' %>"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="label_ar"
+                                        id="checkboximagetitle_label_ar"
+                                        value="<%= attribute?.label?.ar || '' %>"
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.arabic +')' %>"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- <div class="clone-data-main" data-count="1">
+                    <div class="clone-data-inner">
+                        <div class="lang-card-box">
+                            <div class="title-box">
+                                <h3 class="mt-0"><%= trans.global.option_title +' 1' %></h3>
+                            </div>
+                            <div class="lang-form-input-group">
+                                <div class="row w-100">
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="option_title_en[]" 
+                                                id="checkboximagetitle_option_title_en_1"
+                                                value="" 
+                                                placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.english +')' %>"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="form-group">
+                                            <input 
+                                                class="form-control" 
+                                                type="text" 
+                                                name="option_title_ar[]" 
+                                                id="checkboximagetitle_option_title_ar_1"
+                                                value="" 
+                                                placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.arabic +')' %>"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="lang-card-box">
+                            <div class="title-box">
+                                <h3 class="mt-0"><%= trans.global.option_image +' 1' %></h3>
+                            </div>
+                            <div class="lang-form-input-group">
+                                <div class="row w-100">
+                                    <div class="col-12 col-md-6 check-image-size-checkboximagetitle">
+                                        <div class="copy-file-upload-data" data-type="checkboximagetitle">
+                                            <div class="form-group">
+                                                <input class="form-control uploader-1" type="file" name="option_en[]" id="checkboximagetitle_option_image_en_1" accept="image/jpeg, image/jpg, image/png, image/gif">
+                                            </div>
+                                            <div class="copy-image-upload checkmark-box copy-btn" title="Same image for Arabic">
+                                                <input class="form-check-input primary" id="checkboximagetitle_imageclonecheck_1" name="checkboximagetitle_imageclonecheck_1" type="checkbox" data-type="checkboximagetitle" checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 hidecheckbox">
+                                        <div class="form-group">
+                                            <input class="form-control uploader-2" type="file" name="option_ar[]" id="checkboximagetitle_option_image_ar_1" accept="image/jpeg, image/jpg, image/png, image/gif">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-group">
+                        <button type="button" class="btn btn-primary add-btn" data-type="checkboximagetitle">＋</button>
+                    </div>
+                </div> -->
+
+                <% if (attribute && attribute.options && attribute.options.length > 0 && (attribute.type == 'checkboximagetitle')) { %>
+                    <% attribute.options.forEach(function(option, index) { 
+                        const count = index + 1;
+                        const isLast = index === attribute.options.length - 1;
+                        const meta = option?.meta || {};
+                        const isCloned = meta.isCloned === true;
+                        const title_en = option?.value?.en || '';
+                        const title_ar = option?.value?.ar || '';
+                    %>
+                        <div class="clone-data-main" data-count="<%= count %>">
+                            <div class="clone-data-inner">
+                                <div class="lang-card-box">
+                                    <div class="title-box">
+                                        <h3 class="mt-0"><%= trans.global.option_title + ' ' + count %></h3>
+                                    </div>
+                                    <div class="lang-form-input-group">
+                                        <div class="row w-100">
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <input 
+                                                        class="form-control" 
+                                                        type="text" 
+                                                        name="option_title_en[]" 
+                                                        id="checkboximagetitle_option_title_en_<%= count %>"
+                                                        value="<%= title_en %>"
+                                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.english +')' %>"
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6">
+                                                <div class="form-group">
+                                                    <input 
+                                                        class="form-control" 
+                                                        type="text" 
+                                                        name="option_title_ar[]" 
+                                                        id="checkboximagetitle_option_title_ar_<%= count %>"
+                                                        value="<%= title_ar %>"
+                                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.arabic +')' %>"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lang-card-box">
+                                    <div class="title-box">
+                                        <h3 class="mt-0"><%= trans.global.option_image + ' ' + count %></h3>
+                                    </div>
+                                    <div class="lang-form-input-group">
+                                        <div class="row w-100">
+                                            <div class="col-12 col-md-6 check-image-size-checkboximagetitle">
+                                                <div class="copy-file-upload-data" data-type="checkboximagetitle">
+                                                    <div class="form-group">
+                                                        <input 
+                                                            class="form-control uploader-1" 
+                                                            type="file" 
+                                                            name="option_en[]" 
+                                                            id="checkboximagetitle_option_image_en_<%= count %>" 
+                                                            accept="image/jpeg, image/jpg, image/png, image/gif"
+                                                            data-existing-image="/<%= meta?.fileUrl_en %>" data-existing-image-for-save="<%= meta?.fileUrl_en %>"
+                                                        >
+                                                    </div>
+                                                    <div class="copy-image-upload checkmark-box copy-btn" title="Same image for Arabic">
+                                                        <input class="form-check-input primary" id="checkboximagetitle_imageclonecheck_<%= count %>" name="checkboximagetitle_imageclonecheck_<%= count %>" type="checkbox" data-type="checkboximagetitle" <%= isCloned ? 'checked' : '' %>>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-12 col-md-6 hidecheckbox">
+                                                <div class="form-group">
+                                                    <input 
+                                                        class="form-control uploader-2" 
+                                                        type="file" 
+                                                        name="option_ar[]" 
+                                                        id="checkboximagetitle_option_image_ar_<%= count %>" 
+                                                        accept="image/jpeg, image/jpg, image/png, image/gif"
+                                                        data-existing-image="/<%= meta?.fileUrl_ar %>" data-existing-image-for-save="<%= meta?.fileUrl_ar %>"
+                                                    >
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Group: Add/Remove -->
+                            <div class="action-group">
+                                <% if (attribute.options.length > 1) { %>
+                                    <button type="button" class="btn btn-secondary remove-btn" data-type="checkboximagetitle">−</button>
+                                <% } %>
+                                <button type="button" class="btn btn-primary add-btn <%= isLast ? '' : 'hidebtn' %>" data-type="checkboximagetitle">＋</button>
+                            </div>
+                        </div>
+                    <% }) %>
+
+                <% } else { %>
+                    <div class="clone-data-main" data-count="1">
+                        <div class="clone-data-inner">
+                            <div class="lang-card-box">
+                                <div class="title-box">
+                                    <h3 class="mt-0"><%= trans.global.option_title +' 1' %></h3>
+                                </div>
+                                <div class="lang-form-input-group">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <input 
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    name="option_title_en[]" 
+                                                    id="checkboximagetitle_option_title_en_1"
+                                                    value="" 
+                                                    placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.english +')' %>"
+                                                >
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <input 
+                                                    class="form-control" 
+                                                    type="text" 
+                                                    name="option_title_ar[]" 
+                                                    id="checkboximagetitle_option_title_ar_1"
+                                                    value="" 
+                                                    placeholder="<%= trans.global.enter_your +' '+ trans.global.option_title +' ('+ trans.global.arabic +')' %>"
+                                                >
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="lang-card-box">
+                                <div class="title-box">
+                                    <h3 class="mt-0"><%= trans.global.option_image +' 1' %></h3>
+                                </div>
+                                <div class="lang-form-input-group">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-md-6 check-image-size-checkboximagetitle">
+                                            <div class="copy-file-upload-data" data-type="checkboximagetitle">
+                                                <div class="form-group">
+                                                    <input class="form-control uploader-1" type="file" name="option_en[]" id="checkboximagetitle_option_image_en_1" accept="image/jpeg, image/jpg, image/png, image/gif">
+                                                </div>
+                                                <div class="copy-image-upload checkmark-box copy-btn" title="Same image for Arabic">
+                                                    <input class="form-check-input primary" id="checkboximagetitle_imageclonecheck_1" name="checkboximagetitle_imageclonecheck_1" type="checkbox" data-type="checkboximagetitle" checked>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 hidecheckbox">
+                                            <div class="form-group">
+                                                <input class="form-control uploader-2" type="file" name="option_ar[]" id="checkboximagetitle_option_image_ar_1" accept="image/jpeg, image/jpg, image/png, image/gif">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="action-group">
+                            <button type="button" class="btn btn-primary add-btn" data-type="checkboximagetitle">＋</button>
+                        </div>
+                    </div>
+                <% } %>
+            </div>
+            <div class="col-12 col-md-5 position-relative">
+                <div class="preview-data preview-text-data" data-type="checkboximagetitle" style="display: none;">
+                    <fieldset>
+                        <legend><%= trans.global.preview %></legend>
+                        <div class="mb-4">
+                            <div class="lang-card-box">
+                                <div class="lang-form-input-group">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <div class="lang-title-box"><%= trans.global.english %></div>
+                                                <!-- <h4 class="my-3">
+                                                    Select Image
+                                                </h4>
+                                                <div class="form-check w-fit main-img-checkbox">
+                                                    <div class="img-checkbox">
+                                                        <input class="main-img-cover form-check-input" id="img-check-3" type="checkbox">
+                                                        <label class="form-check-label mb-0" for="img-check-3">
+                                                            <img class="img-100" id="imgcheckbox-01" for="flexRadioDefault-age1-img" alt="" src="/backend/images/dummy-image.jpg">
+                                                        </label>
+                                                    </div>
+                                                    <span>Logo Image</span>
+                                                </div> -->
+                                                <h4 class="my-3 label-en-checkboximagetitle"></h4>
+                                                <div class="options-en-checkboximagetitle option-grid-view-en"></div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <div class="lang-title-box"><%= trans.global.arabic %></div>
+                                                <div class="listing-ar-content">
+                                                    <!-- <h4 class="my-3">
+                                                        حدد الصورة
+                                                    </h4>
+                                                    <div class="form-check w-fit main-img-checkbox">
+                                                        <div class="img-checkbox">
+                                                            <input class="main-img-cover form-check-input" id="img-check-4" type="checkbox">
+                                                            <label class="form-check-label mb-0" for="img-check-4">
+                                                                <img class="img-100" id="imgcheckbox-02" for="flexRadioDefault-age1-img" alt="" src="/backend/images/dummy-image.jpg">
+                                                            </label>
+                                                        </div>
+                                                        <span>صورة الشعار</span>
+                                                    </div> -->
+                                                    <h4 class="my-3 label-ar-checkboximagetitle"></h4>
+                                                    <div class="options-ar-checkboximagetitle option-grid-view-ar"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

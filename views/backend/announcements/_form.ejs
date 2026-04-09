@@ -1,0 +1,74 @@
+<div class="card-body">
+  <div class="row">
+    <!-- English Announcement Name Input -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="announcement_en">
+          <%= trans.cruds.ANNOUNCEMENT.fields.title_en %> <span class="text-danger">*</span>
+        </label>
+        <input
+          class="form-control"
+          type="text"
+          id="announcement_en"
+          name="title_en"
+          value="<%= announcement?.title?.en || '' %>"
+          placeholder="<%= trans.global.enter_your %> <%= trans.cruds.ANNOUNCEMENT.fields.title_en %>"
+        />
+      </div>
+    </div>
+
+    <!-- Arabic Announcement Name Input -->
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label class="form-label" for="announcement_ar">
+          <%= trans.cruds.ANNOUNCEMENT.fields.title_ar %> <span class="text-danger">*</span>
+        </label>
+        <input
+          class="form-control"
+          type="text"
+          id="announcement_ar"
+          name="title_ar"
+          value="<%= announcement?.title?.ar || '' %>"
+          placeholder="<%= trans.global.enter_your %> <%= trans.cruds.ANNOUNCEMENT.fields.title_ar %>"
+        />
+      </div>
+    </div>
+
+    <div class="col-sm-6 col-md-6">
+      <div class="form-group mb-3">
+        <label  class="form-label" for="range-date"><%= trans.cruds.ANNOUNCEMENT.fields.choose_date %></label>
+        <div class="input-group flatpicker-calender">
+          <input type="text" name="date-format" class="form-control flatpickr-input" id="range-date" value="<%= announcement.dateRange || '' %>" readonly="readonly">
+        </div>
+      </div>
+    </div>
+
+    <!-- Description (English) -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="description_en">
+          <%= trans.cruds.ANNOUNCEMENT.fields.description_en %>
+        </label>
+        <div class="input-group">
+          <div class="description_editor richtexteditor" id="description_en">
+            <%- announcement?.description?.en || '' %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Description (Arabic) -->
+    <div class="col-md-12">
+      <div class="form-group mb-3">
+        <label class="form-label" for="description_ar">
+          <%= trans.cruds.ANNOUNCEMENT.fields.description_ar %>
+        </label>
+        <div class="input-group">
+          <div class="description_editor1 richtexteditor" id="description_ar">
+            <%- announcement?.description?.ar || '' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

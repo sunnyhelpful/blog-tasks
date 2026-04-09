@@ -1,0 +1,60 @@
+<% title = trans.cruds.USER.heading?.system_user?.edit_system_user + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.USER?.system_user_title?.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="<%= '/admin/dashboard' %>">
+                            <i class="iconly-Home icli svg-color"></i> 
+                            <%= trans.global.home %>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="<%= '/admin/users' %>">
+                            <%= trans.cruds.USER?.system_user_title?.title %>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item active"><%= trans.global.edit %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <form class="card" id="userData" action="<%= '/admin/user/' + user._id %>" method="POST" enctype="multipart/form-data">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.USER.heading.system_user.edit_system_user %></h3> <!-- Edit User Heading in Arabic -->
+                    </div>
+                    <input type="hidden" name="userid" id="userid" value="<%= user._id %>">
+                    <%- include('./_form') %>
+                    
+                    <div class="card-footer text-end d-flex justify-content-end gap-2">
+                        <!-- Cancel Button -->
+                        <a href="<%= '/admin/users' %>" class="btn btn-secondary">
+                            <%= trans.global.cancel || 'Cancel' %>
+                        </a>
+
+                        <!-- Update & Continue Editing Button -->
+                        <button class="btn btn-info" type="submit" name="update_continue" value="1">
+                            <%= trans.global.update_and_continue || 'Update & Continue' %>
+                        </button>
+
+                        <!-- Update Button -->
+                        <button class="btn btn-primary" type="submit">
+                            <%= trans.global.update || 'update' %>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('./script') %>

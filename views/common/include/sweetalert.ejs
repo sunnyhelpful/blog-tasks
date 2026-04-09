@@ -1,0 +1,142 @@
+<!-- Include SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    /**
+     * Show a confirmation prompt before performing an action (e.g., delete, logout, etc.)
+     * 
+     * @param {string} action - The action type (e.g., 'delete', 'logout', etc.)
+     * @param {string} actionUrl - The URL to perform the action (e.g., the delete endpoint)
+     * @param {string} redirectUrl - The URL to redirect to after the action is performed
+     * @param {string} method - The HTTP method to use (e.g., 'GET', 'POST', 'DELETE')
+     */
+    function confirmAction(action, actionUrl, redirectUrl, method = 'POST') {
+        let title = '';
+        let message = '';
+
+        switch(action) {
+            case 'delete':
+                title = `<%= trans.messages.sweetalert.delete.title %>`;
+                message = `<%= trans.messages.sweetalert.delete.message %>`;
+                break;
+            case 'logout':
+                title = `<%= trans.messages.sweetalert.logout.title %>`;
+                message = `<%= trans.messages.sweetalert.logout.message %>`;
+                break;
+            default:
+                title = `<%= trans.messages.sweetalert.default.title %>`;
+                message = `<%= trans.messages.sweetalert.default.message %>`;
+        }
+
+        Swal.fire({
+            title: title,
+            text: message,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `<%= trans.messages.sweetalert.confirm_button_text %>`,
+            cancelButtonText: `<%= trans.messages.sweetalert.cancel_button_text %>`,
+            reverseButtons: true,
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performAction(actionUrl, redirectUrl, method);
+            }
+        });
+    }
+
+    /**
+     * Perform the action (e.g., delete, logout, etc.)
+     * 
+     * @param {string} actionUrl - The URL endpoint to trigger the action
+     * @param {string} redirectUrl - The URL to redirect to after the action is performed
+     * @param {string} method - The HTTP method to use for the request (e.g., 'GET', 'POST', 'DELETE')
+     */
+    function performAction(actionUrl, redirectUrl, method = 'POST') {
+        fetch(actionUrl, { method: method })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status || data.success) {
+                    Swal.fire(`<%= trans.messages.sweetalert.success %>`, data.message, 'success').then(() => {
+                        window.location.href = redirectUrl;
+                    });
+                } else {
+                    Swal.fire(`<%= trans.messages.sweetalert.error %>`, data.message, 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire(`<%= trans.messages.sweetalert.error %>`, 'Something went wrong, please try again later.', 'error');
+            });
+    }
+
+    /* For Js Response  */
+    function showNotificationPopup(message, type, redirectUrl=null) {
+        let icon = ''; 
+        let title = '';
+        let confirmButtonText = 'OK';
+
+        switch (type) {
+            case 'success':
+                icon = 'success';
+                title = `<%= trans.messages.sweetalert.success %>`;
+                break;
+            case 'error':
+                icon = 'error';
+                title = `<%= trans.messages.sweetalert.error %>`;
+                break;
+            case 'warning':
+                icon = 'warning';
+                title = `<%= trans.messages.sweetalert.warning %>`;
+                break;
+            case 'info':
+                icon = 'info';
+                title = `<%= trans.messages.sweetalert.info %>`;
+                break;
+            default:
+                icon = 'info';
+                title = `<%= trans.messages.sweetalert.info %>`;
+                break;
+        }
+
+        Swal.fire({
+            icon: icon,
+            title: title,
+            text: message,
+            confirmButtonText: confirmButtonText,
+            allowOutsideClick: false
+        }).then((result) => {
+            if (result.isConfirmed && type === 'success') {
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                } /* else {
+                    location.reload();
+                } */
+            }
+        });
+    }
+
+
+    <% if (flash.success_with_popup && flash.success_with_popup.length > 0) { %>
+        <% flash.success_with_popup.forEach(function(message) { %>
+            showNotificationPopup('<%= message %>', 'success');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.info_with_popup && flash.info_with_popup.length > 0) { %>
+        <% flash.info_with_popup.forEach(function(message) { %>
+            showNotificationPopup('<%= message %>', 'info');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.warning_with_popup && flash.warning_with_popup.length > 0) { %>
+        <% flash.warning_with_popup.forEach(function(message) { %>
+            showNotificationPopup('<%= message %>', 'warning');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.error_with_popup && flash.error_with_popup.length > 0) { %>
+        <% flash.error_with_popup.forEach(function(message) { %>
+            showNotificationPopup('<%= message %>', 'error');
+        <% }); %>
+    <% } %>
+
+</script>

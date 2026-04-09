@@ -1,0 +1,127 @@
+<% title = trans.cruds.MODULE.TIER + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.TIER %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/tiers' %>"><%= trans.cruds.TIER?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with Tier Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.TIER + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Tier Details in Grid Layout -->
+                        <div class="row">
+                            <!-- Tier Title (English) -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.title_en %> :</label>
+                                    <span><%= tier.title.en %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.description_en %>:</label>
+                                    <span><%- tier.description.en || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Tier Title (Arabic) -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.title_ar %> :</label>
+                                    <span><%= tier.title.ar %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.description_ar %>:</label>
+                                    <span><%- tier.description.ar || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Tier Status -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.status %>:</label>
+                                    <span><%= tier.status.charAt(0).toUpperCase() + tier.status.slice(1).toLowerCase() %></span>
+                                </div>
+                            </div>
+
+                            <!-- Tier Number -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.tierNumber %>:</label>
+                                    <span><%= tier.tierNumber %></span>
+                                </div>
+                            </div>
+
+                            <!-- Max Posted Listings -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.maxPostedListings %>:</label>
+                                    <span><%= tier.maxPostedListings %></span>
+                                </div>
+                            </div>
+
+                            <!-- Listing Duration Days -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.listingDurationDays %>:</label>
+                                    <span><%= tier.listingDurationDays %></span>
+                                </div>
+                            </div>
+
+                            <!-- Annual Subscription -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.annualSubscription %>:</label>
+                                    <span><%= tier.annualSubscription %></span>
+                                </div>
+                            </div>
+
+                            <!-- Applicable Fee Percent -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.applicableFeePercent %>:</label>
+                                    <span><%= tier.applicableFeePercent %></span>
+                                </div>
+                            </div>
+
+                            <!-- Max Fee -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.maxFee %>:</label>
+                                    <span><%= tier.maxFee %></span>
+                                </div>
+                            </div>
+
+                            <!-- Created At -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.TIER.fields.createdAt %>:</label>
+                                    <span><%= tier.createdAt ? new Date(tier.createdAt).toLocaleString() : trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

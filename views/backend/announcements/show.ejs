@@ -1,0 +1,79 @@
+<% title = trans.cruds.MODULE.ANNOUNCEMENT + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.ANNOUNCEMENT %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/categories' %>"><%= trans.cruds.ANNOUNCEMENT?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with Announcement Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.ANNOUNCEMENT + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Announcement Details in Grid Layout -->
+                        <div class="row">
+                            <!-- Announcement Title (English) -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.title_en %> :</label>
+                                    <span><%= announcement.title.en %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.description_en %>:</label>
+                                    <span><%- announcement.description.en || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Announcement Title (Arabic) -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.title_ar %> :</label>
+                                    <span><%= announcement.title.ar %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.description_ar %>:</label>
+                                    <span><%- announcement.description.ar || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Announcement Status -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.status %>:</label>
+                                    <span><%= announcement.status.charAt(0).toUpperCase() + announcement.status.slice(1).toLowerCase() %></span>
+                                </div>
+                            </div>
+
+                            <!-- Announcement Verification Status -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ANNOUNCEMENT.fields.date_range %>:</label>
+                                    <span><%= announcement.start_date_formatted + ' ' + trans.global.to + ' ' + announcement.end_date_formatted %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

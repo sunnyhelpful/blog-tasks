@@ -1,0 +1,88 @@
+<!-- Include Toastr JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    function toastrNotification(message, type) {
+        toastr.clear();
+        /* alert(message);
+        alert(type); */
+
+        const toastrOptions = {
+            closeButton: true,
+            progressBar: true,
+            positionClass: 'toast-top-right',
+            timeOut: 5000,
+            extendedTimeOut: 1000,
+        };
+
+        switch(type) {
+            case 'success':
+                toastr.success(message, `<%= trans.messages.toastr.success %>`, toastrOptions);
+                break;
+            case 'info':
+                toastr.info(message, `<%= trans.messages.toastr.info %>`, toastrOptions);
+                break;
+            case 'warning':
+                toastr.warning(message, `<%= trans.messages.toastr.warning %>`, toastrOptions);
+                break;
+            case 'error':
+                toastr.error(message, `<%= trans.messages.toastr.error %>`, toastrOptions);
+                break;
+            default:
+                toastr.info(message, `<%= trans.messages.toastr.info %>`, toastrOptions);
+        }
+    }
+    
+    <% if (flash.success && flash.success.length > 0) { %>
+        <% flash.success.forEach(function(message) { %>
+            toastrNotification('<%= message %>', 'success');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.info && flash.info.length > 0) { %>
+        <% flash.info.forEach(function(message) { %>
+            toastrNotification('<%= message %>', 'info');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.warning && flash.warning.length > 0) { %>
+        <% flash.warning.forEach(function(message) { %>
+            toastrNotification('<%= message %>', 'warning');
+        <% }); %>
+    <% } %>
+
+    <% if (flash.error && flash.error.length > 0) { %>
+        <% flash.error.forEach(function(message) { %>
+            toastrNotification('<%= message %>', 'error');
+        <% }); %>
+    <% } %>
+
+
+</script>
+
+<style>
+    @keyframes fadeInUp {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOutDown {
+        0% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        100% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+    }
+    .toast {
+        animation: fadeInUp 0.5s ease-in-out, fadeOutDown 0.5s ease-in-out 4.5s;
+    }
+</style>

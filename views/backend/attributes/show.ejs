@@ -1,0 +1,79 @@
+<% title = trans.cruds.MODULE.ATTRIBUTE + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.ATTRIBUTE %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/attributes' %>"><%= trans.cruds.ATTRIBUTE?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with Attribute Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.ATTRIBUTE + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Attribute Details in Grid Layout -->
+                        <div class="row">
+                            <!-- Attribute Title (English) -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.title_en %> :</label>
+                                    <span><%= attribute.title.en %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.description_en %>:</label>
+                                    <span><%- attribute.description.en || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Attribute Title (Arabic) -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.title_ar %> :</label>
+                                    <span><%= attribute.title.ar %></span>
+                                </div>
+
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.description_ar %>:</label>
+                                    <span><%- attribute.description.ar || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Attribute Status -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.status %>:</label>
+                                    <span><%= attribute.status.charAt(0).toUpperCase() + attribute.status.slice(1).toLowerCase() %></span>
+                                </div>
+                            </div>
+
+                            <!-- Attribute Verification Status -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.ATTRIBUTE.fields.type %>:</label>
+                                    <span><%= trans.cruds.ATTRIBUTE.types[attribute?.type] || attribute.type.charAt(0).toUpperCase() + attribute.type.slice(1) %></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

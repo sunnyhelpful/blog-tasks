@@ -1,0 +1,73 @@
+<% title = trans.cruds.MODULE.SYSTEM_USER + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.USER?.system_user_title?.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i>  <%= trans.global.home %></a></li>
+                  <li class="breadcrumb-item"><a href="<%= '/admin/users' %>"><%= trans.cruds.USER?.system_user_title?.title %></a></li>
+                  <li class="breadcrumb-item active"><%= trans.global.list %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        
+        <div class="card-header card-no-border d-flex justify-content-between align-items-center">
+          <div class="">            
+            <h3><%= trans.cruds?.USER?.heading?.system_user?.user_list || 'cruds.USER.heading.system_user.user_list' %></h3>
+            <!-- <p class="desc mb-0 mt-1"><%= trans.cruds?.USER?.heading?.system_user?.all_the_user_list || 'trans.cruds?.USER.heading.system_user.all_the_user_list' %></p> -->
+          </div>
+          <% if (userInfo.permissions.includes("create_system_user")) { %>
+            <div class="btn-showcase d-flex justify-content-end">
+              <a href="/admin/user/create" class="btn btn-pill btn-success" id="btnAddUser" title="<%= trans.global.create %>"><%= trans.global.create %></a>
+            </div>
+          <% } %>
+      </div>
+        <div class="card-body pt-0"> 
+          <!-- <div class="mb-3">
+            <label for="statusFilter">Status Filter:</label>
+            <select id="statusFilter" class="form-select">
+                <option value="" selected>All</option>
+                <option value="1">Active</option>
+                <option value="0">Inactive</option>
+            </select>
+          </div> -->        
+          <div class="table-responsive theme-scrollbar">
+            <table class="table table-lg display usersTable" id=" row_create" style="width:100%">
+              <thead>
+                  <tr>
+                    <th>#</th>
+                    <th data-data="first_name"><%= trans.cruds.USER.fields.name %></th>
+                    <th data-data="username"><%= trans.cruds.USER.fields.username %></th>
+                    <th data-data="email"><%= trans.cruds.USER.fields.email %></th>
+                    <th data-data="phone_number"><%= trans.cruds.USER.fields.phone_number %></th>
+                    <th data-data="role"><%= trans.cruds.USER.fields.role %></th>
+                    <th data-data="status"><%= trans.cruds.USER.fields.status %></th>
+                    <th data-data="createdAt"><%= trans.cruds.USER.fields.createdAt %></th>
+                    <th data-data="last_working_date"><%= trans.cruds.USER.fields.last_working_date %></th>
+                    <% if (userInfo.permissions.includes("view_system_user") || userInfo.permissions.includes("edit_system_user") || userInfo.permissions.includes("delete_system_user") || userInfo.permissions.includes("resend_system_user_credential") || userInfo.permissions.includes("assign_system_user_last_working_days")) { %>
+                      <th data-data="action"><%= trans.cruds.USER.fields.action %></th>
+                    <% } else { %>
+                      <th></th>
+                    <% } %>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- Data will be loaded via AJAX -->
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('./script') %>

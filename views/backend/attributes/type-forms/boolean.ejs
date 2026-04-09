@@ -1,0 +1,178 @@
+<div class="boolean-atr attribute-boolean-data" data-type="boolean">
+    <!-- Boolean Data Section -->
+    <div class="selected-data mb-4" data-type="boolean" style="display: none;">
+        <div class="row">
+            <div class="col-12 col-md-7 boolean-form">
+                <!-- Preview Button -->
+                <div class="previwe-btn-box preview-list" data-type="boolean">
+                    <a href="javascript:;" class="btn btn-info btn-view perviewtextWithLabel" id="perviewtextWithLabel" title="<%= trans.global.preview %>">
+                        <i class="fas fa-eye"></i>
+                    </a>
+                </div>
+
+                <!-- Label Input Section -->
+                <div class="lang-card-box mb-3">
+                    <div class="title-box">
+                        <h3 class="mt-0"><%= trans.global.label %></h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                        <div class="row w-100">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="label_en"
+                                        id="boolean_label_en"
+                                        value="<%= attribute?.label?.en || '' %>"
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.english +')' %>" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="label_ar"
+                                        id="boolean_label_ar"
+                                        value="<%= attribute?.label?.ar %>"
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.label +' ('+ trans.global.arabic +')' %>"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lang-card-box mb-3">
+                    <div class="title-box">
+                        <h3 class="mt-0"><%= trans.global.option +'1' %></h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                        <div class="row w-100">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="option1_en"
+                                        id="boolean_option1_en"
+                                        value="<%= attribute?.options?.[0]?.value?.en || '' %>"
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option +'1 ('+ trans.global.english +')' %>" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input
+                                        class="form-control" 
+                                        type="text" 
+                                        name="option1_ar"
+                                        id="boolean_option1_ar"
+                                        value="<%= attribute?.options?.[0]?.value?.ar || '' %>" 
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option +'1 ('+ trans.global.arabic +')' %>" 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lang-card-box mb-3">
+                    <div class="title-box">
+                        <h3 class="mt-0"><%= trans.global.option +'2' %></h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                        <div class="row w-100">
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="option2_en"
+                                        id="boolean_option2_en"
+                                        value="<%= attribute?.options?.[1]?.value?.en || '' %>" 
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option +'2 ('+ trans.global.english +')' %>" 
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <div class="form-group">
+                                    <input 
+                                        class="form-control" 
+                                        type="text" 
+                                        name="option2_ar"
+                                        id="boolean_option2_ar"
+                                        value="<%= attribute?.options?.[1]?.value?.ar || '' %>" 
+                                        placeholder="<%= trans.global.enter_your +' '+ trans.global.option +'2 ('+ trans.global.arabic +')' %>" 
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Display Section -->
+            <div class="col-12 col-md-5 position-relative">
+                <div class="preview-data preview-text-data" data-type="boolean" style="display: none;">
+                    <fieldset>
+                        <legend><%= trans.global.preview %></legend>
+                        <div class="mb-4">
+                            <div class="lang-card-box">
+                                <div class="lang-form-input-group">
+                                    <div class="row w-100">
+                                        <!-- English Preview -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <div class="lang-title-box"><%= trans.global.english %></div>
+                                                <h4 class="my-3 label-en-boolean"></h4>
+                                                <div class="options-en-boolean"></div>
+                                                <!-- <div class="form-check-group d-flex gap-5">
+                                                    <div class="form-check w-fit">
+                                                        <input class="form-check-input" id="flexRadioDefault1"
+                                                            type="radio" name="flexRadioDefault">
+                                                        <label class="form-check-label option1-en" for="flexRadioDefault1"></label>
+                                                    </div>
+                                                    <div class="form-check w-fit">
+                                                        <input class="form-check-input" id="flexRadioDefault2"
+                                                            type="radio" name="flexRadioDefault" checked="">
+                                                        <label class="form-check-label option2-en" for="flexRadioDefault2"></label>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
+
+                                        <!-- Arabic Preview -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <div class="lang-title-box"><%= trans.global.arabic %></div>
+                                                <div class="listing-ar-content">
+                                                    <h4 class="my-3 label-ar-boolean"></h4>
+                                                    <div class="options-ar-boolean"></div>
+                                                    <!-- <div class="form-check-group d-flex gap-5">
+                                                        <div class="form-check w-fit">
+                                                            <input class="form-check-input" id="flexRadioDefault3"
+                                                                type="radio" name="flexRadioDefault-ar">
+                                                            <label class="form-check-label option1-ar" for="flexRadioDefault3"></label>
+                                                        </div>
+                                                        <div class="form-check w-fit">
+                                                            <input class="form-check-input" id="flexRadioDefault4"
+                                                                type="radio" name="flexRadioDefault-ar" checked="">
+                                                            <label class="form-check-label option2-ar" for="flexRadioDefault4"></label>
+                                                        </div>
+                                                    </div> -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,62 @@
+<% title = trans.cruds.MODULE.BRAND + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.BRAND %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                  <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                  <li class="breadcrumb-item"><a href="<%= '/admin/brands' %>"><%= trans.cruds.MODULE.BRAND %></a></li>
+                  <li class="breadcrumb-item active"><%= trans.global.list %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="card">
+        
+        <div class="card-header card-no-border d-flex justify-content-between align-items-center">
+          <div class="">            
+            <h3><%= trans.cruds.BRAND.heading.brand_list || 'brand_list' %></h3>
+            <!-- <p class="desc mb-0 mt-1"><%= trans.cruds.BRAND.heading.all_the_brand_list || 'all_the_brand_list' %></p> -->
+          </div>
+          <% if (userInfo.permissions.includes("create_brand")) { %>
+            <div class="btn-showcase d-flex justify-content-end">
+                <a href="/admin/brand/create" title="<%= trans.global.create %>" class="btn btn-pill btn-success" id="btnAddBrand">
+                  <%= trans.global.create %>
+                </a>
+            </div>
+          <% } %>
+        </div>
+        <div class="card-body pt-0"> 
+          <div class="table-responsive theme-scrollbar">
+            <table class="table table-lg display brandsTable" id=" row_create" style="width:100%">
+              <thead>
+                  <tr>
+                    <th>#</th>
+                    <th data-data="title"><%= trans.cruds.BRAND.fields.title %></th>
+                    <th data-data="status"><%= trans.cruds.BRAND.fields.status %></th>
+                    <th data-data="createdAt"><%= trans.cruds.BRAND.fields.createdAt %></th>
+                    <% if (userInfo.permissions.includes("view_brand") || userInfo.permissions.includes("edit_brand") || userInfo.permissions.includes("delete_brand")) { %>
+                      <th data-data="action"><%= trans.cruds.BRAND.fields.action %></th>
+                    <% } else { %>
+                      <th></th>
+                    <% } %>
+                  </tr>
+              </thead>
+              <tbody>
+                  <!-- Data will be loaded via AJAX -->
+              </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('./script') %>

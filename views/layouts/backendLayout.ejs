@@ -1,0 +1,49 @@
+<!DOCTYPE html >
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title><%= title || 'Dealy' %></title>
+    <!-- Favicon icon-->
+    <!-- <link rel="icon" href="/backend/images/favicon.png" type="image/x-icon"/> -->
+    <%- include('../backend/partials/header-link') %>
+  </head>
+  <body class="<%= darkMode %>">
+    <!-- page-wrapper Start-->
+    <!-- tap on top starts-->
+    <div class="tap-top"><i class="iconly-Arrow-Up icli"></i></div>
+    <!-- tap on tap ends-->
+    <!-- We dont need unneccessary loaders on load of window -->
+    <!-- loader
+    <div class="loader-wrapper">
+      <div class="loader"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    -->
+    <div class="page-wrapper compact-wrapper" id="pageWrapper"> 
+
+      <div class="page-loader d-none">
+        <div class="loader"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+
+      <%- include('../backend/partials/_header') %>
+      <!-- Page Body Start-->
+      <div class="page-body-wrapper"> 
+        <!-- Page sidebar start-->
+        <%- include('../backend/partials/_sidebar') %>
+        <!-- Page sidebar end-->
+        <div class="page-body">
+            <%- body %>
+        </div>
+        <!-- footer -->
+         <!-- partial:partials/_footer.ejs -->
+         <%- include('../backend/partials/_footer') %> 
+        <!-- partial -->
+      </div>
+    </div>
+    <!-- scripts -->
+    <%- include('../backend/partials/scripts') %>
+    <%- include('../common/include/toastr') %>
+    <%- include('../common/include/sweetalert') %>
+  </body>
+</html>

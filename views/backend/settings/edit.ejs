@@ -1,0 +1,51 @@
+<% title = trans.cruds.SETTING.heading.create_setting + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.SETTING.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/categories' %>"><%= trans.cruds.SETTING.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.edit %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <form class="card" id="settingData" action="<%= userInfo.role == 'admin' ? '/admin/setting/update/' + setting.id : '/setting/update/' + setting.id %>" method="POST" enctype="multipart/form-data">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.global.edit %> <%= setting.details?.[lang] || 'Setting' %></h3>
+                    </div>
+                    <input type="hidden" name="edit_Setting" id="edit_Setting" value="1">
+                    <%- include('./_form') %>
+                    
+                    <div class="card-footer text-end d-flex justify-content-end gap-2">
+                        <!-- Cancel Button -->
+                        <a href="<%= '/admin/settings' %>" class="btn btn-secondary">
+                            <%= trans.global.cancel || 'Cancel' %>
+                        </a>
+
+                        <!-- Update & Continue Editing Button -->
+                        <button class="btn btn-info" type="submit" name="update_continue" value="1">
+                            <%= trans.global.update_and_continue || 'Update & Continue' %>
+                        </button>
+
+                        <!-- Update Button -->
+                        <button class="btn btn-primary" type="submit">
+                            <%= trans.global.update || 'update' %>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('./script') %>

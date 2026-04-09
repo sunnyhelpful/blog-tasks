@@ -1,0 +1,196 @@
+<% title = trans.cruds.MODULE.SYSTEM_USER + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.USER?.system_user_title?.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/users' %>"><%= trans.cruds.USER?.system_user_title?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with User Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.SYSTEM_USER + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 col-md-12 col-lg-10">
+                                <!-- User Details in Grid Layout -->
+                                <div class="row">
+                                    <!-- First Name -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.first_name %> :</label>
+                                            <span><%= user.first_name || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Last Name -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.last_name %> :</label>
+                                            <span><%= user.last_name || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Middle Name -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.middle_name %> :</label>
+                                            <span><%= user.middle_name || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Username -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.username %> :</label>
+                                            <span><%= user.username || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.email %> :</label>
+                                            <span><%= user.email || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Phone Number -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.phone_number %> :</label>
+                                            <span><%= user.phone_number || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Verified -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.verified %> :</label>
+                                            <span><%= user.isVerified ? 'Yes' : 'No' %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Status -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.status %> :</label>
+                                            <span><%= user.status === 0 ? 'Inactive' : 'Active' %></span>
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Account Type -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.account_type %> :</label>
+                                            <span>
+                                                <%= user.account_type === 'system_user' 
+                                                    ? trans.cruds.USER.fields.system_user 
+                                                    : user.account_type === 'platform_user' 
+                                                        ? trans.cruds.USER.fields.platform_user 
+                                                        : trans.global.not_available 
+                                                %>
+                                              </span>                                      
+                                        </div>
+                                    </div>
+                                
+                                    <!-- Created At -->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.USER.fields.createdAt %> :</label>
+                                            <span><%= new Date(user.createdAt).toLocaleDateString() %></span>
+                                        </div>
+                                    </div>
+
+                                    <hr>
+                                    <!--Address-->
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.ADDRESS.fields.building_name %> :</label>
+                                            <span><%= user?.address?.building_name  || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%=trans.cruds.ADDRESS.fields.street %> :</label>
+                                            <span><%= user?.address?.street || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.ADDRESS.fields.area %> :</label>
+                                            <span><%= user?.address?.area || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.ADDRESS.fields.city %> :</label>
+                                            <span><%= user?.address?.city || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.ADDRESS.fields.postal_code %> :</label>
+                                            <span><%= user?.address?.postal_code || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-3">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label"><%= trans.cruds.ADDRESS.fields.country %> :</label>
+                                            <span><%= user?.address?.country || trans.global.not_available %></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                    
+                            </div>
+                            <div class="col-12 col-sm-4 col-md-4 col-lg-2">
+                                <div class="profile-img-wrapper">
+                                    <img class="show-img-box profile-img-item" id="profile_image" alt="Profile Image" 
+                                    src="<%= user.user_profile?.file_path ? '/' + user.user_profile.file_path.replace('public/', '') : '/backend/images/dummy-image.jpg' %>"/>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        
+
+                        <!-- Roles and Their Permissions -->
+                        <% if (user.role_id && user.role_id.role_permissions && user.role_id.role_permissions.length > 0) { %>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mb-3"><%= trans.cruds.USER.fields.permissions %></h5>
+                                    <% permissions.forEach(function(permission, index) { %>
+                                        <span class="badge bg-info rounded-pill p-2 m-1">
+                                            <%= permission.title %>
+                                        </span>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        <% } %>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

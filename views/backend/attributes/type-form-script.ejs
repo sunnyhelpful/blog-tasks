@@ -1,0 +1,1382 @@
+<script>
+$(document).ready(function () {
+    const attriTypeVal = `<%= attribute?.type || '' %>`;
+    const isEditMode = !!attriTypeVal;
+
+    if (isEditMode) {
+        setTimeout(function () {
+            $('#attrType').val(attriTypeVal).trigger('change');
+        }, 100);
+    }
+
+    $(document).on('change', '#attrType', function () {
+        const selected = $(this).val();
+        $('.selected-data').hide();
+
+        if (selected) {
+            if (isEditMode) {
+                if (selected !== attriTypeVal) {
+                    clearFormData(selected);
+                }
+            } else {
+                clearFormData(selected);
+            }
+
+            $(`.selected-data[data-type="${selected}"]`).show();
+
+            if (
+                selected === 'radioimage' ||
+                selected === 'radioimagetitle' ||
+                selected === 'checkboximage' ||
+                selected === 'checkboximagetitle'
+            ) {
+                if (!isEditMode) {
+                    $(`.selected-data[data-type="${selected}"]`).find('input[type="checkbox"]').prop('checked', true).trigger('change');
+                } else {
+                    if (selected !== attriTypeVal) {
+                        $(`.selected-data[data-type="${selected}"]`).find('input[type="checkbox"]').prop('checked', true).trigger('change');
+                    }
+                }
+            }
+        }
+    });
+
+    function clearFormData(type) {
+        const $parent = $(`.attribute-${type}-data`);
+
+        if ($parent.length === 0) return;
+
+        $parent.find('.invalid-feedback').remove();
+        $parent.find('.is-invalid').removeClass('is-invalid');
+
+        $parent.find('input[type="text"], input[type="number"], textarea').val('');
+        $parent.find('input[type="file"]').val('');
+        $parent.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+
+        $parent.find('select').each(function () {
+            $(this).val(null).trigger('change');
+        });
+
+        $parent.find('.preview-text-data').hide();
+        $parent.find(`.label-en-${type}`).text('');
+        $parent.find(`.label-ar-${type}`).text('');
+        $parent.find(`.options-en-${type}`).html('');
+        $parent.find(`.options-ar-${type}`).html('');
+        $parent.find('.selected-data').hide();
+    }
+
+    /* const attriTypeVal = `<%= attribute?.type || '' %>`;
+    if (attriTypeVal) {
+        setTimeout(function(){
+            $(document).find('#attrType').val(attriTypeVal).trigger('change');
+        }, 100)
+    }
+
+    $(document).on('change', '#attrType', function () {
+        var selected = $(this).val();
+        $(document).find('.selected-data').hide();
+        
+        if (selected) {
+            clearFormData(selected);
+            $('.selected-data[data-type="' + selected + '"]').show();
+            if ((selected === 'radioimage') || (selected === 'radioimagetitle') || (selected === 'checkboximage') || (selected === 'checkboximagetitle')) {
+                $(`.selected-data[data-type="${selected}"]`).find('input[type="checkbox"]').prop('checked', true).trigger('change');
+            }
+        }
+    });
+
+    function clearFormData(type) {
+        let $parent = $(`.attribute-${type}-data`);
+
+        if ($parent.length === 0) return;
+
+        $parent.find('.invalid-feedback').remove();
+        $parent.find('.is-invalid').removeClass('is-invalid');
+
+        $parent.find('input[type="text"], input[type="number"], textarea').val('');
+        $parent.find('input[type="file"]').val('');
+        $parent.find('input[type="checkbox"], input[type="radio"]').prop('checked', false);
+
+        $parent.find('select').each(function () {
+            $(this).val(null).trigger('change');
+        });
+
+        $parent.find('.preview-text-data').hide();
+
+        $parent.find(`.label-en-${type}`).text('');
+        $parent.find(`.label-ar-${type}`).text('');
+        
+        $parent.find(`.options-en-${type}`).html('');
+        $parent.find(`.options-ar-${type}`).html('');
+
+        $parent.find('.selected-data').hide();
+    } */
+
+    /* preview after only fill with their label */
+    $(document).on('click', '.perviewtextWithLabel', function (e) {
+        e.preventDefault();
+
+        const $parentContainer = $(this).closest('#attribute-type-form');
+        const type = $(this).closest('.previwe-btn-box').data('type');
+        let $container = $parentContainer.find(`.attribute-${type}-data`);
+        $container.find('.invalid-feedback').remove();
+        $container.find('.is-invalid').removeClass('is-invalid');
+
+        
+        if ((type === 'text') || (type == 'number') || (type == 'date') || (type == 'textarea') || (type == 'googlemap') || (type == 'texteditor') || (type == 'singleimageuploader') || (type == 'multipleimageuploader')) {
+            multiplesPreviewAppend($container);
+        } else if(type == 'boolean'){
+            booleanAppend($container);
+        } else if((type == 'radio') || (type == 'checkbox') || (type == 'radioimage') || (type == 'checkboximage') || (type == 'toggleswitchtitle') || (type == 'toggleswitchtitleinput')) {
+            radioAndCheckboxAppend($container);
+        } else if((type == 'radioimagetitle') || (type == 'checkboximagetitle')){
+            radioAndCheckboxWithTitleAndImageAppend($container);
+        } else if((type == 'singleselectdropdown') || (type == 'singleselectdropdownwithsearch') || (type === 'multipleselectdropdown') || (type === 'multipleselectdropdownwithsearch')){
+            selectAndTogglePreviewAppend($container);
+        }
+    });
+
+    function multiplesPreviewAppend(container){
+        let type = container.data('type');
+        const $labelEnInput = container.find('input[name="label_en"]');
+        const $labelArInput = container.find('input[name="label_ar"]');
+        const $placeholderEnInput = container.find('input[name="placeholder_en"]');
+        const $placeholderArInput = container.find('input[name="placeholder_ar"]');
+
+        const labelEn = $labelEnInput.val().trim();
+        const labelAr = $labelArInput.val().trim();
+
+
+        const placeholderEn = $placeholderEnInput.length ? $placeholderEnInput.val().trim() : null;
+        const placeholderAr = $placeholderArInput.length ? $placeholderArInput.val().trim() : null;
+
+        let hasError = false;
+        let $preview = null;
+        if (!labelEn) {
+            $labelEnInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.label
+                }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!labelAr) {
+            $labelArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.label
+                }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        if ($placeholderEnInput.length && !placeholderEn) {
+            $placeholderEnInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.placeholder
+                }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if ($placeholderArInput.length && !placeholderAr) {
+            $placeholderArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.placeholder
+                }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        $preview = $('.preview-text-data[data-type="' + type + '"]');
+
+        $preview.find(`label[for="${type}_value_attribute_en"]`).text(labelEn);
+        $preview.find(`label[for="${type}_value_attribute_ar"]`).text(labelAr);
+
+        if ($placeholderEnInput.length && placeholderEn) {
+            $preview.find(`#${type}_value_attribute_en`).attr('placeholder', placeholderEn);
+        }
+        if ($placeholderArInput.length && placeholderAr) {
+            $preview.find(`#${type}_value_attribute_ar`).attr('placeholder', placeholderAr);
+        }
+
+        $preview.slideDown();
+    }
+
+    function booleanAppend(container){
+        const type = container.data('type');
+
+        const $labelEnInput = container.find('input[name="label_en"]');
+        const $labelArInput = container.find('input[name="label_ar"]');
+        const $option1EnInput = container.find('input[name="option1_en"]');
+        const $option1ArInput = container.find('input[name="option1_ar"]');
+        const $option2EnInput = container.find('input[name="option2_en"]');
+        const $option2ArInput = container.find('input[name="option2_ar"]');
+
+        const labelEn = $labelEnInput.val().trim();
+        const labelAr = $labelArInput.val().trim();
+        const option1En = $option1EnInput.val().trim();
+        const option1Ar = $option1ArInput.val().trim();
+        const option2En = $option2EnInput.val().trim();
+        const option2Ar = $option2ArInput.val().trim();
+
+        container.find('.invalid-feedback').remove();
+        container.find('.is-invalid').removeClass('is-invalid');
+
+        let hasError = false;
+        let $preview = null;
+        if (!labelEn) {
+            $labelEnInput
+            .addClass('is-invalid')
+            .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                attribute: trans.global.label
+            }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!labelAr) {
+            $labelArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.label
+                }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!option1En) {
+            $option1EnInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.option
+                }) + '1 (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!option1Ar) {
+            $option1ArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.option
+                }) + '1 (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!option2En) {
+            $option2EnInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.option
+                }) + '2 (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!option2Ar) {
+            $option2ArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.option
+                }) + '2 (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (hasError) return;
+
+        $preview = $('.preview-text-data[data-type="' + type + '"]');
+
+        $preview.find(`.label-en-${type}`).text(labelEn);
+        $preview.find(`.label-ar-${type}`).text(labelAr);
+        
+        $preview.find(`.options-en-${type}`).html('');
+        $preview.find(`.options-ar-${type}`).html('');
+
+        $preview.find(`.options-en-${type}`).append(`
+            <div class="form-check-group d-flex gap-5">
+                <div class="form-check w-fit">
+                    <input class="form-check-input" id="flexRadioDefault1" type="radio" name="flexRadioDefault">
+                    <label class="form-check-label" for="flexRadioDefault1">${option1En}</label>
+                </div>
+                <div class="form-check w-fit">
+                    <input class="form-check-input" id="flexRadioDefault2" type="radio" name="flexRadioDefault" checked>
+                    <label class="form-check-label" for="flexRadioDefault2">${option2En}</label>
+                </div>
+            </div>
+        `);
+        
+        $preview.find(`.options-ar-${type}`).append(`
+            <div class="form-check-group d-flex gap-5">
+                <div class="form-check w-fit">
+                    <input class="form-check-input" id="flexRadioDefault3" type="radio" name="flexRadioDefault-ar">
+                    <label class="form-check-label" for="flexRadioDefault3">${option1Ar}</label>
+                </div>
+                <div class="form-check w-fit">
+                    <input class="form-check-input" id="flexRadioDefault4" type="radio" name="flexRadioDefault-ar" checked>
+                    <label class="form-check-label" for="flexRadioDefault4">${option2Ar}</label>
+                </div>
+            </div>
+        `);
+
+        $preview.slideDown();
+    }
+
+    function radioAndCheckboxAppend(container) {
+        const type = container.data('type');
+
+        const $labelEnInput = container.find('input[name="label_en"]');
+        const $labelArInput = container.find('input[name="label_ar"]');
+        const $optionEnInputArray = container.find('input[name="option_en[]"]');
+        const $optionArInputArray = container.find('input[name="option_ar[]"]');
+
+        const labelEn = $labelEnInput.val().trim();
+        const labelAr = $labelArInput.val().trim();
+
+        let optionsEn = [];
+        let optionsAr = [];
+        $optionEnInputArray.each(function () {
+            optionsEn.push($(this).val().trim());
+        });
+        /* $optionArInputArray.each(function () {
+            optionsAr.push($(this).val().trim());
+        }); */
+        $optionArInputArray.each(function (index) {
+            const $arInput = $(this);
+            const $enInput = $optionEnInputArray.eq(index);
+            const inputType = $enInput.closest('.copy-file-upload-data').data('type') || container.data('type');
+            const isImageType = inputType === 'radioimage' || inputType === 'checkboximage';
+            const isSameImageChecked = $enInput
+                .closest('.copy-file-upload-data')
+                .find('input[type="checkbox"]')
+                .prop('checked');
+
+            if (isImageType && isSameImageChecked) {
+                optionsAr.push('[SAME]');
+            } else {
+                optionsAr.push($arInput.val().trim());
+            }
+        });
+
+        container.find('.invalid-feedback').remove();
+        container.find('.is-invalid').removeClass('is-invalid');
+
+        let hasError = false;
+        let $preview = null;
+
+        if (!labelEn) {
+            $labelEnInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!labelAr) {
+            $labelArInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        /* optionsEn.forEach((option, index) => {
+            if (!option) {
+                $optionEnInputArray.eq(index).addClass('is-invalid')
+                    .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+                hasError = true;
+            }
+        }); */
+        optionsEn.forEach((option, index) => {
+            const $input = $optionEnInputArray.eq(index);
+            const inputType = $input.closest('.copy-file-upload-data').data('type');
+            const isImageType = inputType === 'radioimage' || inputType === 'checkboximage';
+
+            const file = $input[0].files ? $input[0].files[0] : null;
+            const existingImage = $input.data('existing-image');
+
+            if (isImageType) {
+                if (!file && !existingImage) {
+                    $input.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+                    hasError = true;
+                }
+            } else {
+                if (!option) {
+                    $input.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+                    hasError = true;
+                }
+            }
+        });
+
+        /* $optionArInputArray.each(function (index) {
+            const $arInput = $(this);
+            const $enInput = $optionEnInputArray.eq(index);
+            const inputType = $enInput.closest('.copy-file-upload-data').data('type') || container.data('type');
+            const isImageType = inputType === 'radioimage' || inputType === 'checkboximage';
+            const isSameImageChecked = $enInput
+                .closest('.copy-file-upload-data')
+                .find('input[type="checkbox"]')
+                .prop('checked');
+
+            if (isImageType && isSameImageChecked) return;
+
+            if (isImageType) {
+                const file = this.files ? this.files[0] : null;
+                if (!file) {
+                    $arInput.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                            attribute: trans.global.option
+                        }) + ' (' + trans.global.arabic + ')' %></span>`);
+                    hasError = true;
+                }
+            } else {
+                if (!$arInput.val().trim()) {
+                    $arInput.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                            attribute: trans.global.option
+                        }) + ' (' + trans.global.arabic + ')' %></span>`);
+                    hasError = true;
+                }
+            }
+        }); */
+        $optionArInputArray.each(function (index) {
+            const $arInput = $(this);
+            const $enInput = $optionEnInputArray.eq(index);
+            const inputType = $enInput.closest('.copy-file-upload-data').data('type') || container.data('type');
+            const isImageType = inputType === 'radioimage' || inputType === 'checkboximage';
+            const isSameImageChecked = $enInput.closest('.copy-file-upload-data').find('input[type="checkbox"]').prop('checked');
+
+            if (isImageType && isSameImageChecked) return;
+
+            if (isImageType) {
+                const file = this.files ? this.files[0] : null;
+                const existingImage = $arInput.data('existing-image');
+                if (!file && !existingImage) {
+                    $arInput.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block">Option is required (Arabic)</span>`);
+                    hasError = true;
+                }
+            } else {
+                if (!$arInput.val().trim()) {
+                    $arInput.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block">Option is required (Arabic)</span>`);
+                    hasError = true;
+                }
+            }
+        });
+
+        if(hasError){
+            return false;
+        }
+
+        $preview = $(`.preview-text-data[data-type="${type}"]`);
+
+        $preview.find(`.label-en-${type}`).text(labelEn);
+        $preview.find(`.label-ar-${type}`).text(labelAr);
+
+        $preview.find(`.options-en-${type}`).html('');
+        $preview.find(`.options-ar-${type}`).html('');
+
+        if (type === 'radioimage' || type === 'checkboximage') {
+            /* const inputType = type === 'radioimage' ? 'radio' : 'checkbox';
+
+            $optionEnInputArray.each(function (index) {
+                const enInput = this;
+                const arInput = $optionArInputArray.eq(index)[0];
+                const $enInput = $(enInput);
+                const $arInput = $(arInput);
+
+                const isSameImageChecked = $enInput
+                    .closest('.copy-file-upload-data')
+                    .find('input[type="checkbox"]')
+                    .prop('checked');
+
+                // const fileEn = enInput.files ? enInput.files[0] : null;
+                const fileEn = enInput.files ? enInput.files[0] : null;
+                const fallbackEnImage = $enInput.data('existing-image');
+
+                const fileAr = arInput.files ? arInput.files[0] : null;
+
+                if (fileEn) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageUrl = e.target.result;
+
+                        $preview.find(`.options-en-${type}`).append(`
+                            <div class="form-check w-fit main-img-checkbox">
+                                <div class="img-checkbox">
+                                    <input class="main-img-cover form-check-input" id="img-${type}-en-${index + 1}" type="${inputType}" name="${inputType}-image-option-en">
+                                    <label class="form-check-label mb-0" for="img-${type}-en-${index + 1}">
+                                        <img class="img-100" src="${imageUrl}" alt="Option ${index + 1}">
+                                    </label>
+                                </div>
+                            </div>
+                        `);
+
+                        if (isSameImageChecked || !fileAr) {
+                            $preview.find(`.options-ar-${type}`).append(`
+                                <div class="form-check w-fit main-img-checkbox">
+                                    <div class="img-checkbox">
+                                        <input class="main-img-cover form-check-input" id="img-${type}-ar-${index + 1}" type="${inputType}" name="${inputType}-image-option-ar">
+                                        <label class="form-check-label mb-0" for="img-${type}-ar-${index + 1}">
+                                            <img class="img-100" src="${imageUrl}" alt="Option ${index + 1}">
+                                        </label>
+                                    </div>
+                                </div>
+                            `);
+                        } else {
+                            const readerAr = new FileReader();
+                            readerAr.onload = function (e2) {
+                                const imageUrlAr = e2.target.result;
+                                $preview.find(`.options-ar-${type}`).append(`
+                                    <div class="form-check w-fit main-img-checkbox">
+                                        <div class="img-checkbox">
+                                            <input class="main-img-cover form-check-input" id="img-${type}-ar-${index + 1}" type="${inputType}" name="${inputType}-image-option-ar">
+                                            <label class="form-check-label mb-0" for="img-${type}-ar-${index + 1}">
+                                                <img class="img-100" src="${imageUrlAr}" alt="Option ${index + 1}">
+                                            </label>
+                                        </div>
+                                    </div>
+                                `);
+                            };
+                            readerAr.readAsDataURL(fileAr);
+                        }
+                    };
+                    reader.readAsDataURL(fileEn);
+                }
+            }); */
+            const inputType = type === 'radioimage' ? 'radio' : 'checkbox';
+
+            $optionEnInputArray.each(function (index) {
+                const enInput = this;
+                const arInput = $optionArInputArray.eq(index)[0];
+                const $enInput = $(enInput);
+                const $arInput = $(arInput);
+
+                const isSameImageChecked = $enInput.closest('.copy-file-upload-data').find('input[type="checkbox"]').prop('checked');
+
+                const fileEn = enInput.files ? enInput.files[0] : null;
+                const fallbackEnImage = $enInput.data('existing-image');
+
+                const fileAr = arInput.files ? arInput.files[0] : null;
+                const fallbackArImage = $arInput.data('existing-image');
+
+                function appendImagePreview($container, imageUrl, index, lang) {
+                    $container.append(`
+                        <div class="form-check w-fit main-img-checkbox">
+                            <div class="img-checkbox">
+                                <input class="main-img-cover form-check-input" id="img-${type}-${lang}-${index + 1}" type="${inputType}" name="${inputType}-image-option-${lang}">
+                                <label class="form-check-label mb-0" for="img-${type}-${lang}-${index + 1}">
+                                    <img class="img-100" src="${imageUrl}" alt="Option ${index + 1}">
+                                </label>
+                            </div>
+                        </div>
+                    `);
+                }
+
+                if (fileEn) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        const imageUrl = e.target.result;
+                        appendImagePreview($preview.find(`.options-en-${type}`), imageUrl, index, 'en');
+
+                        if (isSameImageChecked || !fileAr) {
+                            appendImagePreview($preview.find(`.options-ar-${type}`), imageUrl, index, 'ar');
+                        } else if (fileAr) {
+                            const readerAr = new FileReader();
+                            readerAr.onload = function (e2) {
+                                appendImagePreview($preview.find(`.options-ar-${type}`), e2.target.result, index, 'ar');
+                            };
+                            readerAr.readAsDataURL(fileAr);
+                        } else if (fallbackArImage) {
+                            appendImagePreview($preview.find(`.options-ar-${type}`), fallbackArImage, index, 'ar');
+                        }
+                    };
+                    reader.readAsDataURL(fileEn);
+                } else if (fallbackEnImage) {
+                    appendImagePreview($preview.find(`.options-en-${type}`), fallbackEnImage, index, 'en');
+
+                    if (isSameImageChecked) {
+                        appendImagePreview($preview.find(`.options-ar-${type}`), fallbackEnImage, index, 'ar');
+                    } else if (fileAr) {
+                        const readerAr = new FileReader();
+                        readerAr.onload = function (e2) {
+                            appendImagePreview($preview.find(`.options-ar-${type}`), e2.target.result, index, 'ar');
+                        };
+                        readerAr.readAsDataURL(fileAr);
+                    } else if (fallbackArImage) {
+                        appendImagePreview($preview.find(`.options-ar-${type}`), fallbackArImage, index, 'ar');
+                    }
+                }
+            });
+        } else if(type == 'radio'){
+            optionsEn.forEach((option, index) => {
+                $preview.find(`.options-en-${type}`).append(`
+                    <div class="form-check w-fit">
+                        <input class="form-check-input" type="radio" name="radio-option" id="flexRadioDefault${index + 1}">
+                        <label class="form-check-label" for="flexRadioDefault${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+            
+            optionsAr.forEach((option, index) => {
+                $preview.find(`.options-ar-${type}`).append(`
+                    <div class="form-check w-fit">
+                        <input class="form-check-input" type="radio" name="radio-option-ar" id="flexRadioDefault-ar-${index + 1}">
+                        <label class="form-check-label" for="flexRadioDefault-ar-${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+        } else if(type == 'checkbox') {
+            optionsEn.forEach((option, index) => {
+                $preview.find(`.options-en-${type}`).append(`
+                    <div class="form-check w-fit">
+                        <input class="form-check-input" type="checkbox" name="checkboxoption" id="checkboxoption-${index + 1}">
+                        <label class="form-check-label" for="checkboxoption-${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+
+            optionsAr.forEach((option, index) => {
+                $preview.find(`.options-ar-${type}`).append(`
+                    <div class="form-check w-fit">
+                        <input class="form-check-input" type="checkbox" name="checkboxoption-ar" id="checkboxoption-ar-${index + 1}">
+                        <label class="form-check-label" for="checkboxoption-ar-${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+            
+        } else if(type == 'toggleswitchtitle'){
+            optionsEn.forEach((option, index) => {
+                $preview.find(`.options-en-${type}`).append(`
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked-en-${index + 1}" checked>
+                        <label class="form-check-label" for="flexSwitchCheckChecked-en-${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+
+            optionsAr.forEach((option, index) => {
+                $preview.find(`.options-ar-${type}`).append(`
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked-ar-${index + 1}" checked>
+                        <label class="form-check-label" for="flexSwitchCheckChecked-ar-${index + 1}">${option}</label>
+                    </div>
+                `);
+            });
+        } else if (type == 'toggleswitchtitleinput'){
+            optionsEn.forEach((option, index) => {
+                $preview.find(`.options-en-${type}`).append(`
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked-en-${index + 1}" role="switch" checked>
+                        <label class="form-check-label" for="flexSwitchCheckChecked-en-${index + 1}">${option}</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input class="form-control" type="text" name="title_en[]" placeholder="">
+                    </div>
+                `);
+            });
+
+            optionsAr.forEach((option, index) => {
+                $preview.find(`.options-ar-${type}`).append(`
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked-ar-${index + 1}" role="switch" checked>
+                        <label class="form-check-label" for="flexSwitchCheckChecked-ar-${index + 1}">${option}</label>
+                    </div>
+                    <div class="form-group mb-3">
+                        <input class="form-control" type="text" name="title_ar[]" placeholder="">
+                    </div>
+                `);
+            });
+        }
+        
+
+        $preview.slideDown();
+    }
+
+    function radioAndCheckboxWithTitleAndImageAppend(container) {
+        const type = container.data('type');
+        
+        const $labelEnInput = container.find('input[name="label_en"]');
+        const $labelArInput = container.find('input[name="label_ar"]');
+        const $optionEnTitleInputArray = container.find('input[name="option_title_en[]"]');
+        const $optionArTitleInputArray = container.find('input[name="option_title_ar[]"]');
+        const $optionEnImageInputArray = container.find('input[name="option_en[]"]');
+        const $optionArImageInputArray = container.find('input[name="option_ar[]"]');
+
+        const labelEn = $labelEnInput.val().trim();
+        const labelAr = $labelArInput.val().trim();
+
+        let optionsEnTitle = [];
+        let optionsArTitle = [];
+        let optionsEnImage = [];
+        let optionsArImage = [];
+
+        $optionEnTitleInputArray.each(function () {
+            optionsEnTitle.push($(this).val().trim());
+        });
+        $optionArTitleInputArray.each(function () {
+            optionsArTitle.push($(this).val().trim());
+        });
+
+        $optionEnImageInputArray.each(function () {
+            optionsEnImage.push({
+                file: this.files ? this.files[0] : null,
+                existingImage: $(this).data('existing-image')
+            });
+        });
+
+        $optionArImageInputArray.each(function (index) {
+            const $arInput = $(this);
+            const $enInput = $optionEnImageInputArray.eq(index);
+            const $sameImageCheckbox = $enInput.closest('.copy-file-upload-data').find('input[type="checkbox"]');
+
+            if ($sameImageCheckbox.length && $sameImageCheckbox.prop('checked')) {
+                optionsArImage.push({
+                    file: $enInput[0].files ? $enInput[0].files[0] : null,
+                    existingImage: $enInput.data('existing-image'),
+                    isSame: true
+                });
+            } else {
+                optionsArImage.push({
+                    file: this.files ? this.files[0] : null,
+                    existingImage: $arInput.data('existing-image'),
+                    isSame: false
+                });
+            }
+        });
+
+        container.find('.invalid-feedback').remove();
+        container.find('.is-invalid').removeClass('is-invalid');
+
+        let hasError = false;
+        let $preview = null;
+
+        if (!labelEn) {
+            $labelEnInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!labelAr) {
+            $labelArInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        optionsEnTitle.forEach((title, index) => {
+            if (!title) {
+                $optionEnTitleInputArray.eq(index).addClass('is-invalid');
+                $optionEnTitleInputArray.eq(index).after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+                hasError = true;
+            }
+        });
+
+        optionsArTitle.forEach((title, index) => {
+            if (!title) {
+                $optionArTitleInputArray.eq(index).addClass('is-invalid');
+                $optionArTitleInputArray.eq(index).after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.arabic + ')' %></span>`);
+                hasError = true;
+            }
+        });
+
+        optionsEnImage.forEach((image, index) => {
+            const $input = $optionEnImageInputArray.eq(index);
+            const inputType = $input.closest('.copy-file-upload-data').data('type');
+            const isImageType = inputType === 'radioimagetitle' || inputType === 'checkboximagetitle';
+
+            if (isImageType) {
+                if (!image.file && !image.existingImage) {
+                    $input.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+                    hasError = true;
+                }
+            }
+        });
+
+        // Fixed: Changed optionsArImage.each to optionsArImage.forEach
+        optionsArImage.forEach((image, index) => {
+            const $arInput = $optionArImageInputArray.eq(index);
+            const $enInput = $optionEnImageInputArray.eq(index);
+            const inputType = $enInput.closest('.copy-file-upload-data').data('type') || container.data('type');
+            const isImageType = inputType === 'radioimagetitle' || inputType === 'checkboximagetitle';
+
+            if (isImageType && image.isSame) return;
+
+            if (isImageType) {
+                if (!image.file && !image.existingImage) {
+                    $arInput.addClass('is-invalid')
+                        .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                            attribute: trans.global.option_image
+                        }) + ' (' + trans.global.arabic + ')' %></span>`);
+                    hasError = true;
+                }
+            }
+        });
+
+        if (hasError) {
+            container.find('.lang-form-input-group').addClass('mb-3');
+            return false;
+        } else {
+            container.find('.lang-form-input-group').removeClass('mb-3');
+        }
+
+        $preview = $(`.preview-text-data[data-type="${type}"]`);
+
+        $preview.find(`.label-en-${type}`).text(labelEn);
+        $preview.find(`.label-ar-${type}`).text(labelAr);
+
+        $preview.find(`.options-en-${type}`).html('');
+        $preview.find(`.options-ar-${type}`).html('');
+
+        if (type === 'radioimagetitle' || type === 'checkboximagetitle') {
+            const inputType = type === 'radioimagetitle' ? 'radio' : 'checkbox';
+
+            optionsEnTitle.forEach((enTitle, index) => {
+                const enImage = optionsEnImage[index];
+                const arTitle = optionsArTitle[index];
+                const arImage = optionsArImage[index];
+
+                const processImage = (imageData, title, lang) => {
+                    const imageUrl = imageData.file ? 
+                        URL.createObjectURL(imageData.file) : 
+                        imageData.existingImage;
+
+                    if (!imageUrl) return;
+
+                    $preview.find(`.options-${lang}-${type}`).append(`
+                        <div class="form-check w-fit main-img-checkbox">
+                            <div class="img-checkbox">
+                                <input class="main-img-cover form-check-input" 
+                                    id="img-${type}-${lang}-${index}" 
+                                    type="${inputType}" 
+                                    name="${inputType}-${lang}-group">
+                                <label class="form-check-label mb-0" for="img-${type}-${lang}-${index}">
+                                    <img class="img-100" src="${imageUrl}" alt="${title}">
+                                    <span>${title}</span>
+                                </label>
+                            </div>
+                        </div>
+                    `);
+                };
+
+                // English version
+                processImage(enImage, enTitle, 'en');
+
+                // Arabic version
+                const arImageData = arImage.isSame ? enImage : arImage;
+                processImage(arImageData, arTitle, 'ar');
+            });
+        }
+
+        $preview.show();
+    }
+
+
+    /*  */
+    function selectAndTogglePreviewAppend(container){
+        const type = container.data('type');
+
+        const $labelEnInput = container.find('input[name="label_en"]');
+        const $labelArInput = container.find('input[name="label_ar"]');
+        const $placeholderEnInput = container.find('input[name="placeholder_en"]');
+        const $placeholderArInput = container.find('input[name="placeholder_ar"]');
+
+        const $optionEnInputArray = container.find('input[name="option_en[]"]');
+        const $optionArInputArray = container.find('input[name="option_ar[]"]');
+
+        const labelEn = $labelEnInput.val().trim();
+        const labelAr = $labelArInput.val().trim();
+        const placeholderEn = $placeholderEnInput.length ? $placeholderEnInput.val().trim() : null;
+        const placeholderAr = $placeholderArInput.length ? $placeholderArInput.val().trim() : null;
+
+        let optionsEn = [];
+        let optionsAr = [];
+        $optionEnInputArray.each(function () {
+            optionsEn.push($(this).val().trim());
+        });
+        $optionArInputArray.each(function () {
+            optionsAr.push($(this).val().trim());
+        });
+
+        container.find('.invalid-feedback').remove();
+        container.find('.is-invalid').removeClass('is-invalid');
+
+        let hasError = false;
+        let $preview = null;
+
+        if (!labelEn) {
+            $labelEnInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if (!labelAr) {
+            $labelArInput.addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.label
+                    }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        
+        if ($placeholderEnInput.length && !placeholderEn) {
+            $placeholderEnInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.placeholder
+                }) + ' (' + trans.global.english + ')' %></span>`);
+            hasError = true;
+        }
+
+        if ($placeholderArInput.length && !placeholderAr) {
+            $placeholderArInput
+                .addClass('is-invalid')
+                .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.global.placeholder
+                }) + ' (' + trans.global.arabic + ')' %></span>`);
+            hasError = true;
+        }
+
+        optionsEn.forEach((option, index) => {
+            if (!option) {
+                $optionEnInputArray.eq(index).addClass('is-invalid')
+                    .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                }) + ' (' + trans.global.english + ')' %></span>`);
+                hasError = true;
+            }
+        });
+
+        optionsAr.forEach((option, index) => {
+            if (!option) {
+                $optionArInputArray.eq(index).addClass('is-invalid')
+                    .after(`<span class="invalid-feedback d-block"><%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.global.option
+                }) + ' (' + trans.global.arabic + ')' %></span>`);
+                hasError = true;
+            }
+        });
+
+        if(hasError){
+            return false;
+        }
+
+        $preview = $(`.preview-text-data[data-type="${type}"]`);
+
+        $preview.find(`label[for="${type}_value_attribute_en"]`).text(labelEn);
+        $preview.find(`label[for="${type}_value_attribute_ar"]`).text(labelAr);
+
+        if((type === 'singleselectdropdown') || (type === 'singleselectdropdownwithsearch') || (type === 'multipleselectdropdown') || (type === 'multipleselectdropdownwithsearch')){
+            const $selectEn = $preview.find(`#${type}_value_attribute_en`);
+            const $selectAr = $preview.find(`#${type}_value_attribute_ar`);
+
+            $selectEn.html('');
+            $selectAr.html('');
+
+            if ($placeholderEnInput.length && placeholderEn) {
+                $selectEn.append(`<option value="" selected>${placeholderEn}</option>`);
+            }
+
+            if ($placeholderArInput.length && placeholderAr) {
+                $selectAr.append(`<option value="" selected>${placeholderAr}</option>`);
+            }
+
+            optionsEn.forEach(option => {
+                $selectEn.append(`<option value="${option}">${option}</option>`);
+            });
+
+            optionsAr.forEach(option => {
+                $selectAr.append(`<option value="${option}">${option}</option>`);
+            });
+        } 
+        
+        $preview.slideDown();
+    }
+
+
+    /* Date picker */
+    flatpickr(".attriDate", {
+        dateFormat: "Y-m-d",
+        defaultDate: new Date(),
+        minDate: "today",
+        allowInput: true,
+    });
+
+    /* For label on key up start */
+    $(document).on('input', 'input[name="label_en"], input[name="label_ar"]', function () {
+        const $container = $(this).closest('.lang-form-input-group');
+        const $parentSelected = $container.closest('.selected-data');
+        const type = $parentSelected.data('type');
+
+        const $preview = $('.preview-text-data[data-type="' + type + '"]');
+        if ($preview.is(':visible')) {
+            const labelEn = $container.find('input[name="label_en"]').val().trim();
+            const labelAr = $container.find('input[name="label_ar"]').val().trim();
+            updatePreviewContent(type, labelEn, labelAr, $preview);
+        }
+    });
+
+    function updatePreviewContent(type, labelEn, labelAr, $preview) {
+        switch (type) {
+            case 'text':
+            case 'number':
+            case 'date':
+            case 'googlemap':
+            case 'texteditor':
+            case 'textarea':
+            case 'singleimageuploader':
+            case 'multipleimageuploader':
+            case 'singleselectdropdown':
+            case 'singleselectdropdownwithsearch':
+            case 'multipleselectdropdown':
+            case 'multipleselectdropdownwithsearch':
+                $preview.find(`label[for="${type}_value_attribute_en"]`).text(labelEn);
+                $preview.find(`label[for="${type}_value_attribute_ar"]`).text(labelAr);
+                /* $preview.find('input[name$="_en"]').attr('placeholder', labelEn);
+                $preview.find('input[name$="_ar"]').attr('placeholder', labelAr); */
+                break;
+
+            case 'boolean':
+            case 'checkbox':
+            case 'checkboximage':
+            case 'checkboximagetitle':
+            case 'radio':
+            case 'radioimage':
+            case 'radioimagetitle':
+            case 'toggleswitchtitle':
+            case 'toggleswitchtitleinput':
+                $preview.find(`.label-en-${type}`).text(labelEn);
+                $preview.find(`.label-ar-${type}`).text(labelAr);
+                break;
+
+            default:
+                console.warn('Unsupported preview type: ' + type);
+                break;
+        }
+    }
+    /* End for label on key up */
+
+
+    /* Start action btn append html */
+    function updateButtons(type = null) {
+        if(type){
+            let boxes = $(`.${type}-options-wrapper .option-box`);
+            if(type == 'checkboximagetitle' || type == 'radioimagetitle'){
+                boxes =  $(`.${type}-options-wrapper`).find('.clone-data-main')
+            }
+            boxes.find('.action-group').remove();
+
+            boxes.each(function (index) {
+                const isLast = index === boxes.length - 1;
+                const btnGroup = $('<div class="action-group"></div>');
+
+                $(this).find('.title-box h3').text('<%= trans.global.option %> ' + (index + 1));
+
+                if (isLast && boxes.length > 1) {
+                    btnGroup.append(`<button type="button" class="action-btn remove-btn btn btn-secondary" data-type=${type}>−</button>`);
+                    btnGroup.append(`<button type="button" class="action-btn add-btn btn btn-primary" data-type=${type}>＋</button>`);
+                } else if (isLast) {
+                    btnGroup.append(`<button type="button" class="action-btn remove-btn btn btn-secondary" data-type=${type}>−</button>`);
+                    btnGroup.append(`<button type="button" class="action-btn add-btn btn btn-primary" data-type=${type}>＋</button>`);
+                } else {
+                    btnGroup.append(`<button type="button" class="action-btn remove-btn btn btn-secondary" data-type=${type}>−</button>`);
+                    btnGroup.append(`<button type="button" class="action-btn add-btn btn btn-primary hidebtn" data-type=${type}>＋</button>`);
+                }
+
+                $(this).append(btnGroup);
+            });
+        } else {
+            console.log('Type not found!');
+        }
+    }
+
+    $(document).on('click', '.add-btn', function () {
+        const $this = $(this);
+        const type = $this.data('type');
+        let count = null;
+
+        const $target = $(`.align-box-wrap[data-type="${type}"]`);
+        if (!$target.hasClass('align-box-large-wrap')) {
+            $target.addClass('align-box-large-wrap');
+        }
+        
+        if(type == 'checkboximagetitle' || type == 'radioimagetitle'){
+
+
+            const $wrapper = $this.closest(`.${type}-options-wrapper`);
+            const $lastLangCard = $wrapper.find('.clone-data-main').last();
+
+            count = parseInt($lastLangCard.attr('data-count')) || 1;
+            count += 1;
+
+            const $clone = $lastLangCard.clone();
+            $clone.find('input[type="text"], input[type="file"]').val('');
+
+            $clone.find('input[type="text"]').each(function () {
+                const $input = $(this);
+                const nameAttr = $input.attr('name') || '';
+                
+                if (nameAttr.includes('option_title_en') || nameAttr.includes('option_title_ar')) {
+                    const lang = nameAttr.includes('_ar') ? 'ar' : 'en';
+                    const newId = `${type}_option_title_${lang}_${count}`;
+                    $input.attr('id', newId);
+                }
+            });
+
+            $clone.find('input[type="file"]').each(function () {
+                const $input = $(this);
+                if ($input.is('[data-existing-image]')) {
+                    $(this).removeAttr('data-existing-image');
+                    $(this).removeAttr('data-existing-image-for-save');
+                }
+                const lang = $input.attr('name').includes('_ar') ? 'ar' : 'en';
+                const newId = `${type}_option_image_${lang}_${count}`;
+                $input.attr('id', newId);
+            });
+            $clone.find('input[type="radio"]').each(function () {
+                const newId = `${type}_imagecloneradio_${count}`;
+                $(this).attr('id', newId);
+            });
+
+            $clone.find('input[type="checkbox"]').each(function () {
+                const newCheckboxVal = `${type}_imageclonecheck_${count}`;
+                $(this).attr('id', newCheckboxVal);
+                $(this).attr('name', newCheckboxVal);
+            });
+            $clone.find('.title-box h3').text('<%= trans.global.option %> ' + count);
+            $clone.attr('data-count', count);
+            $lastLangCard.after($clone);
+        } else {
+            /* 
+                const $lastBox = $(`.${type}-options-wrapper .${type}-clone-wrap .option-box:last`);
+                const $clone = $lastBox.clone();
+                $clone.find('input').val('');
+                $(`.${type}-options-wrapper .${type}-clone-wrap`).append($clone);
+            */
+            const $wrapper = $(`.${type}-options-wrapper`);
+            const $lastBox = $wrapper.find(`.${type}-clone-wrap .option-box:last`);
+
+            let count = parseInt($lastBox.attr('data-count')) || 1;
+            count += 1;
+
+            const $clone = $lastBox.clone();
+
+            $clone.find('input[type="text"], input[type="file"]').val('');
+
+            $clone.find('input[type="text"]').each(function () {
+                const $input = $(this);
+                const nameAttr = $input.attr('name') || '';
+
+                if (nameAttr.includes('option_en')) {
+                    $input.attr('id', `${type}_option_en_${count}`);
+                } else if (nameAttr.includes('option_ar')) {
+                    $input.attr('id', `${type}_option_ar_${count}`);
+                }
+            });
+
+            $clone.find('input[type="file"]').each(function () {
+                const $input = $(this);
+                if ($input.is('[data-existing-image]')) {
+                    $(this).removeAttr('data-existing-image');
+                    $(this).removeAttr('data-existing-image-for-save');
+                }
+                const lang = $input.attr('name').includes('_ar') ? 'ar' : 'en';
+                const newId = `${type}_option_image_${lang}_${count}`;
+                $input.attr('id', newId);
+            });
+
+            $clone.find('input[type="checkbox"]').each(function () {
+                const newVal = `${type}_imageclonecheck_${count}`;
+                $(this).attr('id', newVal);
+                $(this).attr('name', newVal);
+            });
+
+            $clone.find('input[type="radio"]').each(function () {
+                const newId = `${type}_imagecloneradio_${count}`;
+                $(this).attr('id', newId);
+            });
+
+            $clone.find('.title-box h3').text('<%= trans.global.option %> ' + count);
+            $clone.attr('data-count', count);
+            $wrapper.find(`.${type}-clone-wrap`).append($clone);
+            updateButtons(type);
+        }
+
+        updateButtons(type);
+    });
+
+    $(document).on('click', '.remove-btn', function () {
+        const type = $(this).data('type');
+        const $targetWrapper = $(this).closest(`.${type}-options-wrapper`);
+        
+        if (type === 'checkboximagetitle' || type === 'radioimagetitle') {
+            $(this).closest('.clone-data-main').remove();
+
+            const $remainingBoxes = $targetWrapper.find('.clone-data-main');
+            console.log($remainingBoxes.length);
+
+            if ($remainingBoxes.length === 1) {
+                $targetWrapper.find('.lang-form-input-group').removeClass('align-box-large-wrap');
+                $remainingBoxes.find('.remove-btn').hide();
+            } else {
+                $remainingBoxes.find('.remove-btn').show();
+            }
+        } else {
+            const $allRemoveBtns = $(`.remove-btn[data-type="${type}"]`);
+            
+            if ($allRemoveBtns.length === 1) {
+                $(this).closest('.option-box').find('input').val('');
+                return;
+            }
+            
+            $(this).closest('.option-box').remove();
+            const $remainingBoxes = $targetWrapper.find('.option-box');
+            if ($remainingBoxes.length === 1) {
+                $targetWrapper.find('.lang-form-input-group').removeClass('align-box-large-wrap');
+                $remainingBoxes.find('.remove-btn').hide();
+            } else {
+                $remainingBoxes.find('.remove-btn').show();
+            }
+        }
+
+        updateButtons(type);
+        const $remainingBoxes = $targetWrapper.find('.option-box');
+        if ($remainingBoxes.length === 1) {
+            $targetWrapper.find('.lang-form-input-group').removeClass('align-box-large-wrap');
+            $remainingBoxes.find('.remove-btn').hide();
+        } else {
+            $remainingBoxes.find('.remove-btn').show();
+        }
+    });
+
+    /* End action btn append html */
+
+    $(document).on('click', '.perviewtext', function (e) {
+        e.preventDefault();
+        const type = $(this).closest('.selected-data').data('type');
+        $('.preview-text-data').each(function () {
+            if ($(this).data('type') !== type) {
+                $(this).slideUp();
+            }
+        });
+        const $currentPreview = $('.preview-text-data[data-type="' + type + '"]');
+        $currentPreview.slideToggle();
+    });
+});
+
+jQuery(document).ready(function () {
+  ImgUpload();
+});
+
+function ImgUpload() {
+  var imgWrap = "";
+  var imgArray = [];
+
+  $('.upload__inputfile').each(function () {
+    $(this).on('change', function (e) {
+      imgWrap = $(this).closest('.upload__box').find('.upload__img-wrap');
+      var maxLength = $(this).attr('data-max_length');
+
+      var files = e.target.files;
+      var filesArr = Array.prototype.slice.call(files);
+      var iterator = 0;
+      filesArr.forEach(function (f, index) {
+
+        if (!f.type.match('image.*')) {
+          return;
+        }
+
+        if (imgArray.length > maxLength) {
+          return false
+        } else {
+          var len = 0;
+          for (var i = 0; i < imgArray.length; i++) {
+            if (imgArray[i] !== undefined) {
+              len++;
+            }
+          }
+          if (len > maxLength) {
+            return false;
+          } else {
+            imgArray.push(f);
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              var html = "<div class='upload__img-box'><div style='background-image: url(" + e.target.result + ")' data-number='" + $(".upload__img-close").length + "' data-file='" + f.name + "' class='img-bg'><div class='upload__img-close'></div></div></div>";
+              imgWrap.append(html);
+              iterator++;
+            }
+            reader.readAsDataURL(f);
+          }
+        }
+      });
+    });
+  });
+
+  $('body').on('click', ".upload__img-close", function (e) {
+    var file = $(this).parent().data("file");
+    for (var i = 0; i < imgArray.length; i++) {
+      if (imgArray[i].name === file) {
+        imgArray.splice(i, 1);
+        break;
+      }
+    }
+    $(this).parent().parent().remove();
+  });
+}
+
+$(function () {
+    $('.formFileRadioImage').FancyFileUpload({
+    params: {
+        action: 'fileuploader'
+    },
+    maxfilesize: 1000000,
+    accept: '.jpg,.jpeg,.png,.gif'
+    });
+});
+
+function handleCheckboxChange($checkbox) {
+    const type = $checkbox.data('type');
+    const $parentWrapper = $checkbox.closest(`.check-image-size-${type}`);
+    const $hideCheckboxDiv = $parentWrapper.siblings('.hidecheckbox');
+
+    if ($checkbox.is(':checked')) {
+        $hideCheckboxDiv.hide();
+        $hideCheckboxDiv.find('input[type="file"]').val('');
+        $parentWrapper.removeClass('col-md-6').addClass('col-md-12');
+    } else {
+        $hideCheckboxDiv.show();
+        $parentWrapper.removeClass('col-md-12').addClass('col-md-6');
+    }
+}
+
+$(document).ready(function () {
+    $('.form-check-input[data-type]').each(function () {
+        handleCheckboxChange($(this));
+    });
+});
+
+$(document).on("change", ".form-check-input[data-type]", function () {
+    handleCheckboxChange($(this));
+});
+
+</script>

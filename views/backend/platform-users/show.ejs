@@ -1,0 +1,140 @@
+<% title = trans.cruds.MODULE.PLATFORM_USER + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.USER?.platform_user_title?.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/platform-users' %>"><%= trans.cruds.USER?.platform_user_title?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with User Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.PLATFORM_USER + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- User Details in Grid Layout -->
+                        <div class="row">
+                            <!-- First Name -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.first_name %> :</label>
+                                    <span><%= user.first_name || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Last Name -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.last_name %> :</label>
+                                    <span><%= user.last_name || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Middle Name -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.middle_name %> :</label>
+                                    <span><%= user.middle_name || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Username -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.username %> :</label>
+                                    <span><%= user.username || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Email -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.email %> :</label>
+                                    <span><%= user.email || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Phone Number -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.phone_number %> :</label>
+                                    <span><%= user.phone_number || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Verified -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.verified %> :</label>
+                                    <span><%= user.isVerified ? 'Yes' : 'No' %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Status -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.status %> :</label>
+                                    <span><%= user.status === 0 ? 'Inactive' : 'Active' %></span>
+                                </div>
+                            </div>
+                        
+                            <!-- Account Type -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.account_type %> :</label>
+                                    <span>
+                                        <%= user.account_type === 'system_user' 
+                                            ? trans.cruds.USER.fields.system_user 
+                                            : user.account_type === 'platform_user' 
+                                                ? trans.cruds.USER.fields.platform_user 
+                                                : trans.global.not_available 
+                                        %>
+                                      </span>                                      
+                                </div>
+                            </div>
+                        
+                            <!-- Created At -->
+                            <div class="col-sm-6 col-md-3">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.USER.fields.createdAt %> :</label>
+                                    <span><%= new Date(user.createdAt).toLocaleString() %></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Roles and Their Permissions -->
+                        <!-- <% if (user.role_id && user.role_id.role_permissions && user.role_id.role_permissions.length > 0) { %>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h5 class="mb-3"><%= trans.cruds.USER.fields.permissions %></h5>
+                                    <% user.role_id.role_permissions.forEach(function(rolePerm) { %>
+                                        <% if (rolePerm.fetch_permissions) { %>
+                                        <span class="badge bg-info rounded-pill p-2">
+                                            <%= rolePerm.fetch_permissions.title %>
+                                        </span>
+                                    <% } %>
+                                    <% }); %>
+                                </div>
+                            </div>
+                        <% } %>  -->                       
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

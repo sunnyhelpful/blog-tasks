@@ -1,0 +1,42 @@
+<script>
+    /* Image Preview */
+    function previewImage(input, previewElementId) {
+        const file = input.files[0];
+        const previewElement = document.getElementById(previewElementId);
+        const errorElement = $(`#${input.id}_error`);
+        const maxSize = 5 * 1024 * 1024;
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+
+        errorElement.remove();
+
+        const displayError = (message) => {
+            const errorHtml = `<span id="${input.id}_error" class="error invalid-feedback d-block">${message}</span>`;
+            $(input).after(errorHtml);
+            input.value = "";  
+            previewElement.src = '/backend/images/dummy-image.jpg';
+        };
+
+        if (file && file.type.startsWith('image/')) {
+            if (!allowedTypes.includes(file.type)) {
+                const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+                displayError(errorMessage);
+                return;
+            }
+
+            if (file.size > maxSize) {
+                const errorMessage = `<%= t(trans.messages.uploaded_file_to_large, { num: 5 }) %>`;
+                displayError(errorMessage);
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewElement.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        } else {
+            const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+            displayError(errorMessage);
+        }
+    }
+</script>

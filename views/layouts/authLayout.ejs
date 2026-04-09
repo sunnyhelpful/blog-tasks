@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title || 'Dealy' %></title>
+    <%- include('../auth/partials/header-link') %>
+  </head>
+  <body>
+    <!-- tap on top starts-->
+    <div class="tap-top"><i class="iconly-Arrow-Up icli"></i></div>
+    <!-- tap on tap ends-->
+    <!-- We dont need unneccessary loaders on load of window -->
+    <!-- loader
+    <div class="loader-wrapper">
+      <div class="loader"><span></span><span></span><span></span><span></span><span></span></div>
+    </div>
+    -->
+    <!-- login page start-->
+    <div class="container-fluid p-0">
+      <div class="page-loader d-none">
+        <div class="loader"><span></span><span></span><span></span><span></span><span></span></div>
+      </div>
+      <%- body %>
+      <!-- Start Footer Script -->
+      <%- include('../auth/partials/footer-scripts') %>
+      <!-- End Footer Script -->
+      <%- include('../auth/script') %>
+      <%- include('../common/include/toastr') %>
+    </div>
+  </body>
+
+</html>

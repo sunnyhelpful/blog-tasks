@@ -1,0 +1,50 @@
+<% title = trans.cruds.BRAND.heading.create_brand + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.BRAND.title %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/brands' %>"><%= trans.cruds.BRAND.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.create %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <form class="card" id="brandData" action="<%= '/admin/brand/store' %>" method="POST">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.BRAND.heading.create_brand %></h3>
+                    </div>
+                    <%- include('./_form') %>
+                    
+                    <div class="card-footer text-end d-flex justify-content-end gap-2">
+                        <!-- Cancel Button -->
+                        <a href="<%= '/admin/brands' %>" class="btn btn-secondary">
+                            <%= trans.global.cancel || 'Cancel' %>
+                        </a>
+
+                        <!-- Save & Continue Editing Button -->
+                        <button class="btn btn-info" type="submit" name="save_continue" value="1">
+                            <%= trans.global.save_and_continue || 'Save & Continue' %>
+                        </button>
+
+                        <!-- Save Button -->
+                        <button class="btn btn-primary" type="submit">
+                            <%= trans.global.save || 'Save' %>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<%- include('./script') %>

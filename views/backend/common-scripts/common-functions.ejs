@@ -1,0 +1,47 @@
+<script>
+    function updateStatus(e, entityType, id, currentStatus, message) {
+        e.preventDefault();
+        $(".page-loader").removeClass('d-none');
+
+        const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+        const url = `/admin/${entityType}/status-update/${id}`;
+
+        const titleMessage = message?.title || `Are you sure you want to ${newStatus} this ${entityType}?`;
+        const textMessage = message?.text || `Don't worry, this action can be undone!`;
+
+        Swal.fire({
+            title: titleMessage,
+            text: textMessage,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `<%= trans.messages.sweetalert.confirm_button_text %>`,
+            cancelButtonText: `<%= trans.messages.sweetalert.cancel_button_text %>`,
+            reverseButtons: true,
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: { status: newStatus },
+                    success: function(response) {
+                        $(".page-loader").addClass('d-none');
+                        if (response.status) {
+                            $(`.${entityType}sTable`).DataTable().ajax.reload(null, false);
+                            showNotificationPopup(response.message || `${entityType.charAt(0).toUpperCase() + entityType.slice(1)} status updated successfully!`, 'success');
+                        } else {
+                            showNotificationPopup(response.message || `Failed to update ${entityType} status.`, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $(".page-loader").addClass('d-none');
+                        console.error(`Error updating ${entityType} status:`, error);
+                        showNotificationPopup(`An error occurred while updating ${entityType} status.`, 'error');
+                    }
+                });
+            } else {
+                $(".page-loader").addClass('d-none');
+            }
+        });
+    }
+</script>

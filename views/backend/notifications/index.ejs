@@ -1,0 +1,56 @@
+<% title = trans.cruds.MODULE.NOTIFICATION + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.NOTIFICATION %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/notifications' %>"><%= trans.cruds.MODULE.NOTIFICATION %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.list %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+        <div class="card">
+            
+            <div class="card-header card-no-border d-flex justify-content-between align-items-center">
+                <div class="">            
+                    <h3><%= trans.cruds.NOTIFICATION.heading.notification_list || 'notification_list' %></h3>
+                    <p class="desc mb-0 mt-1"><%= trans.cruds.NOTIFICATION.heading.all_the_notification_list || 'all_the_notification_list' %></p>
+                </div>
+            </div>
+            <div class="card-body pt-0"> 
+                <div class="table-responsive theme-scrollbar table-responsive-scroll">
+                    <table class="table table-lg display notificationsTable" id=" row_create" style="width:100%">
+                        <thead>
+                            <tr>
+                            <!-- <th><%= trans.cruds.NOTIFICATION.fields.s_no %></th> -->
+                            <th>#</th>
+                            <th data-data="title"><%= trans.cruds.NOTIFICATION.fields.title %></th>
+                            <th data-data="isRead"><%= trans.cruds.NOTIFICATION.fields.read %></th>
+                            <th data-data="createdAt"><%= trans.cruds.NOTIFICATION.fields.createdAt %></th>
+                            <% if (userInfo.permissions.includes("view_notification") || userInfo.permissions.includes("delete_notification") || userInfo.permissions.includes("mark_notification_read")) { %>
+                                <th data-data="action"><%= trans.cruds.NOTIFICATION.fields.action %></th>
+                            <% } else { %>
+                                <th></th>
+                            <% } %>
+                            </tr>
+                        </thead>
+                        <tbody id="notification-list">
+                            <!-- Notifications will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+<%- include('./script') %>

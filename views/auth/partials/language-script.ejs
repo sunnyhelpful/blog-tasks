@@ -1,0 +1,84 @@
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const currentLangElem = document.querySelector('.current_lang');
+        const languageItems = document.querySelectorAll('.more_lang .lang');
+        let savedLang = `<%= lang %>` || getCookie('preferredLang') || localStorage.getItem('preferredLang') || 'en';
+
+        const getCookie = (name) => {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            return parts.length === 2 ? parts.pop().split(';').shift() : null;
+        };
+
+        const setCookie = (name, value, days = 30) => {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            document.cookie = `${name}=${value};expires=${date.toUTCString()};path=/`;
+        };
+
+        const updateHtmlAttributes = (lang, dir) => {
+            document.documentElement.lang = lang;
+            document.documentElement.dir = dir;
+        };
+
+        const setLanguage = (lang) => {
+            const flagIcon = currentLangElem.querySelector('i');
+            const langText = currentLangElem.querySelector('.lang-txt');
+
+            switch (lang) {
+                case 'ar':
+                    flagIcon.className = 'flag-icon flag-icon-ae';
+                    langText.textContent = 'العربية';
+                    updateHtmlAttributes('ar', 'rtl');
+                    break;
+                case 'en':
+                default:
+                    flagIcon.className = 'flag-icon flag-icon-us';
+                    langText.textContent = 'ENG';
+                    updateHtmlAttributes('en', 'ltr');
+            }
+        };
+
+        const persistLanguage = (lang) => {
+            try {
+                localStorage.setItem('preferredLang', lang);
+                setCookie('preferredLang', lang);
+            } catch (e) {
+                console.error('Failed to persist language:', e);
+            }
+        };
+
+        setLanguage(savedLang);
+
+        languageItems.forEach(item => {
+            item.addEventListener('click', async function (event) {
+                event.preventDefault();
+                const lang = this.getAttribute('data-value');
+
+                if (!lang || lang === savedLang) return;
+
+                try {
+                    const response = await fetch('/admin/translator', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ lang })
+                    });
+
+                    if (!response.ok) throw new Error('Network response was not ok');
+
+                    const data = await response.json();
+                    if (data.status) {
+                        persistLanguage(lang);
+                        savedLang = lang;
+                        window.location.reload();
+                    }
+                } catch (error) {
+                    console.error('Language switch failed:', error);
+                    persistLanguage(lang);
+                    setLanguage(lang);
+                    savedLang = lang;
+                }
+            });
+        });
+    });
+</script>

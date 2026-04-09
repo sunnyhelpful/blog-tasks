@@ -1,0 +1,638 @@
+<!-- jQuery and jQuery Validate CDN -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+<%- include('../common/include/language-script') %>
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+        // Dropdown toggle logic
+        const body = document.querySelector("body");
+        body.addEventListener("click", function (event) {
+            const dropdownEl = event.target.closest(".custom-dropdown");
+            const dropdownMenuElement = event.target.closest(".custom-menu");
+            const allMenus = document.querySelectorAll(".custom-menu");
+            allMenus.forEach((menu) => menu.classList.remove("show"));
+
+            if (!dropdownEl) return;
+
+            const menu = dropdownEl.querySelector(".custom-menu");
+            if (!dropdownMenuElement && menu) {
+                menu.classList.add("show");
+            }
+        });
+    });
+
+
+     function updateOTP() {
+        let value = document.getElementById('otp').value;
+        value = value.replace(/\D/g, '');
+        value = value.slice(0, 6);
+        document.getElementById('otp').value = value;
+
+        for (let i = 1; i <= 6; i++) {
+            const digitBox = document.getElementById('digit' + i);
+            digitBox.classList.remove('caret');
+            digitBox.textContent = value[i - 1] || '';
+        }
+
+        const nextIndex = value.length === 0 ? 1 : value.length + 1;
+        if (nextIndex <= 6) {
+            document.getElementById('digit' + nextIndex).classList.add('caret');
+        }
+    }
+
+    function focusOTPInput(event) {
+        const otpInput = document.getElementById('otp');
+        otpInput.focus();
+        for (let i = 1; i <= 6; i++) {
+            document.getElementById('digit' + i).classList.remove('caret');
+        }
+        if (event.target.classList.contains('otp-digit')) {
+            event.target.classList.add('caret');
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const otpInput = document.getElementById('otp');
+        otpInput.focus(); 
+        updateOTP();      
+    });
+    
+    $(document).ready(function () {
+        $("body").on("click", function (event) {
+            const $dropdownEl = $(event.target).closest(".custom-dropdown");
+            const $dropdownMenuEl = $(event.target).closest(".custom-menu");
+            if ($dropdownMenuEl.length === 0) {
+                $(".custom-menu").removeClass("show");
+            }
+
+            if ($dropdownEl.length === 0) return;
+
+            const $dropdownMenu = $dropdownEl.find(".custom-menu");
+            const isVisible = $dropdownMenu.hasClass("show");
+
+            if (!isVisible) {
+                $dropdownMenu.addClass("show");
+            }
+        });
+
+        $('#loginForm').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 15
+                },
+            },
+            messages: {
+                email: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`,
+                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`
+                },
+                password: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.new_password
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.PROFILE.fields.new_password,
+                        min: 6
+                    }) %>`,
+                    maxlength: `<%= t(trans.validation.client_side_validate.max_length, {
+                        attribute: trans.cruds.PROFILE.fields.new_password,
+                        max: 15
+                    }) %>`
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element);
+            },
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function(form) {
+                $(".page-loader").removeClass('d-none');
+                var formData = $(form).serialize();
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $(".page-loader").addClass('d-none');                        
+                        if (response.status) {
+                            toastrNotification(response.message, 'success');
+                            const redirectUrl = response.redirectUrl;
+                            setTimeout(() => {
+                                window.location.href = redirectUrl;
+                            }, 1000);
+                        } else {
+                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
+                                attribute: trans.cruds.MODULE.AUTH,
+                            }) %>`, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $(".page-loader").addClass('d-none');
+                        $(".invalid-feedback").remove();
+                        const errors = xhr?.responseJSON?.errors || {};
+                        const message = xhr?.responseJSON?.message || '';
+                        
+                        if (errors && Object.keys(errors).length > 0) {
+                            displayErrorMessage(errors);
+                        } else if (message) {
+                            toastrNotification(message, 'error');
+                        } else {
+                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
+                                attribute: trans.cruds.MODULE.AUTH,
+                            }) %>`, 'error');
+                        }
+                    }
+                });
+            }
+        });
+
+        // Register Form Validation
+        $('#registerForm').validate({
+            rules: {
+                first_name: {
+                    required: true,
+                    minlength: 3
+                },
+                middle_name: {
+                    required: false,
+                    minlength: 1
+                },
+                last_name: {
+                    required: true,
+                    minlength: 1
+                },
+                username: {
+                    required: true,
+                    minlength: 3
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone_number: {
+                    required: false,
+                    pattern: /^[+]?[0-9]{10,15}$/
+                },
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 15,
+                },
+                password_confirmation: {
+                    required: true,
+                    equalTo: '#password'
+                }
+            },
+            messages: {
+                first_name: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.first_name
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.PROFILE.fields.first_name,
+                        min: 3
+                    }) %>`
+                },
+                middle_name: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.middle_name
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.PROFILE.fields.middle_name,
+                        min: 1
+                    }) %>`
+                },
+                last_name: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.last_name
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.PROFILE.fields.last_name,
+                        min: 1
+                    }) %>`
+                },
+                username: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.username
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.PROFILE.fields.username,
+                        min: 3
+                    }) %>`
+                },
+                email: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`,
+                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`
+                },
+                phone_number: {
+                    pattern: `<%= t(trans.validation.client_side_validate.valid_message, {
+                        attribute: trans.cruds.PROFILE.fields.phone_number
+                    }) %>`
+                },
+                password: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.current_password
+                    }) %>`,
+                },
+                password_confirmation: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.confirm_password
+                    }) %>`,
+                    equalTo: `<%= t(trans.validation.client_side_validate.equal_to_message, {
+                        attribute: trans.cruds.PROFILE.fields.confirm_password
+                    }) %>`
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element);
+            },
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function(form) {
+                $(".page-loader").removeClass('d-none');
+                var formData = $(form).serialize();
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $(".page-loader").addClass('d-none');
+                        if(response.status) {
+                            toastrNotification(response.message, 'success');
+                            setTimeout(() => {
+                                window.location.href = response.redirectUrl;
+                            }, 1000);
+                        } else {
+                            toastrNotification(response.message, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $(".page-loader").addClass('d-none');
+                        $(".invalid-feedback").remove();
+                        const errors = xhr?.responseJSON?.errors || {};
+                        const message = xhr?.responseJSON?.message || '';
+                        
+                        if (errors && Object.keys(errors).length > 0) {
+                            displayErrorMessage(errors);
+                        } else if (message) {
+                            toastrNotification(message, 'error');
+                        } else {
+                            toastrNotification("An unexpected error occurred.", 'error');
+                        }
+                    }
+                });
+            }
+        });
+
+        function getUserId(){
+            var urlParts = window.location.pathname.split('/');
+            var userid = urlParts[urlParts.length - 1];
+            return userid
+        }
+
+        $(document).on('click', '.resendOTP', function(e) {
+            e.preventDefault();
+            var userId = getUserId();
+            if (userId) {
+                window.location.href = "/admin/resend-verification/" + userId;
+                toastrNotification(`<%= trans.auth.messages.resend_verification.email_sent %>`, 'success');
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                toastrNotification(`<%= trans.auth.userNotFound %>`, 'error');
+            }
+        });
+
+
+        $('#otpForm').validate({
+            rules: {
+                otp: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 6,
+                }
+            },
+            messages: {
+                otp: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.USER.fields.password,
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: 'OTP',
+                        min: 6
+                    }) %>`,
+                    maxlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: 'OTP',
+                        min: 6
+                    }) %>`,
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element);
+            },
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function(form) {
+                $(".page-loader").removeClass('d-none');
+                $(document).find('#userid').val(getUserId());
+                var formData = $(form).serialize();
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $(".page-loader").addClass('d-none');
+                        if (response.status) {
+                            toastrNotification(response.message, 'success');
+                            const redirectUrl = response.redirectUrl;
+                            setTimeout(() => {
+                                window.location.href = redirectUrl;
+                            }, 1000);
+                        } else {
+                            toastrNotification(response.message, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $(".invalid-feedback").remove();
+                        $(".page-loader").addClass('d-none');
+
+                        const errors = xhr?.responseJSON?.errors || {};
+                        const message = xhr?.responseJSON?.message || '';
+
+                        if (errors && Object.keys(errors).length > 0) {
+                            displayErrorMessage(errors);
+                        } else if (message) {
+                            toastrNotification(message, 'error');
+                        } else {
+                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
+                                attribute: trans.cruds.MODULE.AUTH,
+                            }) %>`, 'error');
+                        }
+                    }
+                });
+            }
+        });
+
+
+        $('#forgotPasswordForm').validate({
+            rules: {
+                email: {
+                    required: true,
+                    email: true
+                },
+            },
+            messages: {
+                email: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`,
+                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
+                        attribute: trans.cruds.PROFILE.fields.email
+                    }) %>`
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element);
+            },
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function(form) {
+                $(".page-loader").removeClass('d-none');
+                var formData = $(form).serialize();
+                $.ajax({
+                    url: $(form).attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        $(".page-loader").addClass('d-none');
+                        if (response.status) {
+                            toastrNotification(response.message, 'success');
+                            setTimeout(() => {
+                                window.location.href = "/admin/login";
+                            }, 1000);
+                        } else {
+                            toastrNotification(response.message || 'An error occurred, please try again later.', 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        $(".page-loader").addClass('d-none');
+                        $(".invalid-feedback").remove(); 
+
+                        const errors = xhr?.responseJSON?.errors || {};
+                        const message = xhr?.responseJSON?.message || '';
+
+                        if (errors && Object.keys(errors).length > 0) {
+                            displayErrorMessage(errors);
+                        } else if (message) {
+                            toastrNotification(message, 'error');
+                        } else {
+                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
+                                attribute: trans.cruds.MODULE.AUTH,
+                            }) %>`, 'error');
+                        }
+                    }
+                });
+            }
+        });
+
+        $('#resetPasswordForm').validate({
+            rules: {
+                password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 15,
+                },
+                password_confirmation: {
+                    required: true,
+                    equalTo: '#password'
+                }
+            },
+            messages: {
+                password: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.USER.fields.password,
+                    }) %>`,
+                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                        attribute: trans.cruds.USER.fields.password,
+                        min: 6
+                    }) %>`,
+                    maxlength: `<%= t(trans.validation.client_side_validate.max_length, {
+                        attribute: trans.cruds.USER.fields.password,
+                        min: 15
+                    }) %>`,
+                },
+                password_confirmation: {
+                    required: `<%= t(trans.validation.client_side_validate.required_message, {
+                        attribute: trans.cruds.USER.fields.password_confirmation,
+                    }) %>`,
+                    equalTo: `<%= t(trans.validation.client_side_validate.equal_to_message, {
+                        attribute: trans.cruds.USER.fields.password_confirmation
+                    }) %>`,
+                }
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                error.insertAfter(element);
+            },
+            highlight: function(element) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element) {
+                $(element).removeClass('is-invalid');
+            },
+            submitHandler: function(form) {
+                $(".page-loader").removeClass('d-none');
+                var formData = $(form).serialize();
+                var token = new URLSearchParams(window.location.search).get('token');
+                
+                if (token) {
+                    formData += `&token=${token}`;
+
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        method: 'POST',
+                        data: formData,
+                        success: function(response) {
+                            $(".page-loader").addClass('d-none');
+                            if (response.status) {
+                                toastrNotification(response.message, 'success');
+                                setTimeout(() => {
+                                    window.location.href = "/admin/login";
+                                }, 1000);
+                            } else {
+                                toastrNotification('An error occurred, please try again later.', 'error');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            $(".invalid-feedback").remove();
+                            $(".page-loader").addClass('d-none');
+                            const errors = xhr.responseJSON?.errors || {};
+                            const message = xhr?.responseJSON?.message || '';
+
+                            if (errors && Object.keys(errors).length > 0) {
+                                displayErrorMessage(errors);
+                            } else if (message) {
+                                toastrNotification(message, 'error');
+                            } else {
+                                toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
+                                    attribute: trans.cruds.MODULE.AUTH,
+                                }) %>`, 'error');
+                            }
+                        }
+                    });
+                } else {
+                    toastrNotification(`trans.auth.tokenMissing`, 'error');
+                }
+            }
+        });
+
+
+        /* resend verification mail */
+        // $('#resendVerificationPasswordForm').validate({
+        //     rules: {
+        //         email: {
+        //             required: true,
+        //             email: true
+        //         },
+        //     },
+        //     messages: {
+        //         email: {
+        //             required: "Please enter your email",
+        //             email: "Please enter a valid email address"
+        //         }
+        //     },
+        //     errorElement: 'span',
+        //     errorPlacement: function(error, element) {
+        //         error.addClass('invalid-feedback');
+        //         error.insertAfter(element);
+        //     },
+        //     highlight: function(element) {
+        //         $(element).addClass('is-invalid');
+        //     },
+        //     unhighlight: function(element) {
+        //         $(element).removeClass('is-invalid');
+        //     },
+        //     submitHandler: function(form) {
+        //         var formData = $(form).serialize();
+        //         $.ajax({
+        //             url: $(form).attr('action'),
+        //             type: 'POST',
+        //             data: formData,
+        //             success: function(response) {
+        //                 if(response.status) {
+        //                     toastrNotification(response.message, 'success');
+        //                     setTimeout(() => {
+        //                         window.location.href = "<%- '/login' %>";
+        //                     }, 1000);
+        //                 } else {
+        //                     toastrNotification('An error occurred, please try again later.', 'error');
+        //                 }
+        //             },
+        //             error: function(xhr, status, error) {
+		// 				$(".invalid-feedback").remove();
+        //                 const errors = xhr?.responseJSON?.errors || {};
+        //                 const message = xhr?.responseJSON?.message || '';
+                        
+        //                 if (errors && Object.keys(errors).length > 0) {
+        //                     displayErrorMessage(errors);
+        //                 } else if (message) {
+        //                     toastrNotification(message, 'error');
+        //                 } else {
+        //                     toastrNotification("An unexpected error occurred.", 'error');
+        //                 }
+		// 			}
+        //         });
+        //     }
+        // });
+
+        function displayErrorMessage(errors){
+			for (const field in errors) {
+				const fieldErrors = errors[field];
+				const fieldElement = $(`input[name="${field}"]`);
+				const errorSpan = $("<span>").addClass("error invalid-feedback").text(fieldErrors[0]);
+				fieldElement.after(errorSpan);
+				fieldElement.addClass('is-invalid');
+			}
+		}
+    });
+</script>

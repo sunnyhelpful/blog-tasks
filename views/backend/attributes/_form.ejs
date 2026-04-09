@@ -1,0 +1,206 @@
+<div class="card-body mt-3 pb-5 atr-wrapper">
+  <div class="row">
+    <div class="col-12 mx-auto head-atr-form">
+      <div class="row">
+        <!-- English attribute Name Input -->
+        <div class="col-12 mb-2">
+            <div class="row">
+              <div class="col-12 col-md-7">
+                <div class="lang-card-box">
+                  <div class="title-box">
+                    <h3>
+                      <%= trans.cruds.ATTRIBUTE.fields.title %> 
+                    </h3>
+                  </div>
+                  <div class="lang-form-input-group">
+                    <div class="row w-100">
+                      <div class="form-group mb-3">
+                        <label class="form-label" for="attribute_title_en">
+                          <%= trans.global.english %>
+                        </label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          id="attribute_title_en"
+                          name="title_en"
+                          value="<%= attribute?.title?.en || '' %>"
+                          placeholder="<%= trans.global.enter_your +' '+ trans.cruds.ATTRIBUTE.fields.title %>"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-5">
+                <div class="form-group mb-3">
+                  <label class="form-label text-center w-100" for="attribute_title_ar">
+                    <%= trans.global.arabic %>
+                  </label>
+                  <input
+                    class="form-control"
+                    type="text"
+                    id="attribute_title_ar"
+                    name="title_ar"
+                    value="<%= attribute?.title?.ar || '' %>"
+                    placeholder="<%= trans.global.enter_your +' '+ trans.cruds.ATTRIBUTE.fields.title %>"
+                  />
+                </div>
+              </div>
+            </div>
+        </div>
+    
+        <!-- Description -->
+         <div class="col-12 mb-2">
+           <div class="row">
+              <div class="col-12 col-md-7">
+                <div class="lang-card-box">
+                    <div class="title-box">
+                      <h3 class="mt-0">
+                          <%= trans.cruds.ATTRIBUTE.fields.description %>   
+                      </h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                        <div class="row w-100">
+                          <div class="form-group mb-3">
+                            <label class="form-label md-text-title" for="attribute_title_en">
+                              <%= trans.global.english %>
+                            </label>
+                            <textarea
+                              class="form-control"
+                              name="description_en"
+                              id="description_en"
+                              rows="5"
+                              placeholder="<%= trans.global.enter_your +' '+ trans.cruds.ATTRIBUTE.fields.description %>"
+                            ><%= attribute?.description?.en || '' %></textarea>
+                          </div> 
+                        </div>
+                    </div>
+                </div>
+              </div>
+               <div class="col-12 col-md-5">
+                  <div class="form-group mb-3">
+                    <label class="form-label md-text-title" for="attribute_title_ar">
+                      <%= trans.global.arabic %>
+                    </label>
+                    <textarea
+                      class="form-control"
+                      name="description_ar"
+                      id="description_ar"
+                      rows="5"
+                      placeholder="<%= trans.global.enter_your +' '+ trans.cruds.ATTRIBUTE.fields.description %>"
+                    ><%= attribute?.description?.ar || '' %></textarea>
+                  </div>
+               </div>
+           </div>
+         </div>
+        
+        <!-- Attribute Type -->
+        <div class="col-12 mb-2">
+          <div class="row">
+              <div class="col-12 col-md-7">
+                <div class="lang-card-box">
+                    <div class="title-box">
+                      <h3 class="mt-0">
+                          <%= trans.cruds.ATTRIBUTE.fields.type %> 
+                      </h3>
+                    </div>
+                    <div class="lang-form-input-group">
+                      <div class="row w-100">
+                          <div class="form-group">
+                            <select class="select2 form-control" name="type" id="attrType">
+                                <option value="">
+                                  <%= trans.messages.please_select + ' ' + trans.cruds.ATTRIBUTE.fields.type %>
+                                </option>
+                                <% for (const [key, value] of Object.entries(attributeTypes)) { %>
+                                <option value="<%= value %>" <%= attribute?.type === value ? 'selected' : '' %>>
+                                  <%= trans.cruds.ATTRIBUTE.types[value] || value.charAt(0).toUpperCase() + value.slice(1) %>
+                                </option>
+                                <% } %>
+                            </select>
+                          </div>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-5"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-12 mt-4" id="attribute-type-form">
+        <!-- text -->
+        <%- include('./type-forms/text') %>
+        
+        <!-- number -->
+        <%- include('./type-forms/number') %>
+        
+        
+        <!-- boolean -->
+        <%- include('./type-forms/boolean') %>
+        
+
+        <!-- Radio -->
+        <%- include('./type-forms/radio') %>
+
+        <!-- Radio Image -->
+        <%- include('./type-forms/radioimage') %>
+
+        <!-- Radio Image and title -->
+        <%- include('./type-forms/radioimagetitle') %>
+
+        <!-- Checkbox -->
+        <%- include('./type-forms/checkbox') %>
+
+        <!-- Checkbox Image -->
+        <%- include('./type-forms/checkboximage') %>
+
+        <!-- checkbox Image and title -->
+        <%- include('./type-forms/checkboximagetitle') %>
+
+        <!-- date -->
+        <%- include('./type-forms/date') %>
+        
+
+        <!-- singleimageuploader -->
+        <%- include('./type-forms/singleimageuploader') %>
+        
+
+        <!-- multipleimageuploader -->
+        <%- include('./type-forms/multipleimageuploader') %>
+
+        <!-- select -->
+        <%- include('./type-forms/select') %>
+
+        <!-- select with search -->
+        <%- include('./type-forms/singleselectdropdownwithsearch') %>
+
+        <!-- multipleselectdropdown -->
+        <%- include('./type-forms/multipleselectdropdown') %>
+        
+
+        <!-- Multiple with search -->
+        <%- include('./type-forms/multipleselectdropdownwithsearch') %>
+
+
+        <!-- Select toggle -->
+        <%- include('./type-forms/toggleswitchtitle') %>
+
+        <!-- Select toggle in -->
+        <%- include('./type-forms/toggleswitchtitleinput') %>
+        
+
+        <!-- Map -->
+        <%- include('./type-forms/googlemap') %>
+
+        <!-- Text Area -->
+        <%- include('./type-forms/textarea') %>
+
+        <!-- Text Editor -->
+        <%- include('./type-forms/texteditor') %>
+    </div>
+
+  </div>
+</div>
+

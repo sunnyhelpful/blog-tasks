@@ -1,0 +1,162 @@
+<script>
+$(document).ready(function() {
+    const lang = `<%= lang %>`;
+    const table = $('.rolesTable').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: `<%= '/admin/roles' %>`,
+            type: 'GET',
+            dataType: 'json',
+            data: function(d) {
+                
+            }
+        },
+        columns: [
+            { 
+                data: null,
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            { 
+                data: 'name', 
+                render: function(data, type, row) {
+                    let nameData = data ? data : `<%= trans.global.not_available %>`;
+                    nameData = nameData.charAt(0).toUpperCase() + nameData.slice(1);
+                    return nameData.length > 20 ? nameData.substring(0, 30) + '...' : nameData;
+                }
+            },
+            { 
+                data: 'createdAt',
+                render: function(data) {
+                    if (!data) return `<%= trans.global.not_available %>`;
+                    /* 
+                        const date = new Date(data);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        
+                        return lang === 'ar' 
+                            ? `${day}/${month}/${year}`
+                            : `${month}/${day}/${year}`;
+                    */
+                    return new Date(data).toLocaleDateString(`${lang}`);
+                }
+            },
+            {
+                data: 'id',
+                render: function(data, type, row) {
+                    let html = '<div class="d-flex gap-1">';
+                    <% if(userInfo.permissions.includes('edit_role')){ %>
+                        html += `<a href="/admin/role/${data}/edit" class="btn btn-sm btn-primary btn-edit roleUser" title="<%= trans.global.edit %>">
+                            <i class="fas fa-edit"></i>
+                        </a>`;
+                    <% } %>
+                    <% if(userInfo.permissions.includes('delete_role')){ %>
+                        html += `<a href="javascript:;" class="btn btn-sm btn-danger btn-delete" data-id="${data}" onclick="confirmAction('delete', '/admin/role/${data}/delete', '/admin/roles', 'DELETE')" title="<%= trans.global.delete %>">
+                            <i class="fas fa-trash"></i>
+                        </a>`;
+                    <% } %>
+                    html += `</div>`;
+                    return html;
+                },
+                orderable: false
+            }
+        ],
+        responsive: true,
+        lengthMenu: [10, 25, 50, 100],
+        stateSave: false,
+        order: [[2, 'desc']],
+        language: languageConfig,
+    });
+
+    /* $('#statusFilter').change(function() {
+        table.draw();
+    }); */
+
+    /* Form Validate For Save & Update */
+    $("#roleData").validate({
+        rules: {
+            name: {
+                required: true,
+                minlength: 3
+            },
+        },
+        messages: {
+            name: {
+                required: `<%= t(trans.validation.client_side_validate.required_message, {
+                    attribute: trans.cruds.ROLE.fields.name
+                }) %>`,
+                minlength: `<%= t(trans.validation.client_side_validate.min_length, {
+                    attribute: trans.cruds.ROLE.fields.name,
+                    min: 3
+                }) %>`,
+            },
+        },
+        errorElement: 'span',
+        errorPlacement: function(error, element) {
+            error.addClass('invalid-feedback');
+            error.insertAfter(element);
+        },
+        highlight: function(element) {
+            $(element).addClass('is-invalid');
+        },
+        unhighlight: function(element) {
+            $(element).removeClass('is-invalid');
+        },
+        submitHandler: function(form) {
+            $(".page-loader").removeClass('d-none');
+            $(".is-invalid").removeClass('is-invalid');
+            const formData = $(form).serialize();
+            const url = $(form).attr("action");         
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: formData,
+                success: function(response) {
+                    $(".page-loader").addClass('d-none');
+                    if (response.status) {
+                        showNotificationPopup(response.message, 'success', response.redirectUrl);
+                    } else {
+                        showNotificationPopup(response.message, 'error');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $(".invalid-feedback").remove();
+                    $(".page-loader").addClass('d-none');
+                    
+
+                    const errors = xhr.responseJSON && xhr.responseJSON.error ? xhr.responseJSON.error : {};
+                    const message = xhr.responseJSON && xhr?.responseJSON?.message ? xhr?.responseJSON?.message : '';
+
+                    if (errors && Object.keys(errors).length > 0) {
+                        displayErrorMessage(errors);
+                    } else if (message) {
+                        showNotificationPopup(message, 'error');
+                    } else {
+                        showNotificationPopup(`<%= t(trans.messages.oops_something_went_wrong, {
+                            attribute: trans.cruds.MODULE.ROLE
+                        }) %>`, 'error');
+                    }
+                }
+            });
+        }
+    });
+
+
+    function displayErrorMessage(errors) {
+        for (const field in errors) {
+            let fieldElement = $(`input[name="${field}"], select[name="${field}"], textarea[name="${field}"]`);
+            const fieldError = errors[field];
+            const errorSpan = $("<span>").addClass("error invalid-feedback").text(fieldError);
+            if (field === 'permissions') {
+                $(`select[name="${field}[]"]`).next().addClass('is-invalid').after(errorSpan);
+            } else {
+                fieldElement.after(errorSpan);
+            }
+            fieldElement.addClass('is-invalid');
+        }
+    }
+});
+</script>

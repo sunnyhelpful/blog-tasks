@@ -1,0 +1,112 @@
+<% title = trans.cruds.MODULE.CATEGORY + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.CATEGORY %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/categories' %>"><%= trans.cruds.CATEGORY?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with Category Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.CATEGORY + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Category Details in Grid Layout -->
+                        <div class="row">
+                            <!-- Category Title (English) -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.category_en %> :</label>
+                                    <span><%= category.title.en %></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.description_en %>:</label>
+                                    <span><%- category.description.en || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Category Title (Arabic) -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.category_ar %> :</label>
+                                    <span><%= category.title.ar %></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.description_ar %>:</label>
+                                    <span><%- category.description.ar || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <hr>
+
+                            <!-- Category Status -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.status %>:</label>
+                                    <span><%= category.status.charAt(0).toUpperCase() + category.status.slice(1).toLowerCase() %></span>
+                                </div>
+                            </div>
+
+                            <!-- Category Verification Status -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY.fields.verification %>:</label>
+                                    <span><%= category.isVerification.charAt(0).toUpperCase() + category.isVerification.slice(1).toLowerCase() %></span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Parent Category -->
+                        <% if (hierarchy.length > 0) { %>
+                            <hr>
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4><%= category.parentId ? trans.cruds.CATEGORY.fields.parent_hierarchy : trans.cruds.CATEGORY.fields.child_hierarchy %></h4>
+                                    <div class="tree-wrapper">
+                                        <ul class="tree vertical">
+                                            <% function renderHierarchy(hierarchy, lang) { %>
+                                                <% hierarchy.forEach(category => { %>
+                                                <li>
+                                                    <div><%= category.title[lang] || category.title.en %></div>
+                                                    <% if (category.children) { %>
+                                                    <ul>
+                                                        <% renderHierarchy(category.children, lang); %>
+                                                    </ul>
+                                                    <% } %>
+                                                </li>
+                                                <% }); %>
+                                            <% }; %>
+                        
+                                            <li>
+                                                <div><%= category.title[lang] || 'Root' %></div>
+                                                <ul>
+                                                <% renderHierarchy(hierarchy, lang); %>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

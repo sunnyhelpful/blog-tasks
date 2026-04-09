@@ -1,0 +1,78 @@
+<% title = trans.cruds.MODULE.TIER + ' - ' + companyInfo.NAME %>
+
+<div class="container-fluid">
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.TIER %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="<%= '/admin/dashboard' %>">
+                            <i class="iconly-Home icli svg-color"></i> <%= trans.global.home %>
+                        </a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a href="<%= '/admin/tiers' %>"><%= trans.cruds.MODULE.TIER %></a>
+                    </li>
+                    <li class="breadcrumb-item active"><%= trans.global.list %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header card-no-border d-flex justify-content-between align-items-center">
+                    <div>
+                        <h3><%= trans.cruds.TIER.heading.tier_list || 'tier_list' %></h3>
+                        <!-- <p class="desc mb-0 mt-1"><%= trans.cruds.BRAND.heading.all_the_tier_list || 'all_the_tier_list' %></p> -->
+                    </div>
+
+                    <!-- <% if (userInfo.permissions.includes("create_tier")) { %>
+                        <div class="btn-showcase d-flex justify-content-end">
+                            <a href="/admin/tier/create" title="<%= trans.global.create %>" class="btn btn-pill btn-success" id="btnAddBrand">
+                                <%= trans.global.create %>
+                            </a>
+                        </div>
+                    <% } %> -->
+                </div>
+
+                <div class="card-body pt-0">
+                    <div class="table-responsive theme-scrollbar">
+                        <table class="table table-lg display tiersTable" id="row_create" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th data-data="title"><%= trans.cruds.TIER.fields.title %></th>
+                                    <th data-data="status"><%= trans.cruds.TIER.fields.tierNumber %></th>
+                                    <th data-data="status"><%= trans.cruds.TIER.fields.applicableFeePercent %></th>
+                                    <th data-data="status"><%= trans.cruds.TIER.fields.status %></th>
+                                    <th data-data="createdAt"><%= trans.cruds.TIER.fields.createdAt %></th>
+                                    <% if (
+                                        userInfo.permissions.includes("view_tier") ||
+                                        userInfo.permissions.includes("edit_tier") ||
+                                        userInfo.permissions.includes("delete_tier")
+                                    ) { %>
+                                        <th data-data="action"><%= trans.cruds.TIER.fields.action %></th>
+                                    <% } else { %>
+                                        <th></th>
+                                    <% } %>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Data will be loaded via AJAX -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('./script') %>

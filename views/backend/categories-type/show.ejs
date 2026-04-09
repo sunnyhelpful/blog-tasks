@@ -1,0 +1,92 @@
+<% title = trans.cruds.MODULE.CATEGORY_TYPE + ' ' + trans.global.view + ' - ' + companyInfo.NAME %>
+<div class="container-fluid">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="row">
+            <div class="col-sm-6 col-12">
+                <h2><%= trans.cruds.MODULE.CATEGORY_TYPE %></h2>
+            </div>
+            <div class="col-sm-6 col-12">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="<%= '/admin/dashboard' %>"><i class="iconly-Home icli svg-color"></i> <%= trans.global.home %></a></li>
+                    <li class="breadcrumb-item"><a href="<%= '/admin/categories-type' %>"><%= trans.cruds.CATEGORY_TYPE?.title %></a></li>
+                    <li class="breadcrumb-item active"><%= trans.global.view %></li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="edit-profile">
+        <div class="row">
+            <div class="col-xl-12">
+                <!-- Card with Category Type Details -->
+                <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                        <h3 class="card-title mb-0"><%= trans.cruds.MODULE.CATEGORY_TYPE + ' ' + trans.global.view %></h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- Category Type Details in Grid Layout -->
+                        <div class="row">
+                            <!-- Category Type Title (English) -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY_TYPE.fields.title_en %> :</label>
+                                    <span><%= category_type.title.en %></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY_TYPE.fields.description_en %>:</label>
+                                    <span><%- category_type.description.en || trans.global.not_available %></span>
+                                </div>
+                            </div>
+
+                            <!-- Category Type Title (Arabic) -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY_TYPE.fields.title_ar %> :</label>
+                                    <span><%= category_type.title.ar %></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="form-label"><%= trans.cruds.CATEGORY_TYPE.fields.description_ar %>:</label>
+                                    <span><%- category_type.description.ar || trans.global.not_available %></span>
+                                </div>
+                            </div>
+                            <!-- Brand Image Input -->
+                            <div class="col-sm-6 col-md-4">
+                                <div class="form-group mb-3">
+                                    <label class="form-label" for="category_type_image">
+                                        <%= trans.cruds.CATEGORY_TYPE.fields.category_type_image || "Category Type Type Image" %>
+                                    </label>
+                                    <br>
+                                    <img 
+                                        class="img-100 show-img-box" 
+                                        id="category_type_image" 
+                                        alt="Category Type Type Image" 
+                                        src="<%= category_type.category_type_image?.file_path ? '/' + category_type.category_type_image.file_path.replace('public/', '') : '/backend/images/dummy-image.jpg' %>"/>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Brand Icon Input -->
+                            <div class="col-sm-6 col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label" for="category_type_icon">
+                                        <%= trans.cruds.CATEGORY_TYPE.fields.category_type_icon || "Category Type Type Icon" %>
+                                    </label>
+                                    <br>
+                                    <img 
+                                        class="img-100 show-img-box" 
+                                        id="category_type_icon" 
+                                        alt="Category Type Type Icon" 
+                                        src="<%= category_type.category_type_icon?.file_path ? '/' + category_type.category_type_icon.file_path.replace('public/', '') : '/backend/images/dummy-image.jpg' %>"/>
+                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
