@@ -1,45 +1,113 @@
+const { isValidObjectId } = require("mongoose");
 const Blog = require("../../models/blog");
+const { saveUpload } = require("../../utils/saveUpload");
 
-// INDEX → get all blogs
+// helper validation
+const validateBlog = (
+  { title, description, content, slug },
+  isUpdate = false,
+) => {
+  const errors = [];
+
+  if (!isUpdate || title !== undefined) {
+    if (!title || title.trim().length < 3) {
+      errors.push("Title must be at least 3 characters");
+    }
+  }
+
+  if (!isUpdate || description !== undefined) {
+    if (!description || description.trim().length < 5) {
+      errors.push("Description must be at least 5 characters");
+    }
+  }
+
+  if (!isUpdate || content !== undefined) {
+    if (!content || content.trim().length < 10) {
+      errors.push("Content must be at least 10 characters");
+    }
+  }
+
+  if (!isUpdate || slug !== undefined) {
+    if (!slug || !/^[a-z0-9-]+$/.test(slug)) {
+      errors.push(
+        "Slug must be lowercase and contain only letters, numbers, hyphens",
+      );
+    }
+  }
+
+  return errors;
+};
+
+// INDEX
 const index = async (req, res) => {
   try {
-    const blogs = await Blog.find().sort({ createdAt: -1 });
+    const blogs = await Blog.find()
+      .populate("blogImages")
+      .sort({ createdAt: -1 });
+
     return res.json({ success: true, data: blogs });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// STORE → create blog
+// STORE
 const store = async (req, res) => {
   try {
     const { title, description, content, slug } = req.body;
 
-    let blogImages = [];
-    if (req.files && req.files.blogImages) {
-      blogImages = req.files.blogImages.map(file => file.path);
+    // validation
+    const errors = validateBlog({ title, description, content, slug });
+    if (errors.length) {
+      return res.status(400).json({ success: false, errors });
+    }
+
+    // check unique slug
+    const existingSlug = await Blog.findOne({ slug });
+    if (existingSlug) {
+      return res.status(400).json({
+        success: false,
+        message: "Slug already exists",
+      });
     }
 
     const blog = await Blog.create({
-      title,
-      description,
-      content,
-      slug,
-      blogImages,
+      title: title.trim(),
+      description: description.trim(),
+      content: content.trim(),
+      slug: slug.trim(),
     });
 
-    return res.status(201).json({ success: true, data: blog });
+    // uploads
+    if (req.files && req.files.blogImages) {
+      for (const file of req.files.blogImages) {
+        await saveUpload(blog._id, "Blog", file);
+      }
+    }
+
+    const updatedBlog = await Blog.findById(blog._id).populate("blogImages");
+
+    return res.status(201).json({ success: true, data: updatedBlog });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// SHOW → single blog
+// SHOW
 const show = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id);
+    const { id } = req.params;
+
+    if (!id || !isValidObjectId(id)) {
+      return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
+
+    const blog = await Blog.findById(id).populate("blogImages");
+
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
 
     return res.json({ success: true, data: blog });
@@ -48,12 +116,19 @@ const show = async (req, res) => {
   }
 };
 
-// EDIT → return editable fields
+// EDIT
 const edit = async (req, res) => {
   try {
-    const blog = await Blog.findById(req.params.id);
+    const { id } = req.params;
+    if (!id || !isValidObjectId(id)) {
+      return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
+    const blog = await Blog.findById(req.params.id).populate("blogImages");
+
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
 
     return res.json({
@@ -71,43 +146,84 @@ const edit = async (req, res) => {
   }
 };
 
-// UPDATE → update blog
+// UPDATE
 const update = async (req, res) => {
   try {
     const { title, description, content, slug } = req.body;
+    const { id } = req.params;
+    if (!id || !isValidObjectId(id)) {
+      return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
 
     const blog = await Blog.findById(req.params.id);
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
 
-    blog.title = title ?? blog.title;
-    blog.description = description ?? blog.description;
-    blog.content = content ?? blog.content;
-    blog.slug = slug ?? blog.slug;
-
-    if (req.files && req.files.blogImages) {
-      const newImages = req.files.blogImages.map(file => file.path);
-      blog.blogImages = newImages; // or append if needed
-      // blog.blogImages = [...(blog.blogImages || []), ...newImages];
+    // validation (partial allowed)
+    const errors = validateBlog({ title, description, content, slug }, true);
+    if (errors.length) {
+      return res.status(400).json({ success: false, errors });
     }
+
+    // slug uniqueness (if changed)
+    if (slug && slug !== blog.slug) {
+      const existingSlug = await Blog.findOne({ slug });
+      if (existingSlug) {
+        return res.status(400).json({
+          success: false,
+          message: "Slug already exists",
+        });
+      }
+    }
+
+    blog.title = title?.trim() ?? blog.title;
+    blog.description = description?.trim() ?? blog.description;
+    blog.content = content?.trim() ?? blog.content;
+    blog.slug = slug?.trim() ?? blog.slug;
 
     await blog.save();
 
-    return res.json({ success: true, data: blog });
+    // uploads
+    if (req.files && req.files.blogImages) {
+      for (const file of req.files.blogImages) {
+        await saveUpload(blog._id, "Blog", file);
+      }
+    }
+
+    const updatedBlog = await Blog.findById(blog._id).populate("blogImages");
+
+    return res.json({ success: true, data: updatedBlog });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }
 };
 
-// DELETE → delete blog
+// DELETE
 const deleteBlog = async (req, res) => {
   try {
-    const blog = await Blog.findByIdAndDelete(req.params.id);
+    const { id } = req.params;
+    if (!id || !isValidObjectId(id)) {
+      return res.status(400).json({ success: false, message: "Invalid ID" });
+    }
+    const blog = await Blog.findById(req.params.id);
 
     if (!blog) {
-      return res.status(404).json({ success: false, message: "Blog not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Blog not found" });
     }
+
+    const Upload = require("../../models/upload");
+
+    await Upload.updateMany(
+      { uploadsable_id: blog._id, uploadsable_type: "Blog" },
+      { deletedAt: new Date() },
+    );
+
+    await blog.deleteOne();
 
     return res.json({ success: true, message: "Blog deleted successfully" });
   } catch (err) {

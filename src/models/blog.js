@@ -12,10 +12,6 @@ const BlogSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    content: {
-      type: String,
-      required: true,
-    },
     slug: {
       type: String,
       required: true,
@@ -26,7 +22,18 @@ const BlogSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
+
+BlogSchema.virtual("blogImages", {
+  ref: "Upload",
+  localField: "_id",
+  foreignField: "uploadsable_id",
+  justOne: false,
+  match: {
+    uploadsable_type: "Blog",
+    deletedAt: null,
+  },
+});
 
 module.exports = mongoose.model("Blog", BlogSchema);
