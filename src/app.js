@@ -137,14 +137,12 @@ app.use((req, res, next) => {
   next();
 });
 
-const setRouteType = require('./middleware/setRouteType');
-app.use(setRouteType);
 app.use('/', require('./routes'));
 
 app.get('/', function (req, res) {
   try {
-    // res.send('Welcome');
-    return res.redirect('/admin/login')
+    res.send('Welcome');
+    // return res.redirect('/admin/login')
   } catch (error) {
     logError('Error rendering the home view:', error);
     res.status(500).send('Internal Server Error');
