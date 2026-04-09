@@ -1,4 +1,4 @@
-<% title = 'Create Blog' %>
+<% title = 'Edit Blog' %>
 
 <div class="container-fluid">
     <div class="page-title">
@@ -16,7 +16,7 @@
                     <li class="breadcrumb-item">
                         <a href="/admin/blogs">Blogs</a>
                     </li>
-                    <li class="breadcrumb-item active">Create</li>
+                    <li class="breadcrumb-item active">Edit</li>
                 </ol>
             </div>
         </div>
@@ -27,30 +27,30 @@
     <div class="edit-profile">
         <div class="row">
             <div class="col-xl-12">
-
-                <!-- ✅ FIXED FORM -->
-                <form class="card" id="blogData" action="/admin/blog/store" method="POST" enctype="multipart/form-data">
-
+                <form class="card" id="blogData" action="/admin/blog/store" method="POST">
                     <div class="card-header card-no-border pb-0">
-                        <h3 class="card-title mb-0">Create Blog</h3>
+                        <h3 class="card-title mb-0">Edit Blog</h3>
                     </div>
 
                     <%- include('./_form') %>
 
                     <div class="card-footer text-end d-flex justify-content-end gap-2">
-                        <a href="/admin/blogs" class="btn btn-secondary">Cancel</a>
+                        <!-- Cancel Button -->
+                        <a href="/admin/blogs" class="btn btn-secondary">
+                            Cancel
+                        </a>
 
+                        <!-- Save & Continue Editing Button -->
                         <button class="btn btn-info" type="submit" name="save_continue" value="1">
                             Save & Continue
                         </button>
 
+                        <!-- Save Button -->
                         <button class="btn btn-primary" type="submit">
                             Save
                         </button>
                     </div>
-
                 </form>
-
             </div>
         </div>
     </div>

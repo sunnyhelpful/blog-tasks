@@ -7,7 +7,7 @@ const isNotAuthenticated = require("../../middleware/auth/web/isNotAuthenticated
 const routeLimiter = require("../../middleware/rateLimiter");
 const blogController = require("../../controllers/backend/blogController");
 
-const { uploadFile } = require("../../utils/uploadFile");
+const { uploadFile, multiUploadFiles } = require("../../utils/uploadFile");
 
 // Controllers
 const authController = require("../../controllers/backend/auth/authController");
@@ -48,13 +48,17 @@ router.get("/logout", authenticate, authController.logout);
 router.get("/dashboard", authenticate, dashboardController.dashboard);
 
 /* blog */
-router.get('/blogs', authenticate, blogController.index);
-router.get('/blog/create', authenticate, uploadFile("blogImages"), blogController.create);
-router.post('/blog/store', authenticate, blogController.store);
-router.get('/blog/:id', authenticate, blogController.show);
-router.get('/blog/:id/edit', authenticate, blogController.edit);
-router.post('/blog/:id', authenticate, blogController.update);
-router.delete('/blog/:id/delete', authenticate, blogController.delete);
-
+router.get("/blogs", authenticate, blogController.index);
+router.get("/blog/create", authenticate, blogController.create);
+router.post(
+  "/blog/store",
+  authenticate,
+  uploadFile('blogImages', 'image', 'blog', 5, 1),
+  blogController.store,
+);
+router.get("/blog/:id", authenticate, blogController.show);
+router.get("/blog/:id/edit", authenticate, blogController.edit);
+router.post("/blog/:id", authenticate, blogController.update);
+router.delete("/blog/:id/delete", authenticate, blogController.delete);
 
 module.exports = router;

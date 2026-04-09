@@ -1,16 +1,20 @@
+<%
+  const hasUrl = blog?.externalImageUrl;
+  const hasFile = blog?.blogImages && blog.blogImages.length > 0;
+%>
+
 <div class="card-body">
   <div class="row">
 
     <!-- Title -->
     <div class="col-md-12">
       <div class="form-group mb-3">
-        <label class="form-label" for="title">
+        <label class="form-label">
           Title <span class="text-danger">*</span>
         </label>
         <input
           class="form-control"
           type="text"
-          id="title"
           name="title"
           value="<%= blog?.title || '' %>"
           placeholder="Enter Title"
@@ -18,16 +22,12 @@
       </div>
     </div>
 
-
     <!-- Description -->
     <div class="col-md-12">
       <div class="form-group mb-3">
-        <label class="form-label" for="description">
-          Description
-        </label>
+        <label class="form-label">Description</label>
         <textarea
           class="form-control"
-          id="description"
           name="description"
           rows="4"
           placeholder="Enter Description"
@@ -35,36 +35,91 @@
       </div>
     </div>
 
-    <!-- Image Upload -->
-    <div class="col-md-6">
+    <!-- Image Source Selection -->
+    <div class="col-md-12">
       <div class="form-group mb-3">
-        <label class="form-label" for="image">
-          Upload Image
-        </label>
+        <label class="form-label">Select Image Source</label>
+
+        <div class="d-flex gap-4">
+
+          <!-- File Option -->
+          <div>
+            <input
+              type="radio"
+              name="image_type"
+              value="file"
+              id="type_file"
+              <%= hasFile || (!hasFile && !hasUrl) ? 'checked' : '' %>
+            />
+            <label for="type_file">Upload File</label>
+          </div>
+
+          <!-- URL Option -->
+          <div>
+            <input
+              type="radio"
+              name="image_type"
+              value="url"
+              id="type_url"
+              <%= hasUrl ? 'checked' : '' %>
+            />
+            <label for="type_url">Image URL</label>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- File Upload -->
+    <div class="col-md-6 <%= hasUrl ? 'd-none' : '' %>" id="fileInputBox">
+      <div class="form-group mb-3">
+        <label class="form-label">Upload Image</label>
         <input
           type="file"
           class="form-control"
           id="image"
-          name="image"
+          name="blogImages"
           accept="image/*"
         />
+
+        <!-- Existing File Preview -->
+        <% if (hasFile) { %>
+          <div class="mt-2">
+            <img 
+              src="/<%= blog.blogImages[0].file_path.replace('public/', '') %>" 
+              width="120"
+              class="rounded border"
+            >
+          </div>
+        <% } %>
+
       </div>
     </div>
 
-    <!-- OR URL Input -->
-    <div class="col-md-6">
+    <!-- URL Input -->
+    <div class="col-md-6 <%= hasUrl ? '' : 'd-none' %>" id="urlInputBox">
       <div class="form-group mb-3">
-        <label class="form-label" for="url">
-          Or Enter Image URL
-        </label>
+        <label class="form-label">Enter Image URL</label>
         <input
-          type="text"
+          type="url"
           class="form-control"
           id="url"
           name="image_url"
-          value="<%= blog?.image_url || '' %>"
+          value="<%= blog?.externalImageUrl || '' %>"
           placeholder="https://example.com/image.jpg"
         />
+
+        <!-- URL Preview -->
+        <% if (hasUrl) { %>
+          <div class="mt-2">
+            <img 
+              src="<%= blog.externalImageUrl %>" 
+              width="120"
+              class="rounded border"
+            >
+          </div>
+        <% } %>
+
       </div>
     </div>
 
