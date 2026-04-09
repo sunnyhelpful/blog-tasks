@@ -15,93 +15,173 @@
   </div>
 </div>
 
-<!-- POST 1 — Company Award -->
-<div class="li-card" style="margin-top:8px;">
-  <div class="post-header">
-    <div class="post-author">
-      <div class="post-logo" style="background:#0a66c2;border-radius:8px;font-size:12px;font-weight:800;">CC</div>
-      <div>
-        <div class="post-author-name">Castrosasz Convertiblessd Pvt Ltd</div>
-        <div class="post-author-meta">24,391 followers</div>
-        <div class="post-author-time"><span>2d</span> <i class="bi bi-globe2" style="font-size:11px;"></i></div>
-      </div>
-    </div>
-    <div class="post-controls">
-      <button><i class="bi bi-three-dots"></i></button>
-      <button><i class="bi bi-x-lg" style="font-size:16px;"></i></button>
+<!-- Dynamic Blog Posts Feed -->
+<div id="blog-feed-container">
+  <div class="text-center py-5" id="loading-spinner">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
     </div>
   </div>
-  <div class="post-body">
-    🎉 Thrilled to announce that <a href="#">Castrosasz Convertiblessd</a> has been recognized as one of India's <strong>Top 50 Emerging Tech Companies of 2026!</strong><br><br>
-    This milestone belongs to every person who showed up, solved hard problems, and believed in our mission. From Jaipur to the global stage — we're just getting started! 🚀
-  </div>
-  <div style="margin-top:10px;background:linear-gradient(135deg,#0a66c2,#00b09b);">
-    <img src="/images/post-image-1.png" alt="Post Image">
-  </div>
-  <div class="post-footer">
-    <button class="post-action-btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-    <button class="post-action-btn"><i class="bi bi-chat"></i> Comment</button>
-    <button class="post-action-btn"><i class="bi bi-repeat"></i> Repost</button>
-    <button class="post-action-btn"><i class="bi bi-send"></i> Send</button>
+  <div id="blog-posts"></div>
+  <div class="text-center py-3" id="load-more-container" style="display: none;">
+    <button class="btn btn-outline-primary" id="load-more-btn">Load More</button>
   </div>
 </div>
 
-<!-- POST 2 — Chad L. Allen -->
-<div class="li-card" style="margin-top:8px;">
-  <div class="post-header">
-    <div class="post-author">
-      <div class="post-logo" style="background:linear-gradient(135deg,#f093fb,#f5576c);">CA</div>
-      <div>
-        <div class="post-author-name">Chad L. Allen</div>
-        <div class="post-author-meta">Full-Stack Developer at CloudBurst Technologies</div>
-        <div class="post-author-time"><span>5h</span> <i class="bi bi-globe2" style="font-size:11px;"></i></div>
-      </div>
-    </div>
-    <div class="post-controls">
-      <button><i class="bi bi-three-dots"></i></button>
-      <button><i class="bi bi-x-lg" style="font-size:16px;"></i></button>
-    </div>
-  </div>
-  <div class="post-body" style="margin-bottom:10px;">
-    Join us for an exciting event packed with insights, networking, and innovation. Connect with professionals, explore new ideas, and be part of the future of technology. 🚀
-  </div>
-  <div style="margin-top:10px;background:linear-gradient(135deg,#0a66c2,#00b09b);">
-    <img src="/images/post-image-2.png" alt="Post Image">
-  </div>
-  <div class="post-footer">
-    <button class="post-action-btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-    <button class="post-action-btn"><i class="bi bi-chat"></i> Comment</button>
-    <button class="post-action-btn"><i class="bi bi-repeat"></i> Repost</button>
-    <button class="post-action-btn"><i class="bi bi-send"></i> Send</button>
-  </div>
-</div>
+<script>
+  let currentOffset = 0;
+  const limit = 5;
+  let isLoading = false;
+  let hasMore = true;
 
-<!-- POST 3 — Event -->
-<div class="li-card" style="margin-top:8px;">
-  <div class="post-header">
-    <div class="post-author">
-      <div class="post-logo" style="background:#e91e8c;border-radius:8px;font-size:11px;font-weight:800;">RJ</div>
-      <div>
-        <div class="post-author-name">Roger C. Jimenez</div>
-        <div class="post-author-meta">12,004 followers</div>
-        <div class="post-author-time"><span>6h</span> <i class="bi bi-globe2" style="font-size:11px;"></i></div>
+  function formatTimeAgo(date) {
+    const now = new Date();
+    const diffMs = now - new Date(date);
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMins / 60);
+    const diffDays = Math.floor(diffHours / 24);
+    const diffWeeks = Math.floor(diffDays / 7);
+    
+    if (diffMins < 1) return 'Just now';
+    if (diffMins < 60) return `${diffMins}m ago`;
+    if (diffHours < 24) return `${diffHours}h ago`;
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return `${diffWeeks}w ago`;
+  }
+
+  function truncateText(text, maxLength = 300) {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength) + '...';
+  }
+
+  function createPostCard(blog) {
+    const imageHtml = blog.blogImages && blog.blogImages.file_path 
+      ? `<div style="margin-top:10px;">
+           <img src="/public/storage/${blog.blogImages.file_path}" alt="${blog.title}" style="width:100%; max-height:400px; object-fit:cover;">
+         </div>`
+      : '';
+
+    const timeAgo = formatTimeAgo(blog.createdAt);
+    const author = blog.author;
+    
+    return `
+      <div class="li-card" style="margin-top:8px;">
+        <div class="post-header">
+          <div class="post-author">
+            <div class="post-logo" style="background:${author.gradient};border-radius:8px;font-size:12px;font-weight:800;">${author.initials}</div>
+            <div>
+              <div class="post-author-name">${author.name}</div>
+              <div class="post-author-meta">${author.jobTitle} at ${author.company}</div>
+              <div class="post-author-time"><span>${timeAgo}</span> <i class="bi bi-globe2" style="font-size:11px;"></i></div>
+            </div>
+          </div>
+          <div class="post-controls">
+            <button><i class="bi bi-three-dots"></i></button>
+            <button><i class="bi bi-x-lg" style="font-size:16px;"></i></button>
+          </div>
+        </div>
+        <div class="post-body">
+          <h5 style="font-weight:700; margin-bottom:10px;">${blog.title}</h5>
+          <p>${truncateText(blog.description)}</p>
+          <a href="/blogs/${blog.slug}" style="color:#0a66c2; text-decoration:none; font-weight:500;">Read more →</a>
+        </div>
+        ${imageHtml}
+        <div class="post-footer">
+          <button class="post-action-btn" data-blog-id="${blog._id}"><i class="bi bi-hand-thumbs-up"></i> Like</button>
+          <button class="post-action-btn"><i class="bi bi-chat"></i> Comment</button>
+          <button class="post-action-btn"><i class="bi bi-repeat"></i> Repost</button>
+          <button class="post-action-btn"><i class="bi bi-send"></i> Send</button>
+        </div>
       </div>
-    </div>
-    <div class="post-controls">
-      <button><i class="bi bi-three-dots"></i></button>
-      <button><i class="bi bi-x-lg" style="font-size:16px;"></i></button>
-    </div>
-  </div>
-  <div class="post-body" style="margin-bottom:10px;">
-    We're excited to bring together innovators, developers, and industry leaders for an engaging experience filled with learning and networking opportunities. This event will showcase the latest trends in technology, product development, and digital transformation. Join us to connect with like-minded professionals, gain valuable insights, and be part of something impactful. 🚀
-  </div>
-  <div style="margin-top:10px;background:linear-gradient(135deg,#0a66c2,#00b09b);">
-    <img src="/images/post-image-3.png" alt="Post Image">
-  </div>
-  <div class="post-footer">
-    <button class="post-action-btn"><i class="bi bi-hand-thumbs-up"></i> Like</button>
-    <button class="post-action-btn"><i class="bi bi-chat"></i> Comment</button>
-    <button class="post-action-btn"><i class="bi bi-repeat"></i> Repost</button>
-    <button class="post-action-btn"><i class="bi bi-send"></i> Send</button>
-  </div>
-</div>
+    `;
+  }
+
+  async function loadBlogs() {
+    if (isLoading || !hasMore) return;
+    
+    isLoading = true;
+    document.getElementById('loading-spinner').style.display = 'block';
+    
+    try {
+      const response = await fetch(`/api/blogs/feed?offset=${currentOffset}&limit=${limit}`);
+      const result = await response.json();
+      
+      if (result.success && result.data.length > 0) {
+        const postsContainer = document.getElementById('blog-posts');
+        
+        result.data.forEach(blog => {
+          const postHtml = createPostCard(blog);
+          postsContainer.insertAdjacentHTML('beforeend', postHtml);
+        });
+        
+        currentOffset += result.data.length;
+        hasMore = result.data.length === limit;
+        
+        if (hasMore) {
+          document.getElementById('load-more-container').style.display = 'block';
+        } else {
+          document.getElementById('load-more-container').style.display = 'none';
+        }
+      } else {
+        hasMore = false;
+        document.getElementById('load-more-container').style.display = 'none';
+        
+        if (currentOffset === 0) {
+          document.getElementById('blog-posts').innerHTML = `
+            <div class="li-card text-center py-5">
+              <p class="text-muted mb-0">No blogs found. Check back later!</p>
+            </div>
+          `;
+        }
+      }
+    } catch (error) {
+      console.error('Error loading blogs:', error);
+      document.getElementById('blog-posts').innerHTML = `
+        <div class="li-card text-center py-5">
+          <p class="text-danger mb-0">Failed to load blogs. Please try again later.</p>
+        </div>
+      `;
+    } finally {
+      isLoading = false;
+      document.getElementById('loading-spinner').style.display = 'none';
+    }
+  }
+
+  // Load more button click handler
+  document.getElementById('load-more-btn')?.addEventListener('click', loadBlogs);
+
+  // Like button functionality
+  document.addEventListener('click', function(e) {
+    const likeBtn = e.target.closest('.post-action-btn');
+    if (likeBtn && likeBtn.querySelector('.bi-hand-thumbs-up')) {
+      const icon = likeBtn.querySelector('i');
+      if (likeBtn.dataset.liked === '1') {
+        likeBtn.dataset.liked = '0';
+        likeBtn.style.color = '';
+        icon.classList.replace('bi-hand-thumbs-up-fill', 'bi-hand-thumbs-up');
+        if(likeBtn.lastChild) likeBtn.lastChild.textContent = ' Like';
+      } else {
+        likeBtn.dataset.liked = '1';
+        likeBtn.style.color = '#0a66c2';
+        icon.classList.replace('bi-hand-thumbs-up', 'bi-hand-thumbs-up-fill');
+        if(likeBtn.lastChild) likeBtn.lastChild.textContent = ' Liked';
+      }
+    }
+  });
+
+  // Initial load
+  loadBlogs();
+</script>
+
+<style>
+  #loading-spinner {
+    padding: 40px 0;
+  }
+  .post-body h5 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+  .post-body p {
+    margin-bottom: 8px;
+  }
+</style>
