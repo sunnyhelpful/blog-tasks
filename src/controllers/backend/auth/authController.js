@@ -67,37 +67,49 @@ const login = async (req, res) => {
     }
 
     user.resetLoginAttempts();
-    const otp = user.generateOTP();
+    // const otp = user.generateOTP();
+
+    const jti = require('crypto').randomBytes(32).toString('hex');
+    const token = jwt.sign({ userId: user._id, jti }, auth.AUTH.JWT_SECRET, {
+      expiresIn: auth.AUTH.JWT_EXPIRATION,
+    });
+    const refreshToken = jwt.sign({ userId: user._id, jti }, auth.AUTH.JWT_REFRESH_SECRET, {
+      expiresIn: auth.AUTH.JWT_REFRESH_EXPIRATION,
+    });
+
+    res.cookie('token', token, { httpOnly: true, maxAge: auth.AUTH.TOKEN_MAX_AGE });
+    res.cookie('refreshToken', refreshToken, { httpOnly: true, maxAge: auth.AUTH.REFRESH_TOKEN_MAX_AGE });
+
     await user.save();
 
-    const baseUrl = req.protocol + '://' + req.headers.host;
-    const verificationLink = `${baseUrl}/verify-email/${user._id}/${otp}`;
+    // const baseUrl = req.protocol + '://' + req.headers.host;
+    // const verificationLink = `${baseUrl}/verify-email/${user._id}/${otp}`;
     
-    let emailBody = null;
-    if (req.session.lang === 'ar') {
-      emailBody = emailTemplate.login_otp_verification.twoStepVerificationAr
-        .replace('{name}', user.first_name)
-        .replace('{otp}', otp);
-    } else {
-      emailBody = emailTemplate.login_otp_verification.twoStepVerificationEn
-        .replace('{name}', user.first_name)
-        .replace('{otp}', otp);
-    }
+    // let emailBody = null;
+    // if (req.session.lang === 'ar') {
+    //   emailBody = emailTemplate.login_otp_verification.twoStepVerificationAr
+    //     .replace('{name}', user.first_name)
+    //     .replace('{otp}', otp);
+    // } else {
+    //   emailBody = emailTemplate.login_otp_verification.twoStepVerificationEn
+    //     .replace('{name}', user.first_name)
+    //     .replace('{otp}', otp);
+    // }
 
-    const subject = req.session.lang === 'ar'
-      ? 'التحقق بخطوتين لحسابك'
-      : 'Two-Step Verification for Your Account';
+    // const subject = req.session.lang === 'ar'
+    //   ? 'التحقق بخطوتين لحسابك'
+    //   : 'Two-Step Verification for Your Account';
 
-    const mailOptions = {
-      from: `"${sender.name}" <${sender.address}>`,
-      to: user.email,
-      subject: subject,
-      text: emailBody,
-    };
+    // const mailOptions = {
+    //   from: `"${sender.name}" <${sender.address}>`,
+    //   to: user.email,
+    //   subject: subject,
+    //   text: emailBody,
+    // };
 
-    const otpResp = await transporter.sendMail(mailOptions);
-    const redirectUrl = `/admin/verify-otp/${user._id}`;
-    
+    // const otpResp = await transporter.sendMail(mailOptions);
+    // const redirectUrl = `/admin/verify-otp/${user._id}`;
+    const redirectUrl = `/admin/dashboard`;    
     return res.status(200).json(
       successResponse(req.trans.auth.loginSuccess, {
         id: user._id,
