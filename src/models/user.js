@@ -8,6 +8,8 @@ const {
   sender 
 } = require('../config/mailer');
 const path = require('path');
+require('./upload');
+
 
 const userSchema = new mongoose.Schema(
   {
@@ -361,6 +363,15 @@ userSchema.virtual('profile', {
   foreignField: 'uploadsable_id',
   justOne: true,
   match: { uploadsable_type: 'Profile', type:'profile_image', deletedAt: null },
+  options: { sort: { createdAt: -1 } }
+});
+
+userSchema.virtual('user_profile', {
+  ref: 'Upload',
+  localField: '_id',
+  foreignField: 'uploadsable_id',
+  justOne: true,
+  match: { uploadsable_type: 'User', deletedAt: null },
   options: { sort: { createdAt: -1 } }
 });
 
