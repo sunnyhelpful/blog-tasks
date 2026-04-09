@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const whatsApp = require('../../../config/whatsappOtp');
 const User = require('../../../models/user');
 const Role = require('../../../models/role');
 const auth = require('../../../config/auth');

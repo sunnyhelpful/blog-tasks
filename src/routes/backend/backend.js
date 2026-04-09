@@ -9,7 +9,6 @@ const routeLimiter = require("../../middleware/rateLimiter");
 
 // Controllers
 const authController = require("../../controllers/backend/auth/authController");
-const commonController = require("../../controllers/backend/commonController");
 const dashboardController = require("../../controllers/backend/dashboardController");
 
 // Auth Routes

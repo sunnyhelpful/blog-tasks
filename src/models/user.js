@@ -364,24 +364,6 @@ userSchema.virtual('profile', {
   options: { sort: { createdAt: -1 } }
 });
 
-userSchema.virtual('user_profile', {
-  ref: 'Upload',
-  localField: '_id',
-  foreignField: 'uploadsable_id',
-  justOne: true,
-  match: { uploadsable_type: 'User', deletedAt: null },
-  options: { sort: { createdAt: -1 } }
-});
-
-/* Address */
-userSchema.virtual('address',{
-  ref: 'Address',
-  localField:'_id',
-  foreignField:'userId',
-  justOne: true,
-  match: { isDeleted: false },
-  options: { sort: { createdAt: -1 } }
-});
 
 userSchema.set('toObject', { virtuals: true });
 userSchema.set('toJSON', { virtuals: true });

@@ -55,6 +55,6 @@ uploadSchema.methods.softDelete = async function() {
     await this.save();
 };
 
-const Upload = mongoose.model("Upload", uploadSchema, "uploads");
+const Upload = mongoose.model("Upload", uploadSchema);
 
 module.exports = Upload;

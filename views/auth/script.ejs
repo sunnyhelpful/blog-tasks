@@ -1,7 +1,6 @@
 <!-- jQuery and jQuery Validate CDN -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
-<%- include('../common/include/language-script') %>
 <script>
     document.addEventListener("DOMContentLoaded", function(){
         // Dropdown toggle logic
@@ -89,25 +88,13 @@
             },
             messages: {
                 email: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`,
-                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`
+                    required: "Please enter your email address.",
+                    email: "Please enter a valid email address."
                 },
                 password: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.new_password
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.PROFILE.fields.new_password,
-                        min: 6
-                    }) %>`,
-                    maxlength: `<%= t(trans.validation.client_side_validate.max_length, {
-                        attribute: trans.cruds.PROFILE.fields.new_password,
-                        max: 15
-                    }) %>`
+                    required: "Please enter your password.",
+                    minlength: "Your password must be at least 6 characters long.",
+                    maxlength: "Your password cannot exceed 15 characters."
                 },
             },
             errorElement: 'span',
@@ -137,9 +124,7 @@
                                 window.location.href = redirectUrl;
                             }, 1000);
                         } else {
-                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
-                                attribute: trans.cruds.MODULE.AUTH,
-                            }) %>`, 'error');
+                            toastrNotification("Something went wrong! Please try again.", 'error');
                         }
                     },
                     error: function(xhr, status, error) {
@@ -153,9 +138,7 @@
                         } else if (message) {
                             toastrNotification(message, 'error');
                         } else {
-                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
-                                attribute: trans.cruds.MODULE.AUTH,
-                            }) %>`, 'error');
+                            toastrNotification("Something went wrong! Please try again.", 'error');
                         }
                     }
                 });
@@ -201,66 +184,34 @@
             },
             messages: {
                 first_name: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.first_name
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.PROFILE.fields.first_name,
-                        min: 3
-                    }) %>`
+                    required: "Please enter your first name.",
+                    minlength: "Your first name must be at least 3 characters long."
                 },
                 middle_name: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.middle_name
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.PROFILE.fields.middle_name,
-                        min: 1
-                    }) %>`
+                    required: "Please enter your middle name.",
+                    minlength: "Your middle name must be at least 1 character long."
                 },
                 last_name: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.last_name
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.PROFILE.fields.last_name,
-                        min: 1
-                    }) %>`
+                    required: "Please enter your last name.",
+                    minlength: "Your last name must be at least 1 character long."
                 },
                 username: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.username
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.PROFILE.fields.username,
-                        min: 3
-                    }) %>`
+                    required: "Please enter a username.",
+                    minlength: "Your username must be at least 3 characters long."
                 },
                 email: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`,
-                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`
+                    required: "Please enter your email address.",
+                    email: "Please enter a valid email address."
                 },
                 phone_number: {
-                    pattern: `<%= t(trans.validation.client_side_validate.valid_message, {
-                        attribute: trans.cruds.PROFILE.fields.phone_number
-                    }) %>`
+                    pattern: "Please enter a valid phone number."
                 },
                 password: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.current_password
-                    }) %>`,
+                    required: "Please enter your password.",
                 },
                 password_confirmation: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.confirm_password
-                    }) %>`,
-                    equalTo: `<%= t(trans.validation.client_side_validate.equal_to_message, {
-                        attribute: trans.cruds.PROFILE.fields.confirm_password
-                    }) %>`
+                    required: "Please confirm your password.",
+                    equalTo: "Passwords do not match."
                 }
             },
             errorElement: 'span',
@@ -321,12 +272,12 @@
             var userId = getUserId();
             if (userId) {
                 window.location.href = "/admin/resend-verification/" + userId;
-                toastrNotification(`<%= trans.auth.messages.resend_verification.email_sent %>`, 'success');
+                toastrNotification("Verification email has been sent successfully.", 'success');
                 setTimeout(() => {
                     location.reload();
                 }, 1000);
             } else {
-                toastrNotification(`<%= trans.auth.userNotFound %>`, 'error');
+                toastrNotification("User not found.", 'error');
             }
         });
 
@@ -341,17 +292,9 @@
             },
             messages: {
                 otp: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.USER.fields.password,
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: 'OTP',
-                        min: 6
-                    }) %>`,
-                    maxlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: 'OTP',
-                        min: 6
-                    }) %>`,
+                    required: "Please enter your password.",
+                    minlength: "OTP must be at least 6 characters long.",
+                    maxlength: "OTP must be at least 6 characters long.",
                 }
             },
             errorElement: 'span',
@@ -397,9 +340,7 @@
                         } else if (message) {
                             toastrNotification(message, 'error');
                         } else {
-                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
-                                attribute: trans.cruds.MODULE.AUTH,
-                            }) %>`, 'error');
+                            toastrNotification("Something went wrong! Please try again.", 'error');
                         }
                     }
                 });
@@ -416,12 +357,8 @@
             },
             messages: {
                 email: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`,
-                    email: `<%= t(trans.validation.client_side_validate.valid_message, {
-                        attribute: trans.cruds.PROFILE.fields.email
-                    }) %>`
+                    required: "Please enter your email address.",
+                    email: "Please enter a valid email address."
                 }
             },
             errorElement: 'span',
@@ -465,9 +402,7 @@
                         } else if (message) {
                             toastrNotification(message, 'error');
                         } else {
-                            toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
-                                attribute: trans.cruds.MODULE.AUTH,
-                            }) %>`, 'error');
+                            toastrNotification("Something went wrong! Please try again.", 'error');
                         }
                     }
                 });
@@ -488,25 +423,13 @@
             },
             messages: {
                 password: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.USER.fields.password,
-                    }) %>`,
-                    minlength: `<%= t(trans.validation.client_side_validate.min_length, {
-                        attribute: trans.cruds.USER.fields.password,
-                        min: 6
-                    }) %>`,
-                    maxlength: `<%= t(trans.validation.client_side_validate.max_length, {
-                        attribute: trans.cruds.USER.fields.password,
-                        min: 15
-                    }) %>`,
+                    required: "Please enter your password.",
+                    minlength: "Your password must be at least 6 characters long.",
+                    maxlength: "Your password cannot exceed 15 characters.",
                 },
                 password_confirmation: {
-                    required: `<%= t(trans.validation.client_side_validate.required_message, {
-                        attribute: trans.cruds.USER.fields.password_confirmation,
-                    }) %>`,
-                    equalTo: `<%= t(trans.validation.client_side_validate.equal_to_message, {
-                        attribute: trans.cruds.USER.fields.password_confirmation
-                    }) %>`,
+                    required: "Please confirm your password.",
+                    equalTo: "Passwords do not match.",
                 }
             },
             errorElement: 'span',
@@ -554,14 +477,12 @@
                             } else if (message) {
                                 toastrNotification(message, 'error');
                             } else {
-                                toastrNotification(`<%= t(trans.messages.oops_something_went_wrong, {
-                                    attribute: trans.cruds.MODULE.AUTH,
-                                }) %>`, 'error');
+                                toastrNotification("Something went wrong! Please try again.", 'error');
                             }
                         }
                     });
                 } else {
-                    toastrNotification(`trans.auth.tokenMissing`, 'error');
+                    toastrNotification("Token is missing.", 'error');
                 }
             }
         });
@@ -609,7 +530,7 @@
         //                 }
         //             },
         //             error: function(xhr, status, error) {
-		// 				$(".invalid-feedback").remove();
+        //                 $(".invalid-feedback").remove();
         //                 const errors = xhr?.responseJSON?.errors || {};
         //                 const message = xhr?.responseJSON?.message || '';
                         
@@ -620,19 +541,19 @@
         //                 } else {
         //                     toastrNotification("An unexpected error occurred.", 'error');
         //                 }
-		// 			}
+        //             }
         //         });
         //     }
         // });
 
         function displayErrorMessage(errors){
-			for (const field in errors) {
-				const fieldErrors = errors[field];
-				const fieldElement = $(`input[name="${field}"]`);
-				const errorSpan = $("<span>").addClass("error invalid-feedback").text(fieldErrors[0]);
-				fieldElement.after(errorSpan);
-				fieldElement.addClass('is-invalid');
-			}
-		}
+            for (const field in errors) {
+                const fieldErrors = errors[field];
+                const fieldElement = $(`input[name="${field}"]`);
+                const errorSpan = $("<span>").addClass("error invalid-feedback").text(fieldErrors[0]);
+                fieldElement.after(errorSpan);
+                fieldElement.addClass('is-invalid');
+            }
+        }
     });
 </script>
