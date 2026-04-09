@@ -34,6 +34,8 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '200mb' }));
 app.use('/', express.static(path.join(__dirname, '../public')));
 /* For access Storage */
 app.use('/public/storage', express.static(path.join(__dirname, '../public/storage')));
+app.use('/storage', express.static(path.join(__dirname, '../public/storage')));
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));

@@ -122,8 +122,17 @@ async function getFeedBlogs(req, res) {
       const gradient = getRandomGradient();
       const fullName = `${firstName} ${middleInitial}. ${lastName}`;
 
+      const blogObject = blog;
+      
       return {
-        ...blog.toObject(),
+        _id: blogObject._id,
+        title: blogObject.title,
+        description: blogObject.description,
+        slug: blogObject.slug,
+        externalImageUrl: blogObject.externalImageUrl,
+        blogImages: blogObject.blogImages,
+        createdAt: blogObject.createdAt,
+        updatedAt: blogObject.updatedAt,
         author: {
           name: fullName,
           initials: initials,
@@ -148,7 +157,6 @@ async function getFeedBlogs(req, res) {
     });
   } catch (error) {
     console.error("Error fetching feed blogs:", error);
-
     return res.status(500).json({ status: false, message: error.message });
   }
 }
@@ -160,7 +168,6 @@ async function show(req, res) {
     const blog = await Blog.findOne({ slug: slug })
       .populate("blogImages");
     
-    console.log("blog.. ", blog);
     
     if (!blog) {
       return res.status(404).render("common/pages/page-404", {

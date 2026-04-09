@@ -1,7 +1,24 @@
 <%
   title = blog.title;
+  
+  let imageUrl = null;
+  
+  if (blog.externalImageUrl && blog.externalImageUrl.trim() !== '') {
+    imageUrl = blog.externalImageUrl;
+  } 
+  else if (blog.blogImages && blog.blogImages.file_path) {
+    let filePath = blog.blogImages.file_path;
+    
+    if (filePath.startsWith('public/')) {
+      filePath = '/' + filePath;
+    } 
+    else if (!filePath.startsWith('/')) {
+      filePath = '/' + filePath;
+    }
+    
+    imageUrl = filePath;
+  }
 %>
-
 <!-- Blog Detail View -->
 <div class="li-card" style="margin-bottom: 24px;">
   <!-- Blog Header with Author Info -->
@@ -35,18 +52,14 @@
   </div>
 
   <!-- Blog Featured Image -->
-  <% if (blog.blogImages && blog.blogImages.file_path) { %>
+  <% if (imageUrl) { %>
     <div style="margin: 16px 24px 0;">
       <img 
-        src="/<%= blog.blogImages.file_path %>" 
+        src="<%= imageUrl %>" 
         alt="<%= blog.title %>"
         style="width: 100%; max-height: 500px; object-fit: cover; border-radius: 8px;"
+        onerror="this.style.display='none'"
       >
-      <% if (blog.blogImages.original_file_name) { %>
-        <div style="font-size: 12px; color: rgba(0,0,0,0.6); margin-top: 8px; text-align: center;">
-          <%= blog.blogImages.original_file_name %>
-        </div>
-      <% } %>
     </div>
   <% } %>
 
@@ -134,18 +147,33 @@
         
         if (relatedBlogs.length > 0) {
           relatedBlogs.forEach(blog => {
-            const imageHtml = blog.blogImages && blog.blogImages.file_path
-              ? `<img src="/public/storage/${blog.blogImages.file_path}" alt="${blog.title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 6px; margin-bottom: 8px;">`
+            // Get image URL for related post
+            let relatedImageUrl = '';
+            if (blog.externalImageUrl && blog.externalImageUrl.trim() !== '') {
+              relatedImageUrl = blog.externalImageUrl;
+            } else if (blog.blogImages && blog.blogImages.file_path) {
+              let filePath = blog.blogImages.file_path;
+              if (filePath.startsWith('/public/storage/') || filePath.startsWith('/storage/')) {
+                relatedImageUrl = filePath;
+              } else if (filePath.startsWith('storage/')) {
+                relatedImageUrl = '/' + filePath;
+              } else {
+                relatedImageUrl = '/public/storage/' + filePath;
+              }
+            }
+            
+            const imageHtml = relatedImageUrl
+              ? `<img src="${relatedImageUrl}" alt="${blog.title}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 6px; margin-bottom: 8px;" onerror="this.style.display='none'">`
               : '';
             
             const postHtml = `
               <div style="margin-bottom: 20px; cursor: pointer;" onclick="window.location.href='/blogs/${blog.slug}'">
                 ${imageHtml}
                 <h4 style="font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: rgba(0,0,0,0.9);">
-                  ${blog.title}
+                  ${escapeHtml(blog.title)}
                 </h4>
                 <p style="font-size: 12px; color: rgba(0,0,0,0.6); margin: 0;">
-                  ${blog.author ? blog.author.name : 'ProConnect'} · ${new Date(blog.createdAt).toLocaleDateString()}
+                  ${blog.author ? escapeHtml(blog.author.name) : 'ProConnect'} · ${new Date(blog.createdAt).toLocaleDateString()}
                 </p>
               </div>
             `;
@@ -161,6 +189,13 @@
       document.getElementById('related-loading').style.display = 'none';
       document.getElementById('related-posts-list').innerHTML = '<p class="text-muted text-center">Unable to load related posts.</p>';
     }
+  }
+
+  function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
   }
 
   // Load related posts on page load
