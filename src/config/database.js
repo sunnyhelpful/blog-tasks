@@ -1,5 +1,7 @@
 require('dotenv').config();
-const APP_MODE = process.env.APP_MODES || 'local';
+const dns = require('node:dns/promises');
+dns.setServers(['8.8.8.8', '1.1.1.1', '1.0.0.1']);
+const APP_MODE = process.env.APP_MODE || 'local';
 
 const config = {
     local: {

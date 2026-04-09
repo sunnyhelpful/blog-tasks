@@ -1,7 +1,7 @@
 const { CATEGORY } = require("../locales/en/cruds");
 
 module.exports = {
-    APP_MODES: [
+    APP_MODE: [
         'development',
         'production',
         'staging',

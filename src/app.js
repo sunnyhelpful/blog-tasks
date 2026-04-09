@@ -41,7 +41,7 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '../views'));
 app.use(ejsLayouts);
 
-const isProduction = process.env.APP_MODES === 'production';
+const isProduction = process.env.APP_MODE === 'production';
 let sessionStore;
 if (isProduction) {
   const { createClient } = require('redis');
