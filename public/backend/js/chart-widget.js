@@ -56,7 +56,7 @@
     fill: {
       opacity: 0.2,
     },
-    colors: [KanzyAdminConfig.primary],
+    colors: [Admin.primary],
     series: [
       {
         data: [70, 60, 82, 80, 60, 90, 70, 120, 50, 60, 0],
@@ -140,7 +140,7 @@
     fill: {
       opacity: 0.2,
     },
-    colors: [KanzyAdminConfig.secondary],
+    colors: [Admin.secondary],
     series: [
       {
         name: "series1",
@@ -313,7 +313,7 @@
         },
       },
     },
-    colors: [KanzyAdminConfig.secondary, "#3eb95f", KanzyAdminConfig.primary],
+    colors: [Admin.secondary, "#3eb95f", Admin.primary],
     fill: {
       type: "gradient",
       gradient: {
@@ -374,7 +374,7 @@
       },
     ],
     fill: {
-      colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+      colors: [Admin.primary, Admin.secondary],
       type: "gradient",
       gradient: {
         shade: "light",
@@ -397,7 +397,7 @@
         bottom: 10,
       },
     },
-    colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+    colors: [Admin.primary, Admin.secondary],
     labels: [
       "Jan",
       "Feb",
@@ -496,7 +496,7 @@
     fill: {
       opacity: 0.2,
     },
-    colors: [KanzyAdminConfig.primary],
+    colors: [Admin.primary],
     series: [
       {
         data: [70, 60, 82, 80, 60, 90, 70, 120, 50, 60, 0],
@@ -589,7 +589,7 @@
     fill: {
       opacity: 0.2,
     },
-    colors: [KanzyAdminConfig.primary],
+    colors: [Admin.primary],
     series: [
       {
         data: [
@@ -675,13 +675,13 @@
         {
           x: new Date("15 Nov 2017").getTime(),
           strokeDashArray: 0,
-          borderColor: KanzyAdminConfig.primary,
+          borderColor: Admin.primary,
           label: {
-            borderColor: KanzyAdminConfig.primary,
+            borderColor: Admin.primary,
             offsetY: 20,
             style: {
               color: "#fff",
-              background: KanzyAdminConfig.primary,
+              background: Admin.primary,
             },
             text: "Anno Test",
           },
@@ -726,7 +726,7 @@
         fontWeight: 500,
       },
     },
-    colors: [KanzyAdminConfig.secondary],
+    colors: [Admin.secondary],
     labels: series.monthDataSeries1.dates,
     xaxis: {
       type: "datetime",
@@ -762,7 +762,7 @@
         stops: [0, 100],
       },
     },
-    colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+    colors: [Admin.primary, Admin.secondary],
     chart: {
       height: 300,
       type: "radar",
@@ -871,10 +871,10 @@
       },
     },
     colors: [
-      KanzyAdminConfig.primary,
-      KanzyAdminConfig.secondary,
+      Admin.primary,
+      Admin.secondary,
       "#3eb95f",
-      KanzyAdminConfig.primary,
+      Admin.primary,
     ],
     title: {
       text: "Simple Bubble Chart",
@@ -1386,7 +1386,7 @@
       },
     },
     fill: {
-      colors: [KanzyAdminConfig.primary],
+      colors: [Admin.primary],
       type: "gradient",
       gradient: {
         shade: "light",
@@ -1499,7 +1499,7 @@
     fill: {
       opacity: 0.9,
     },
-    colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+    colors: [Admin.primary, Admin.secondary],
     markers: {
       size: 0,
       hover: {
@@ -1625,7 +1625,7 @@
         radius: 3,
       },
     },
-    colors: [KanzyAdminConfig.secondary, KanzyAdminConfig.primary, "#3eb95f"],
+    colors: [Admin.secondary, Admin.primary, "#3eb95f"],
     responsive: [
       {
         breakpoint: 767,
@@ -1672,20 +1672,20 @@
         horizontal: true,
         barHeight: "15%",
         colors: {
-          backgroundBarColors: [KanzyAdminConfig.primary],
+          backgroundBarColors: [Admin.primary],
           backgroundBarOpacity: 0.2,
         },
       },
     },
-    colors: [KanzyAdminConfig.primary],
+    colors: [Admin.primary],
     stroke: {
       width: 0,
     },
     fill: {
-      colors: [KanzyAdminConfig.primary],
+      colors: [Admin.primary],
       type: "gradient",
       gradient: {
-        gradientToColors: [KanzyAdminConfig.primary],
+        gradientToColors: [Admin.primary],
       },
     },
     series: [
@@ -1758,13 +1758,13 @@
         horizontal: true,
         barHeight: "15%",
         colors: {
-          backgroundBarColors: [KanzyAdminConfig.secondary],
+          backgroundBarColors: [Admin.secondary],
           backgroundBarOpacity: 0.2,
           backgroundBarRadius: 10,
         },
       },
     },
-    colors: [KanzyAdminConfig.secondary],
+    colors: [Admin.secondary],
     stroke: {
       width: 0,
     },
@@ -1804,11 +1804,11 @@
       max: 100,
     },
     fill: {
-      colors: [KanzyAdminConfig.secondary],
+      colors: [Admin.secondary],
       type: "gradient",
       gradient: {
         inverseColors: false,
-        gradientToColors: [KanzyAdminConfig.secondary],
+        gradientToColors: [Admin.secondary],
       },
     },
     responsive: [{

@@ -16,7 +16,7 @@ const authorizePermission = (requiredPermissions = []) => {
             return res.status(401).json({
                 success: false,
                 code: 'UNAUTHORIZED',
-                message: req.trans.auth.authorization.authentication_required,
+                message: 'Authentication required',
                 statusCode: 401
             });
         }
@@ -30,7 +30,7 @@ const authorizePermission = (requiredPermissions = []) => {
             return res.status(404).json({
                 success: false,
                 code: 'USER_NOT_FOUND',
-                message: req.trans.auth.authorization.user_not_found,
+                message: 'User not found',
                 statusCode: 404
             });
         }
@@ -39,7 +39,7 @@ const authorizePermission = (requiredPermissions = []) => {
             return res.status(403).json({
                 success: false,
                 code: 'UNVERIFIED_ACCOUNT',
-                message: req.trans.auth.authorization.unverified,
+                message: 'Account not verified',
                 statusCode: 403
             });
         }
@@ -48,7 +48,7 @@ const authorizePermission = (requiredPermissions = []) => {
             return res.status(403).json({
                 success: false,
                 code: 'ACCOUNT_LOCKED',
-                message: req.trans.auth.authorization.locked,
+                message: 'Account locked',
                 statusCode: 403
             });
         }
@@ -69,7 +69,7 @@ const authorizePermission = (requiredPermissions = []) => {
             return res.status(403).json({
                 success: false,
                 code: 'FORBIDDEN',
-                message: req.trans.auth.authorization.required.replace(':permissions', permissions.join(', ')),
+                message: `Required permissions: ${permissions.join(', ')}`,
                 statusCode: 403
             });
         }
@@ -80,7 +80,7 @@ const authorizePermission = (requiredPermissions = []) => {
         return res.status(500).json({
             success: false,
             code: 'PERMISSION_CHECK_FAILED',
-            message: req.trans.auth.authorization.check_failed,
+            message: 'Permission check failed',
             statusCode: 500
         });
     }

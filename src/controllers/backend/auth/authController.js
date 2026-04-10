@@ -19,7 +19,7 @@ const {
 const login = async (req, res) => {
   const validationErrors = await loginRequest(req);
   if (validationErrors) {
-    return res.status(400).json(errorResponse(req.trans.auth.validation_error, validationErrors));
+    return res.status(400).json(errorResponse('Validation error', validationErrors));
   }
 
   try {
@@ -31,15 +31,15 @@ const login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).json(errorResponse(req.trans.auth.invalidCredentials));
+      return res.status(404).json(errorResponse('Invalid credentials'));
     }
 
     if (!user.isVerified) {
-      return res.status(403).json(errorResponse(req.trans.auth.notVerified));
+      return res.status(403).json(errorResponse('Account not verified'));
     }
 
     if (user.isLocked()) {
-      return res.status(403).json(errorResponse(req.trans.auth.account.locked));
+      return res.status(403).json(errorResponse('Account locked'));
     }
 
     /* if (user.loginSecurity.lockUntil && user.loginSecurity.lockUntil < Date.now()) {
@@ -48,18 +48,18 @@ const login = async (req, res) => {
     } */
 
     if (user.status === 2) {
-      return res.status(403).json(errorResponse(req.trans.auth.suspendAccount));
+      return res.status(403).json(errorResponse('Account suspended'));
     }
 
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       user.incrementLoginAttempts();
       await user.save();
-      return res.status(401).json(errorResponse(req.trans.auth.invalidCredentials));
+      return res.status(401).json(errorResponse('Invalid credentials'));
     }
     
     if(user.account_type === 'platform_user'){
-      return res.status(401).json(errorResponse(req.trans.auth.accessDenied));
+      return res.status(401).json(errorResponse('Access denied'));
     }    
 
     if (user.status === 0) {
@@ -111,7 +111,7 @@ const login = async (req, res) => {
     // const redirectUrl = `/admin/verify-otp/${user._id}`;
     const redirectUrl = `/admin/dashboard`;    
     return res.status(200).json(
-      successResponse(req.trans.auth.loginSuccess, {
+      successResponse('Login successful', {
         id: user._id,
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
@@ -123,9 +123,7 @@ const login = async (req, res) => {
   } catch (error) {
     console.error('Login error:', error);
     return res.status(500).json(internalServerErrorResponse(
-      req.t(req.trans.messages.oops_something_went_wrong, {
-          attribute: req.trans.cruds.MODULE.AUTH,
-      })
+      'Something went wrong with AUTH'
     ));
   }
 };
@@ -166,7 +164,7 @@ const verifyOtp = async (req, res) => {
 
     const redirectUrl = `/admin/dashboard`;
     return res.json(
-      successResponse(req.trans.auth.loginSuccess, {
+      successResponse('Login successful', {
         id: user._id,
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
@@ -180,9 +178,7 @@ const verifyOtp = async (req, res) => {
   } catch (error) {
     console.error('OTP Verification error:', error);
     return res.status(500).json(internalServerErrorResponse(
-      req.t(req.trans.messages.oops_something_went_wrong, {
-          attribute: req.trans.cruds.MODULE.AUTH,
-      })
+      'Something went wrong with AUTH'
     ));
   }
 };
@@ -199,7 +195,7 @@ const resendVerificationOtp = async (req, res) => {
     });
 
     if (!user) {
-      req.flash('error', req.trans.auth.userNotFound);
+      req.flash('error', 'User not found');
       return res.redirect(`/admin/verify-otp/${user._id}`);
     }
 
@@ -235,9 +231,7 @@ const resendVerificationOtp = async (req, res) => {
     return res.redirect(redirectUrl);
   } catch (error) {
     console.error('Error in resendVerificationOtp:', error);
-    req.flash('error', req.t(req.trans.messages.oops_something_went_wrong, {
-        attribute: req.trans.cruds.MODULE.AUTH,
-    }));
+    req.flash('error', 'Something went wrong with AUTH');
     return res.redirect('/admin/verify-otp');
   }
 };
@@ -252,23 +246,19 @@ const logout = async (req, res) => {
       req.session.destroy((err) => {
         if (err) {
           return res.status(500).json(internalServerErrorResponse(
-            req.t(req.trans.messages.oops_something_went_wrong, {
-              attribute: req.trans.cruds.MODULE.AUTH,
-            })
+            'Something went wrong with AUTH'
           ));
         }
-        return res.json(successResponse(req.trans.auth.messages.logout.success));
+        return res.json(successResponse('Logout successful'));
       });
     } else {
-      req.flash('success', req.trans.auth.messages.logout.success);
+      req.flash('success', 'Logout successful');
       res.redirect('/admin/login');
     }
   } catch (error) {
     console.error('Logout error:', error);
     return res.status(500).json(internalServerErrorResponse(
-      req.t(req.trans.messages.oops_something_went_wrong, {
-          attribute: req.trans.cruds.MODULE.AUTH,
-      })
+      'Something went wrong with AUTH'
     ));
   }
 };
@@ -286,7 +276,7 @@ async function forgotPassword(req, res) {
 
     const user = await User.findOne(filter);
     if (!user) {
-      return res.status(404).json(errorResponse(req.trans.auth.userNotFound));
+      return res.status(404).json(errorResponse('User not found'));
     }
 
     const resetToken = jwt.sign({ userId: user._id }, auth.AUTH.JWT_SECRET, { expiresIn: '2h' });
@@ -313,13 +303,11 @@ async function forgotPassword(req, res) {
     await user.save();
 
     return res.status(200).json(
-      successResponse(req.trans.auth.messages.forgot_password.validation.password_reset, { user }, null, null, null)
+      successResponse('Password reset instructions sent', { user }, null, null, null)
     );
   } catch (error) {
     return res.status(500).json(internalServerErrorResponse(
-      req.t(req.trans.messages.oops_something_went_wrong, {
-        attribute: req.trans.cruds.MODULE.AUTH,
-      })
+      'Something went wrong with AUTH'
     ));
   }
 }
@@ -348,11 +336,11 @@ async function resetPassword(req, res) {
     userId = decoded.userId;
     const user = await User.findById(userId);
     if (!user || user.isDeleted) {
-      return res.status(404).json(errorResponse(req.trans.auth.userNotFound));
+      return res.status(404).json(errorResponse('User not found'));
     }
 
     if (user.password_reset_token !== token) {
-      return res.status(404).json(errorResponse(req.trans.auth.otpInvalidOrExpire));
+      return res.status(404).json(errorResponse('Invalid or expired OTP'));
     }
 
     user.password = password;
@@ -360,13 +348,11 @@ async function resetPassword(req, res) {
     await user.save();
 
     return res.status(200).json(
-      successResponse(req.trans.auth.messages.reset_password.success, { user }, null, null, null)
+      successResponse('Password reset successfully', { user }, null, null, null)
     );
   } catch (error) {
     return res.status(500).json(internalServerErrorResponse(
-      req.t(req.trans.messages.oops_something_went_wrong, {
-        attribute: req.trans.cruds.MODULE.AUTH,
-      })
+      'Something went wrong with AUTH'
     ));
   }
 }

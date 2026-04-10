@@ -13,13 +13,11 @@ const isNotAuthenticated = async (req, res, next) => {
     'verify-otp'
   ]);
 
-  // Check ALL path segments for auth route matches
   const pathSegments = req.path.split('/')
     .filter(segment => segment.trim().length > 0);
 
   const isAuthRoute = pathSegments.some(segment => authRoutes.has(segment));
 
-  // Skip middleware if no auth routes found in path
   if (!isAuthRoute) {
     return next();
   }
@@ -45,10 +43,6 @@ const isNotAuthenticated = async (req, res, next) => {
     }
 
     if (user.role_id.name) {
-      /* req.flash('info', req.t(req.trans.messages.you_are_already, {
-          attribute : req.trans.global.logged_in
-        })
-      ); */
       return res.redirect('/admin/dashboard');
     }
 

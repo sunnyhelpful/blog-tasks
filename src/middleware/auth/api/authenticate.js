@@ -17,7 +17,7 @@ const authenticate = async (req, res, next) => {
     if (!token) {
             return res.status(401).json({
                 success: false,
-                message: req.trans.auth.noToken,
+                message: 'No token provided',
                 statusCode: 401,
             });
     }
@@ -27,7 +27,7 @@ const authenticate = async (req, res, next) => {
         if (isBlacklisted) {
             return res.status(401).json({
                 success: false,
-                message: req.trans.auth.tokenRevoked,
+                message: 'Token has been revoked',
                 statusCode: 401,
             });
         }
@@ -38,7 +38,7 @@ const authenticate = async (req, res, next) => {
         if (!user) {
             return res.status(401).json({
                 success: false,
-                message: req.trans.auth.userNotFound,
+                message: 'User not found',
                 statusCode: 401,
             });
         }
@@ -47,7 +47,7 @@ const authenticate = async (req, res, next) => {
             blacklist.revoke(token);
             return res.status(401).json({
                 success: false,
-                message: req.trans.auth.invalidToken,
+                message: 'Invalid token',
                 statusCode: 401,
             });
         }
@@ -59,13 +59,13 @@ const authenticate = async (req, res, next) => {
             blacklist.revoke(token);
             return res.status(401).json({
                 success: false,
-                message: req.trans.auth.tokenExpired,
+                message: 'Token has expired',
                 statusCode: 401,
             });
         }
         return res.status(401).json({
             success: false,
-            message: req.trans.auth.invalidToken,
+            message: 'Invalid token',
             statusCode: 401,
         });
     }

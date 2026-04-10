@@ -18,13 +18,13 @@
 
         if (file && file.type.startsWith('image/')) {
             if (!allowedTypes.includes(file.type)) {
-                const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+                const errorMessage = `Invalid image type. Only JPEG, PNG, and GIF are allowed.`;
                 displayError(errorMessage);
                 return;
             }
 
             if (file.size > maxSize) {
-                const errorMessage = `<%= t(trans.messages.uploaded_file_to_large, { num: 5 }) %>`;
+                const errorMessage = `The uploaded file is too large. Max size is 5 MB.`;
                 displayError(errorMessage);
                 return;
             }
@@ -35,7 +35,7 @@
             };
             reader.readAsDataURL(file);
         } else {
-            const errorMessage = `<%= trans.validation.client_side_validate.invalid_image_type %>`;
+            const errorMessage = `Invalid image type. Only JPEG, PNG, and GIF are allowed.`;
             displayError(errorMessage);
         }
     }

@@ -1488,7 +1488,7 @@ var options = {
   legend: {
     horizontalAlign: "left",
   },
-  color: [KanzyAdminConfig.primary],
+  color: [Admin.primary],
 };
 
 var chart = new ApexCharts(document.querySelector("#basic-apex"), options);
@@ -1538,7 +1538,7 @@ var options1 = {
       format: "dd/MM/yy HH:mm",
     },
   },
-  colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+  colors: [Admin.primary, Admin.secondary],
 };
 
 var chart1 = new ApexCharts(document.querySelector("#area-spaline"), options1);
@@ -1581,7 +1581,7 @@ var options2 = {
       "Germany",
     ],
   },
-  colors: [KanzyAdminConfig.primary],
+  colors: [Admin.primary],
 };
 
 var chart2 = new ApexCharts(document.querySelector("#basic-bar"), options2);
@@ -1644,7 +1644,7 @@ var options3 = {
       },
     },
   },
-  colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary, "#51bb25"],
+  colors: [Admin.primary, Admin.secondary, "#51bb25"],
 };
 
 var chart3 = new ApexCharts(document.querySelector("#column-chart"), options3);
@@ -1734,8 +1734,8 @@ var options = {
     width: 0,
   },
   colors: [
-    KanzyAdminConfig.primary,
-    KanzyAdminConfig.secondary,
+    Admin.primary,
+    Admin.secondary,
     "#51bb25",
     "#f8d62b",
   ],
@@ -1757,8 +1757,8 @@ var options4 = {
   plotOptions: {
     candlestick: {
       colors: {
-        upward: KanzyAdminConfig.primary,
-        downward: KanzyAdminConfig.secondary,
+        upward: Admin.primary,
+        downward: Admin.secondary,
       },
     },
   },
@@ -2065,7 +2065,7 @@ var options5 = {
       sizeOffset: 4,
     },
   },
-  colors: [KanzyAdminConfig.primary],
+  colors: [Admin.primary],
 };
 
 var chart5 = new ApexCharts(document.querySelector("#stepline"), options5);
@@ -2193,7 +2193,7 @@ var options6 = {
   xaxis: {
     type: "datetime",
   },
-  colors: [KanzyAdminConfig.primary],
+  colors: [Admin.primary],
 };
 
 var chart6 = new ApexCharts(
@@ -2289,7 +2289,7 @@ var options7 = {
       useSeriesColors: true,
     },
   },
-  colors: [KanzyAdminConfig.secondary, "#51bb25", KanzyAdminConfig.primary],
+  colors: [Admin.secondary, "#51bb25", Admin.primary],
 };
 
 var chart7 = new ApexCharts(document.querySelector("#mixedchart"), options7);
@@ -2318,8 +2318,8 @@ var options8 = {
     },
   ],
   colors: [
-    KanzyAdminConfig.primary,
-    KanzyAdminConfig.secondary,
+    Admin.primary,
+    Admin.secondary,
     "#3eb95f",
     "#ea9200",
     "#e74b2b",

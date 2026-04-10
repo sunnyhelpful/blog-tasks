@@ -38,12 +38,12 @@
                   render: function(data, type, row) {
                       let html = '<div class="d-flex gap-1">';
                       <% if(userInfo.permissions.includes('edit_blog')){ %>
-                          html += `<a href="/admin/blog/${data}/edit" class="btn btn-sm btn-primary btn-edit blogUser" title="<%= trans.global.edit %>">
+                          html += `<a href="/admin/blog/${data}/edit" class="btn btn-sm btn-primary btn-edit blogUser" title="Edit">
                               <i class="fas fa-edit"></i>
                           </a>`;
                       <% } %>
                       <% if(userInfo.permissions.includes('delete_blog')){ %>
-                          html += `<a href="javascript:;" class="btn btn-sm btn-danger btn-delete" data-id="${data}" onclick="confirmAction('delete', '/admin/blog/${data}/delete', '/admin/blogs', 'DELETE')" title="<%= trans.global.delete %>">
+                          html += `<a href="javascript:;" class="btn btn-sm btn-danger btn-delete" data-id="${data}" onclick="confirmAction('delete', '/admin/blog/${data}/delete', '/admin/blogs', 'DELETE')" title="Delete">
                               <i class="fas fa-trash"></i>
                           </a>`;
                       <% } %>
@@ -116,9 +116,7 @@
                       } else if (message) {
                           showNotificationPopup(message, 'error');
                       } else {
-                          showNotificationPopup(`<%= t(trans.messages.oops_something_went_wrong, {
-                              attribute: trans.cruds.MODULE.blog
-                          }) %>`, 'error');
+                          showNotificationPopup(`Oops, Something went wrong!`, 'error');
                       }
                   }
               });

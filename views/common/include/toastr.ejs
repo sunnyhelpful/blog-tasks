@@ -17,19 +17,19 @@
 
         switch(type) {
             case 'success':
-                toastr.success(message, `<%= trans.messages.toastr.success %>`, toastrOptions);
+                toastr.success(message, 'Success', toastrOptions);
                 break;
             case 'info':
-                toastr.info(message, `<%= trans.messages.toastr.info %>`, toastrOptions);
+                toastr.info(message, 'Info', toastrOptions);
                 break;
             case 'warning':
-                toastr.warning(message, `<%= trans.messages.toastr.warning %>`, toastrOptions);
+                toastr.warning(message, 'Warning', toastrOptions);
                 break;
             case 'error':
-                toastr.error(message, `<%= trans.messages.toastr.error %>`, toastrOptions);
+                toastr.error(message, 'Error', toastrOptions);
                 break;
             default:
-                toastr.info(message, `<%= trans.messages.toastr.info %>`, toastrOptions);
+                toastr.info(message, 'Info', toastrOptions);
         }
     }
     

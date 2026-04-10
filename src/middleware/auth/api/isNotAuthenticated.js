@@ -25,9 +25,7 @@ const isNotAuthenticated = async (req, res, next) => {
         return res.status(403).json({
             success: false,
             code: 'ALREADY_AUTHENTICATED',
-            message: req.t(req.trans.messages.you_are_already, {
-                attribute : req.trans.global.logged_in
-            }),
+            message: 'You are already logged in',
             statusCode: 403
         });
         }

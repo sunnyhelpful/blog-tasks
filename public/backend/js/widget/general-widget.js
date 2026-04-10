@@ -49,7 +49,7 @@
     legend: {
       show: false,
     },
-    colors: [KanzyAdminConfig.primary, "#D5E8E6"],
+    colors: [Admin.primary, "#D5E8E6"],
     xaxis: {
       show: false,
       labels: {
@@ -157,7 +157,7 @@
     legend: {
       show: false,
     },
-    colors: [KanzyAdminConfig.secondary, "#faded1"],
+    colors: [Admin.secondary, "#faded1"],
     xaxis: {
       show: false,
       labels: {
@@ -255,7 +255,7 @@
     },
     
     colors: [
-      KanzyAdminConfig.primary, KanzyAdminConfig.secondary, "#ea9200", "#e74b2b",
+      Admin.primary, Admin.secondary, "#ea9200", "#e74b2b",
     ],
     labels: ["Vimeo", "Messenger", "Facebook", "LinkedIn"],
     legend: {
@@ -452,7 +452,7 @@
       },
     },
     labels: ["Selling rate", "Returning: 3.2k"],
-    colors: [KanzyAdminConfig.primary, KanzyAdminConfig.secondary],
+    colors: [Admin.primary, Admin.secondary],
     legend: {
       show: false,
     },
@@ -633,11 +633,11 @@
         colorStops: [],
       },
     },
-    colors: [KanzyAdminConfig.primary],
+    colors: [Admin.primary],
     markers: {
       size: 6,
       colors: "#ffffff",
-      strokeColor: KanzyAdminConfig.primary,
+      strokeColor: Admin.primary,
       strokeWidth: 3,
       strokeOpacity: 1,
       fillOpacity: 0,
@@ -717,14 +717,14 @@
         top: 5,
         left: 0,
         blur: 3,
-        color: KanzyAdminConfig.secondary,
+        color: Admin.secondary,
         opacity: 0.3,
       },
       zoom: {
         enabled: false,
       },
     },
-    colors: [KanzyAdminConfig.secondary],
+    colors: [Admin.secondary],
     dataLabels: {
       enabled: false,
     },
@@ -925,8 +925,8 @@
       },
     },
     colors: [
-      KanzyAdminConfig.primary,
-      KanzyAdminConfig.primary,
+      Admin.primary,
+      Admin.primary,
       "var(--body-color)",
       "var(--body-color)",
     ],

@@ -1,4 +1,3 @@
-require('./logs/logger');
 const express = require('express');
 const { connect, closeMongoPluginConnection } = require('./config/database');
 const path = require('path');
@@ -76,14 +75,8 @@ app.use(
 app.use(flash());
 app.use([customMiddleware.setFlash]);
 
-/* Log Each Requests */
-app.use((req, res, next) => {
-  logInfo(`[Tracking  Route] - ${req.method} ${req.originalUrl}`);
-  next();
-});
-
 app.use((err, req, res, next) => {
-  logError('Global Error:', {
+  console.error('Global Error:', {
     method: req.method,
     url: req.originalUrl,
     body: req.body,
@@ -94,40 +87,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-const { localization, interpolateMessage } = require('./utils/localization');
-
 app.use((req, res, next) => {
   const defaultLang = 'en';
-  const isApiRequest = req.path.startsWith('/api/');
-  
-  let lang;
-  if (isApiRequest) {
-    lang = req.headers['accept-language'] || req.cookies.preferredLang || defaultLang;
-    req.session.lang = lang;
-  } else {
-    lang = req.session.lang || req.cookies.preferredLang || defaultLang;
-    req.session.lang = lang;
-  }
-
-  res.locals.lang = lang;
-
-  const localizationData = localization(lang);
-  if (!localizationData) {
-    console.error(`Localization data could not be loaded for language: ${lang}`);
-    return res.status(500).json({ error: 'Localization data missing' });
-  }
-
-  req.trans = localizationData;
-  req.t = (key, params = {}) => {
-    const [category, messageKey] = key.split('.');
-    const message = localizationData[category]?.[messageKey] || key;
-    return interpolateMessage(message, params);
-  };
-  
-  res.locals.trans = localizationData;
-  res.locals.t = req.t;
-
-  res.locals.companyInfo = constantKey.COMPANY_DETAILS;
+  req.session.lang = defaultLang;
 
   /* For template color */
   if (!req.session.mode) {
@@ -150,7 +112,7 @@ app.get('/', function (req, res) {
     // res.send('Welcome');
     return res.redirect('/')
   } catch (error) {
-    logError('Error rendering the home view:', error);
+    console.error('Error rendering the home view:', error);
     res.status(500).send('Internal Server Error');
   }
 });
@@ -164,12 +126,9 @@ app.use((req, res) => {
 
 connect().then(() => {
   console.log('Database connected successfully');
-  
-  /* Start Crons */
-  runCrons();
   /* End Crons */
 }).catch((err) => {
-  logError('Error connecting to database:', err);
+  console.error('Error connecting to database:', err);
 });
 
 module.exports = { 

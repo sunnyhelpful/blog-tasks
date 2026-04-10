@@ -27,8 +27,8 @@ if (process.env.EMAIL_SERVICE_TYPE == 'gmail') {
 }
 
 const sender = {
-    name: "Kanzy",
-    address: "admin@kanzy.com",
+    name: "Example",
+    address: "admin@example.com",
 };
 
 module.exports = { transporter, sender };
